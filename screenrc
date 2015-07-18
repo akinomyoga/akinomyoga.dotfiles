@@ -1,0 +1,50 @@
+# screenrc
+defflow off
+vbell off
+startup_message off
+altscreen on
+shell /bin/bash
+defshell /bin/bash
+defscrollback 1000
+deflogin off
+
+cjkwidth emacs
+
+bind w windowlist -b
+bind  windowlist -b
+
+bind ~ split
+bind | split -v
+
+# bindkey -t "[A" focus up
+# bindkey -t "[B" focus down
+# bindkey -t "[C" focus right
+# bindkey -t "[D" focus left
+# bindkey -t "[1;5A" resize -v -l -3
+# bindkey -t "[1;5B" resize -v -l +3
+# bindkey -t "[1;5C" resize -h -l +5
+# bindkey -t "[1;5D" resize -h -l -5
+# bindkey -t "" other
+
+# escape 
+# escape \377\377
+bindkey -t "[9;5\^" windowlist -b
+bindkey -t "[9;5\^" command
+bindkey -t "[9;5\^[A" focus up
+bindkey -t "[9;5\^[B" focus down
+bindkey -t "[9;5\^[C" focus right
+bindkey -t "[9;5\^[D" focus left
+bindkey -t "[9;5\^[1;5A" resize -v -l -3
+bindkey -t "[9;5\^[1;5B" resize -v -l +3
+bindkey -t "[9;5\^[1;5C" resize -h -l +5
+bindkey -t "[9;5\^[1;5D" resize -h -l -5
+bindkey -t "[9;5\^[9;5\^" other
+
+caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
+windowlist string "%?%F%{= gW}%:%{ Wb}%?%4n %t%=%f"
+
+#defmousetrack on
+term screen-256color
+termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo rosaterm 'Co#256:pa#32767:'
