@@ -16,6 +16,17 @@ MWGDIR=$HOME/.mwg
 LOGDIR=$MWGDIR/log/myset
 mkdir -p "$LOGDIR"
 
+function updaterc {
+  local src="$1"
+  local dst="$2"
+  local fallback="${3:-${dst%/*}/${src##*/}.new}"
+  if [[ -e $dst ]]; then
+    [[ $fallback != "$dst" ]] && cp -p "$src" "$fallback"
+  else
+    cp -p "$src" "$dst"
+  fi
+}
+
 function install.tic {
   echo registering rosaterm.ti...
   tic terminfo/rosaterm.ti || exit 1
@@ -81,12 +92,35 @@ function install.modls {
 }
 
 function install.screenrc {
-  if [[ -e $HOME/.screenrc ]]; then
-    cp -p screenrc "$HOME/screenrc.new"
-  else
-    cp -p screenrc "$HOME/.screenrc"
-  fi
+  updaterc screenrc "$HOME/.screenrc"
 }
+function install.gitignore {
+  updaterc gitignore "$HOME/.gitignore"
+}
+function install.mwgpp {
+  mkdir -p "$MWGDIR/bin"
+  cp -p mwg_pp.awk "$MWGDIR/bin/"
+}
+
+function install.myemacs {
+  ( mkdir -p "$MWGDIR/src" &&
+      cd "$MWGDIR/src" &&
+      git clone https://github.com/akinomyoga/myemacs.git &&
+      cd myemacs &&
+      make install &&
+      updaterc emacs.new "$HOME/.emacs" "$HOME/.emacs.new"
+  )
+}
+
+if (($#==0)); then
+  {
+    echo "usage: ./install.sh name"
+    echo
+    echo "NAME:"
+    declare -F | awk '{if(sub(/^declare -f install./,""))print "  " $0;}'
+  } >&2
+  exit 1
+fi
 
 declare alpha
 for alpha in "$@"; do
@@ -103,4 +137,3 @@ for alpha in "$@"; do
 
   "install.$alpha" && touch "$fstamp"
 done
-
