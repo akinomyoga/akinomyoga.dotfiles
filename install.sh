@@ -21,7 +21,8 @@ function updaterc {
   local dst="$2"
   local fallback="${3:-${dst%/*}/${src##*/}.new}"
   if [[ -e $dst ]]; then
-    [[ $fallback != "$dst" ]] && cp -p "$src" "$fallback"
+    diff -q "$dst" "$src" ||
+      [[ $fallback != "$dst" ]] && cp -p "$src" "$fallback"
   else
     cp -p "$src" "$dst"
   fi
@@ -94,8 +95,49 @@ function install.modls {
 function install.screenrc {
   updaterc screenrc "$HOME/.screenrc"
 }
-function install.gitignore {
-  updaterc gitignore "$HOME/.gitignore"
+function install.git {
+  git config --global core.editor 'emacs -nw'
+  git config --global push.default simple
+  updaterc gitignore "$HOME/.gitignore" &&
+    git config --global core.excludesfile $HOME/.gitignore
+
+  if [[ $USER == murase || $USER == koichi ]]; then
+    git config --global user.name 'Koichi Murase'
+    git config --global user.email myoga.murase@gmail.com
+  fi
+}
+function install.github {
+  # create ~/.ssh/config
+  local fconfig=~/.ssh/config
+  if [[ ! -e $fconfig ]]; then
+    ( umask 077
+      mkdir -p ~/.ssh
+      echo '# ssh_config' > "$fconfig" )
+    echo "myset (install.github): $fconfig is generated"
+  fi
+
+  # create ~/.ssh/id_rsa-github
+  local fkey=~/.ssh/id_rsa-github@${HOSTNAME%%.*}
+  if [[ ! -e $fkey ]]; then
+    echo "myset (install.github): generating $fkey..."
+    ssh-keygen -t rsa -b 4096 -f "$fkey"
+  fi
+
+  if ! grep -q '\bgithub.com\b' "$fconfig"; then
+    cat <<EOF >> "$fconfig"
+
+# GitHub (automatically added by myset/install.github)
+Host github.com
+  HostName github.com
+  Port 22
+  User git
+  IdentityFile $fkey
+
+EOF
+    echo "myset (install.github): github.com is added to ssh_config ($fconfig)."
+  else
+    echo "myset (install.github): ssh_config ($fconfig) seems to already have a github.com entry."
+  fi
 }
 function install.mwgpp {
   mkdir -p "$MWGDIR/bin"
@@ -112,12 +154,26 @@ function install.myemacs {
   )
 }
 
+function show_status {
+  local line alpha
+  while read line; do
+    if [[ $line == 'declare -f install.'* ]]; then
+      alpha=${line#declare -f install.}
+      if [[ -e $LOGDIR/$alpha.stamp ]]; then
+        echo "  done [32m$alpha[m"
+      else
+        echo "  todo [31m$alpha[m"
+      fi
+    fi
+  done < <( declare -F )
+}
+
 if (($#==0)); then
   {
     echo "usage: ./install.sh name"
     echo
     echo "NAME:"
-    declare -F | awk '{if(sub(/^declare -f install./,""))print "  " $0;}'
+    show_status
   } >&2
   exit 1
 fi
