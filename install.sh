@@ -85,14 +85,27 @@ function install.mshex {
 
 function install.modls {
   local tar="$PWD/pkg/modls.tar.xz"
-  (cd "$MWGDIR/src" &&
+  ( mkdir -p "$MWGDIR/src" &&
+      cd "$MWGDIR/src" &&
       tar xJvf "$tar" &&
       cd modls &&
       make all &&
       make install )
 }
 
-function install.screenrc {
+function install.screen {
+  local tar="$PWD/pkg/screen-4.3.1.tar.xz"
+  ( mkdir -p "$MWGDIR/src" &&
+      cd "$MWGDIR/src" &&
+      tar xJvf "$tar" &&
+      cd screen-4.3.1 &&
+      if [[ $OSTYPE == cygwin ]]; then
+        CC=/usr/bin/gcc ./configure --prefix="$HOME"/local --enable-colors256 --enable-ut_time
+      else
+        ./configure --prefix="$HOME"/local --enable-colors256
+      fi &&
+      make all &&
+      make install )
   updaterc screenrc "$HOME/.screenrc"
 }
 function install.git {
