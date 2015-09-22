@@ -12,9 +12,15 @@
 #
 #
 
+function mkd { [[ -d $1 ]] || mkdir -p "$1"; }
+function mkcd { mkd "$1" && cd "$1"; }
+
 MWGDIR=$HOME/.mwg
 LOGDIR=$MWGDIR/log/myset
-mkdir -p "$LOGDIR"
+mkd "$LOGDIR"
+
+#------------------------------------------------------------------------------
+# update commands
 
 function updaterc {
   local src="$1"
@@ -27,6 +33,18 @@ function updaterc {
     cp -p "$src" "$dst"
   fi
 }
+
+function myset/update-git {
+  local name="$1"
+  local base="$2"
+  if [[ -d $name ]]; then
+    cd "$name" && git pull
+  else
+    git clone "$base" && cd "$name"
+  fi
+}
+
+#------------------------------------------------------------------------------
 
 function install.tic {
   echo registering rosaterm.ti...
@@ -58,7 +76,7 @@ php php-mbstring php-pear php-opcache php-common php-mysql'
 
 function install.user-dirs {
   local dir
-  mkdir -p "$HOME/User"
+  mkd "$HOME/User"
   for dir in デスクトップ ダウンロード テンプレート 公開 ドキュメント 音楽 画像 ビデオ; do
     [[ -d $HOME/$dir ]] && mv "$HOME/$dir" "$HOME/User/$dir"
   done
@@ -76,17 +94,14 @@ function install.user-dirs {
 }
 
 function install.mshex {
-  ( mkdir -p "$MWGDIR/src" &&
-      cd "$MWGDIR/src" &&
-      git clone https://github.com/akinomyoga/mshex.git &&
-      cd mshex &&
+  ( mkcd "$MWGDIR/src" &&
+      myset/update-git mshex https://github.com/akinomyoga/mshex.git &&
       make install )
 }
 
 function install.modls {
   local tar="$PWD/pkg/modls.tar.xz"
-  ( mkdir -p "$MWGDIR/src" &&
-      cd "$MWGDIR/src" &&
+  ( mkcd "$MWGDIR/src" &&
       tar xJvf "$tar" &&
       cd modls &&
       make all &&
@@ -95,8 +110,7 @@ function install.modls {
 
 function install.screen {
   local tar="$PWD/pkg/screen-4.3.1.tar.xz"
-  ( mkdir -p "$MWGDIR/src" &&
-      cd "$MWGDIR/src" &&
+  ( mkcd "$MWGDIR/src" &&
       tar xJvf "$tar" &&
       cd screen-4.3.1 &&
       if [[ $OSTYPE == cygwin ]]; then
@@ -124,7 +138,7 @@ function install.github {
   local fconfig=~/.ssh/config
   if [[ ! -e $fconfig ]]; then
     ( umask 077
-      mkdir -p ~/.ssh
+      mkd ~/.ssh
       echo '# ssh_config' > "$fconfig" )
     echo "myset (install.github): $fconfig is generated"
   fi
@@ -153,18 +167,15 @@ EOF
   fi
 }
 function install.mwgpp {
-  mkdir -p "$MWGDIR/bin"
+  mkd "$MWGDIR/bin"
   cp -p mwg_pp.awk "$MWGDIR/bin/"
 }
 
 function install.myemacs {
-  ( mkdir -p "$MWGDIR/src" &&
-      cd "$MWGDIR/src" &&
-      git clone https://github.com/akinomyoga/myemacs.git &&
-      cd myemacs &&
-      make install &&
-      updaterc emacs.new "$HOME/.emacs" "$HOME/.emacs.new"
-  )
+  ( mkcd "$MWGDIR/src" &&
+      myset/update-git myemacs https://github.com/akinomyoga/myemacs.git &&
+      make package-install install &&
+      updaterc emacs.new "$HOME/.emacs" "$HOME/.emacs.new" )
 }
 
 function show_status {
