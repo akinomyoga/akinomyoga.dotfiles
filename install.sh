@@ -54,25 +54,56 @@ function install.tic {
   touch "$LOGDIR"/tic.stamp
 }
 
-function install.yum {
-  local packages='emacs w3m wget screen'
-  sudo yum install $packages || exit 1
-  touch "$LOGDIR"/yum.stamp
-}
+#------------------------------------------------------------------------------
+# Additional Packages
+#
+#   ./install.sh yum-minimal
+#   ./install.sh yum
+#
 
-function install.yum2 {
-  local packages='
+_yum_packages_minimal='emacs w3m wget screen'
+_yum_packages="$_yum_packages_minimal
 lynx httpd ntpdate
 mono-devel
 fuse fuse-libs ntfs-3g
 git autoconf automake*
 gcc* llvm* clang*
 glibc-static cairo-devel ncurses* bison
-php php-mbstring php-pear php-opcache php-common php-mysql'
+php php-mbstring php-pear php-opcache php-common php-mysql
+nkf"
 
-  sudo yum install $packages || exit 1
+## @var[out] YUM
+function install.yum/determine-packager {
+  YUM=yum
+  if [[ -f /etc/os-release ]]; then
+    # read systemd /etc/os-release
+    local ID VERSION_ID
+    eval -- $(grep -E '^[[:space:]](ID|VERSION_ID)=' /etc/os-release)
+    if [[ $ID == fedora ]]; then
+      ((VERSION_ID>=22)) && YUM=dnf
+    fi
+  elif [[ -f /etc/fedora-release ]]; then
+    local release
+    IFS= read -r release < /etc/fedora-release
+    local rex_release='Fedora release ([0-9]+)'
+    if [[ $release =~ $rex_release ]]; then
+      local VERSION_ID="${BASH_REMATCH[1]}"
+      ((VERSION_ID>=22)) && YUM=dnf
+    fi
+  fi
+}
+function install.yum-minimal {
+  local YUM; install.yum/determine-packager
+  sudo $YUM install $_yum_packages_minimal || exit 1
   touch "$LOGDIR"/yum.stamp
 }
+function install.yum {
+  local YUM; install.yum/determine-packager
+  sudo $YUM install $_yum_packages || exit 1
+  touch "$LOGDIR"/yum.stamp
+}
+
+#------------------------------------------------------------------------------
 
 function install.user-dirs {
   local dir
@@ -183,6 +214,7 @@ function show_status {
   while read line; do
     if [[ $line == 'declare -f install.'* ]]; then
       alpha=${line#declare -f install.}
+      [[ $alpha == *[^a-zA-Z_-]* ]] && continue
       if [[ -e $LOGDIR/$alpha.stamp ]]; then
         echo "  done [32m$alpha[m"
       else
