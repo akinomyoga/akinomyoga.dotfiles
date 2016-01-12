@@ -209,6 +209,12 @@ function install.myemacs {
       updaterc emacs.new "$HOME/.emacs" "$HOME/.emacs.new" )
 }
 
+function install.ble {
+  ( mkcd "$MWGDIR/src" &&
+      myset/update-git ble https://github.com/akinomyoga/ble.sh.git &&
+      make all )
+}
+
 function show_status {
   local line alpha
   while read line; do
@@ -234,15 +240,31 @@ if (($#==0)); then
   exit 1
 fi
 
+declare -a alphas
+alphas=()
+fUpdate=
+while (($#)); do
+  declare arg="$1"
+  shift
+  case "$arg" in
+  (--update)
+    fUpdate=1 ;;
+  (-*)
+    echo "myset: unrecognized option \`$arg'." >&2;;
+  (*)
+    alphas+=("$arg") ;;
+  esac
+done
+
 declare alpha
-for alpha in "$@"; do
+for alpha in "${alphas[@]}"; do
   if ! declare -f "install.$alpha" &>/dev/null; then
     echo "myset-install.sh: command $alpha not found" >&2
     continue
   fi
 
   declare fstamp="$LOGDIR/$alpha.stamp"
-  if [[ -e $fstamp ]]; then
+  if [[ ! $fUpdate && -e $fstamp ]]; then
     echo "myset-install.sh: $alpha is already installed" >&2
     continue
   fi
