@@ -1,16 +1,27 @@
 # bashrc -*- mode:sh; mode:sh-bash -*-
 
-source ~/.mwg/bashrc >/dev/null || :
-if test "$-" != "${-/i/}"; then
-  mwg_bashrc_set_prompt2 '\e[31m' '\e[m'
+umask 022
+
+# ble.sh
+if [[ -f $HOME/.mwg/src/ble.sh/out/ble.sh ]]; then
+  if [[ $- == *i* && ! $NOBLE ]]; then
+    bleopt_char_width_mode=emacs
+    source ~/.mwg/src/ble.sh/ble.sh noattach
+  fi
+fi
+
+# mshex
+source ~/.mwg/bashrc
+source ~/.mwg/share/mshex/shrc/path.sh
+# source ~/.mwg/bashrc.cygwin >/dev/null||:
+if [[ $- == *i* ]]; then
+  # mwg_bashrc_set_prompt2 '\e[31m' '\e[m'
   mwg_cdhist_config_BubbleHist=1
 fi
 
-# source ~/.mwg/bashrc.cygwin >/dev/null||:
-
-source ~/.mwg/share/mshex/shrc/path.sh ||:
 PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
 
+#------------------------------------------------------------------------------
 # Fedora
 #
 # 存在しないコマンドに当たった時に、勝手にインターネットに接続して検索しに行く。
@@ -22,5 +33,9 @@ unset -f command_not_found_handle
 # screen 内で勝手に変なタイトルを設定しようとするのを防ぐ
 PROMPT_COMMAND=
 
+#------------------------------------------------------------------------------
 # GNU/Linux の場合
 alias p='ps uaxf'
+
+#------------------------------------------------------------------------------
+(($_ble_bash)) && ble-attach
