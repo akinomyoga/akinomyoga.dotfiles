@@ -66,7 +66,7 @@ _yum_packages="$_yum_packages_minimal
 lynx httpd ntpdate
 mono-devel
 fuse fuse-libs ntfs-3g
-git autoconf automake*
+gdb git autoconf automake*
 gcc* llvm* clang*
 glibc-static cairo-devel ncurses* bison
 php php-mbstring php-pear php-opcache php-common php-mysql
