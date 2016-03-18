@@ -211,7 +211,7 @@ function install.myemacs {
 
 function install.ble {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git ble https://github.com/akinomyoga/ble.sh.git &&
+      myset/update-git ble.sh https://github.com/akinomyoga/ble.sh.git &&
       make all )
 }
 
