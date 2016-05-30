@@ -6,7 +6,7 @@ umask 022
 if [[ -f $HOME/.mwg/src/ble.sh/out/ble.sh ]]; then
   if [[ $- == *i* && ! $NOBLE ]]; then
     bleopt_char_width_mode=emacs
-    source ~/.mwg/src/ble.sh/ble.sh noattach
+    source ~/.mwg/src/ble.sh/out/ble.sh noattach
   fi
 fi
 
