@@ -156,6 +156,7 @@ function install.screen {
 function install.git {
   git config --global core.editor 'emacs -nw'
   git config --global push.default simple
+  git config --global core.quotepath false # 日本語ファイル名を表示するため
   updaterc gitignore "$HOME/.gitignore" &&
     git config --global core.excludesfile $HOME/.gitignore
 
