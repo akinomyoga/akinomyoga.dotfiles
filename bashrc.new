@@ -13,7 +13,7 @@ fi
 # mshex
 source ~/.mwg/bashrc
 source ~/.mwg/share/mshex/shrc/path.sh
-# source ~/.mwg/bashrc.cygwin >/dev/null||:
+[[ $OSTYPE == cygwin* ]] && source ~/.mwg/bashrc.cygwin
 if [[ $- == *i* ]]; then
   # mwg_bashrc_set_prompt2 '\e[31m' '\e[m'
   mwg_cdhist_config_BubbleHist=1
