@@ -19,7 +19,12 @@ if [[ $- == *i* ]]; then
   mwg_cdhist_config_BubbleHist=1
 fi
 
-PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
+PATH.prepend -v PATH               "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
+PATH.prepend -v C_INCLUDE_PATH     "$HOME/local/include" # /usr/local/include
+PATH.prepend -v CPLUS_INCLUDE_PATH "$HOME/local/include" # /usr/local/include
+PATH.prepend -v LIBRARY_PATH       "$HOME/local/lib"     # /usr/local/lib
+PATH.prepend -v LD_LIBRARY_PATH    "$HOME/local/lib"     # /usr/local/lib
+PATH.prepend -v PKG_CONFIG_PATH    "$HOME/local/lib/pkgconfig" # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
 
 #------------------------------------------------------------------------------
 # GNU/Linux の場合
