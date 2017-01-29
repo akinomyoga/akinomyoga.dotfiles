@@ -150,8 +150,8 @@ function install.screen {
         ./configure --prefix="$HOME"/local --enable-colors256
       fi &&
       make all &&
-      make install )
-  updaterc screenrc "$HOME/.screenrc"
+      make install ) &&
+    updaterc screenrc "$HOME/.screenrc"
 }
 function install.git {
   git config --global core.editor 'emacs -nw'
