@@ -62,15 +62,84 @@ function install.tic {
 #
 
 _yum_packages_minimal='emacs w3m wget screen'
-_yum_packages="$_yum_packages_minimal
-lynx httpd ntpdate
-mono-devel
-fuse fuse-libs ntfs-3g
-gdb git autoconf automake* libtool
-gcc* llvm* clang*
-glibc-static cairo-devel ncurses* bison
-php php-mbstring php-pear php-opcache php-common php-mysql
-nkf"
+_yum_packages=(
+  $_yum_packages_minimal
+
+  dnf-plugin-system-upgrade
+
+  # Compilers
+  llvm\* clang\* bison
+  # gcc\*  # 何故か Fedora 27 で動かない
+
+  # Build tools / debugger / VMS
+  make git lldb gdb
+  autoconf automake* libtool cmake
+
+  # Libraries
+  glibc-static cairo-devel ncurses\*
+  xz-devel eigen3-devel gsl-devel fftw3-devel lapack-devel blas-devel boost-*
+  libstdc++-static
+  libcurl libcurl-devel
+  libXmu-devel libXtst libXtst-devel
+  wxGTK-devel wxGTK3-devel
+  oniguruma-devel
+
+  # shells / terminals
+  bash zsh ksh yash dash tcsh
+  tmux xterm
+
+  # editors
+  vim nano
+  aspell aspell-en
+
+  # 何故か screen で makeinfo が必要
+  texlive
+  texlive-revtex
+  texlive-revtex4
+  texlive-elsarticle
+  texlive-wrapfig
+  texlive-japanese
+
+  # C#
+  mono-devel
+
+  # Web / PHP
+  lynx httpd nginx ntpdate
+  php php-mbstring php-pear php-opcache php-common php-mysql
+  # php-mysql # Fedora 27 では何故かない
+
+  # Ruby
+  ruby ruby-devel rubygem-rails rubygem-rake
+
+  # Python
+  python2-devel python2-numpy python2-scipy
+  python3-devel python3-numpy python3-scipy
+
+  # Node
+  nodejs npm nodejs-grunt uglify-js
+
+  # Golang
+  golang
+
+  # Fuse
+  fuse fuse-libs ntfs-3g fuse-sshfs
+
+  # text tools, etc
+  gawk nkf jq source-highlight qpdf
+  gnuplot xauth xorg-x11-fonts-\*
+
+  # cuda
+  # git-svn
+  # java-1.8.0-openjdk
+  # java-1.8.0-openjdk-devel
+  # nfs nfs-tools nfs-utils
+  # perf htop memtest86+ zerofree
+  # swig
+  # postgresql-upgrade
+  # smartmontools
+  # yp-tools ypbind ypserv
+  # cron
+)
 
 ## @var[out] YUM
 function install.yum/determine-packager {
@@ -99,7 +168,7 @@ function install.yum-minimal {
 }
 function install.yum {
   local YUM; install.yum/determine-packager
-  sudo $YUM install $_yum_packages || exit 1
+  sudo $YUM install "${_yum_packages[@]}" || exit 1
   touch "$LOGDIR"/yum.stamp
 }
 
