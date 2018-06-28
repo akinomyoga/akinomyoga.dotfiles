@@ -1,15 +1,35 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+umask 022
+
 #------------------------------------------------------------------------------
 # initialize ble.sh
 
-umask 022
+function dotfiles/find-blesh-path {
+  _dotfiles_blesh_path=
 
-# ble.sh
-if [[ -f $HOME/.mwg/src/ble.sh/out/ble.sh ]]; then
-  if [[ $- == *i* && ! $NOBLE ]]; then
-    bleopt_char_width_mode=emacs
-    source ~/.mwg/src/ble.sh/out/ble.sh --noattach
+  local -a candidates
+  candidates=(
+    "$HOME"/prog/ble/out/ble.sh
+    "$HOME"/.mwg/src/ble.sh/out/ble.sh
+    ${XDG_DATA_HOME:+"$XDG_DATA_HOME"/blesh/ble.sh}
+    "$HOME"/.local/share/blesh/ble.sh )
+
+  local path
+  for path in "${candidates[@]}"; do
+    if [[ -s $path ]]; then
+      _dotfiles_blesh_path=$path
+    fi
+  done
+}
+
+dotfiles/find-blesh-path
+
+if [[ ! $NOBLE && -s $_dotfiles_blesh_path && $- == *i* ]]; then
+  bleopt_char_width_mode=emacs
+  if source "$_dotfiles_blesh_path" --noattach; then
+    bleopt indent_offset=2
+    bleopt decode_isolated_esc=esc
   fi
 fi
 
@@ -22,7 +42,7 @@ function dotfiles/find-mshex-path {
   local path
   for path in "${XDG_DATA_HOME:-$HOME/.local/share}" "$HOME"/.mwg/share; do
     if [[ -d $path/mshex ]]; then
-      _dotfiles_mshex_path=$path
+      _dotfiles_mshex_path=$path/mshex
       break
     fi
   done
@@ -33,7 +53,12 @@ dotfiles/find-mshex-path
 if [[ $_dotfiles_mshex_path ]]; then
   source "$_dotfiles_mshex_path"/shrc/bashrc_common.sh
   if [[ $- == *i* ]]; then
-    mshex/set-prompt '\e[31m' '\e[m'
+    case ${HOSTNAME%%.*} in
+    (vaio2016) mshex/set-prompt '\e[31m' '\e[m' ;;
+    (dyna2018) mshex/set-prompt '\e[32m' '\e[m' ;;
+    (*)        mshex/set-prompt '\e[m' '\e[m' ;;
+    esac
+
     mwg_cdhist_config_BubbleHist=1
   fi
 
@@ -44,7 +69,8 @@ if [[ $_dotfiles_mshex_path ]]; then
   # setup path
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
-  PATH.prepend /usr/sbin:/sbin
+  PATH.prepend /usr/local/sbin:/usr/sbin
+  PATH.prepend /usr/local/bin:/usr/bin:/bin
   PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
 
   function dotfiles/setup-path:vaio2016 {
