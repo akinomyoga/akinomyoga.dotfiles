@@ -14,12 +14,13 @@ dotfiles - my settings for actual hosts
 - akinomyoga/colored
 - [akinomyoga/psforest](https://github.com/akinomyoga/psforest.git) - `ps` with process tree graph
 
-## Setup
+## Download
 
 ```console
 $ mkdir -p ~/.local/src
 $ cd !$
 $ git clone git@github.com:akinomyoga/akinomyoga.dotfiles.git
 $ cd !$:t:r
-$ make install
 ```
+
+Do not run the command `make install` since your settings will be overwritten by mine. For example, the default user name and email of Git will be replaced by my name (i.e., Koichi Murase) and my email address (i.e., myoga.murase at gmail.com).
