@@ -80,9 +80,12 @@ if [[ $_dotfiles_mshex_path ]]; then
       else
         mshex/set-prompt $'\e[4m' $'\e[m'
       fi ;;
-    (vaio2016) mshex/set-prompt '\e[31m' '\e[m' ;;
-    (dyna2018) mshex/set-prompt '\e[32m' '\e[m' ;;
-    (*)        mshex/set-prompt '\e[m' '\e[m' ;;
+    (magnate2016|gauge)
+      mshex/set-prompt '\e[32m' '\e[m' ;;
+    (vaio2016|dyna2018)
+      mshex/set-prompt '\e[31m' '\e[m' ;;
+    (*)
+      mshex/set-prompt '\e[m'   '\e[m' ;;
     esac
 
     mwg_cdhist_config_BubbleHist=1

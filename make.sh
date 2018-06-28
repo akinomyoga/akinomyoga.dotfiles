@@ -8,6 +8,7 @@ function is-known-file {
     2584c4ba8b0d2a52d94023f420b7e356a1b1a3f2291ad5eba06683d58c48570d
 
     # screenrc
+    5ada607a52e9111ec8f902d8d74af24b830bc21f541edd414156e9765ecd20d1
     a73072ecac6513802f7a53fc4315ba38175a0fbde563b9f52b73681c5d13a023
     4d82d10eb5646d1375ad8a92817e2750d497e927ffdd1256be5429cbf658e751
 
@@ -20,6 +21,9 @@ function is-known-file {
     # gitignore
     8e712bf84f7a596e96651d281812dfa6a740d9f819ddf968dfe7f864b51f67d5
     7c1039a1062d623628832c6deab1e9919bd75422da73a21a06c81a8ed907dc91
+
+    # aspell.conf
+    350c552dea4bc158e82506936727382f58b0178394afa327e08334e41dd7aa2c
   )
   IFS=$'\n' eval 'local rex="${known_hash[*]/#/\^}"'
   sha256sum "$dst" | grep "$rex" &>/dev/null
