@@ -10,6 +10,13 @@ function is-known-file {
 
     # emacs
     8706de289895f47ec7f24f6348e108425b2b3a9d6b6ce5e775376aea3bcffbcd
+
+    # gitconfig
+    8634a13e65b96f9869459ca709b746e4e6b5986b13bfc8491d162efc5dbd4b84
+
+    # gitignore
+    8e712bf84f7a596e96651d281812dfa6a740d9f819ddf968dfe7f864b51f67d5
+    7c1039a1062d623628832c6deab1e9919bd75422da73a21a06c81a8ed907dc91
   )
   IFS=$'\n' eval 'local rex="${known_hash[*]/#/\^}"'
   sha256sum "$dst" | grep "$rex" &>/dev/null

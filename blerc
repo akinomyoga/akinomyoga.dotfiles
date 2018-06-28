@@ -56,5 +56,5 @@ function blerc/vim-load-hook {
   ble-bind -f 'M-m'       '@nomarked beginning-of-line'
   ble-bind -f 'S-M-m'     '@marked beginning-of-line'
 
-  source ~/prog/ble/keymap/vi_test.sh
+  source "$_ble_base"/keymap/vi_test.sh
 }
