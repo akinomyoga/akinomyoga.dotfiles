@@ -60,6 +60,7 @@ command:link-dotfile bashrc ~/.bashrc
 command:link-dotfile bash_logout ~/.bash_logout
 command:link-dotfile emacs ~/.emacs
 command:link-dotfile screenrc ~/.screenrc
+command:link-dotfile tmux.conf ~/.tmux.conf
 command:link-dotfile blerc ~/.blerc
 command:link-dotfile gitconfig ~/.gitconfig
 command:link-dotfile gitignore ~/.gitignore
