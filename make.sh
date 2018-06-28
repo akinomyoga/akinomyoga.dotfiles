@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+# 既知の古い設定ファイルの場合はバックアップしなくて良い
+function is-known-file {
+  local -a known_hash
+  known_hash=(
+    # screenrc
+    4d82d10eb5646d1375ad8a92817e2750d497e927ffdd1256be5429cbf658e751
+
+    # emacs
+    8706de289895f47ec7f24f6348e108425b2b3a9d6b6ce5e775376aea3bcffbcd
+  )
+  IFS=$'\n' eval 'local rex="${known_hash[*]/#/\^}"'
+  sha256sum "$dst" | grep "$rex" &>/dev/null
+}
+
 function command:link-dotfile {
   local src=$1
   local dst=$2
@@ -8,6 +22,7 @@ function command:link-dotfile {
     return 1
   fi
 
+
   if [[ -h $dst ]]; then
     # seems to be already installed
     return
@@ -15,15 +30,19 @@ function command:link-dotfile {
     echo "make.sh: failed to install $dst. A directory already exists." >&2
     return 1
   else
-    if [[ -f $dst ]]; then
-      local dstbk=${dst}.old i=0
-      while [[ -e $dstbk ]]; do
-        dstbk=${dst}.old.$((++i))
-      done
+    if [[ -s $dst ]]; then
+      if is-known-file; then
+        echo "make.sh: existing file '$dst' has known contents, so it will be overwritten." >&2
+      else
+        local dstbk=${dst}.old i=0
+        while [[ -e $dstbk ]]; do
+          dstbk=${dst}.old.$((++i))
+        done
 
-      echo "mv $dst $dstbk"
-      if ! mv "$dst" "$dstbk"; then
-        echo "failed to backup the original file. abort." >&2
+        echo "mv $dst $dstbk"
+        if ! mv "$dst" "$dstbk"; then
+          echo "failed to backup the original file. abort." >&2
+        fi
       fi
     fi
 
@@ -31,9 +50,11 @@ function command:link-dotfile {
       src=$PWD/$src
     fi
 
-    echo "ln -s $src $dst"
-    ln -s "$src" "$dst"
+    echo "ln -sf $src $dst"
+    ln -sf "$src" "$dst"
   fi
 }
 
 command:link-dotfile bashrc ~/.bashrc
+command:link-dotfile emacs ~/.emacs
+command:link-dotfile screenrc ~/.screenrc

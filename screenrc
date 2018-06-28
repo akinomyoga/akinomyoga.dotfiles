@@ -1,0 +1,63 @@
+# screenrc -*- mode: sh -*-
+defflow off
+vbell off
+startup_message off
+altscreen on
+shell /bin/bash
+defshell /bin/bash
+defscrollback 1000
+deflogin off
+
+cjkwidth east
+cjkwidth emacs
+
+bind w windowlist -b
+bind  windowlist -b
+
+bind ~ split
+bind | split -v
+
+# ESC の次の文字を待たない
+maptimeout 1
+
+# bindkey のオプション -t はタイムアウトしない事を表す。
+# これはユーザの手でシーケンスを入力する時に使用する。
+# ここで、ESC から始まるシーケンスに対して -t を指定すると、
+# maptimeout が効かなくなってしまうことに注意する。
+
+# bindkey -t "[A" focus up
+# bindkey -t "[B" focus down
+# bindkey -t "[C" focus right
+# bindkey -t "[D" focus left
+# bindkey -t "[1;5A" resize -v -l -3
+# bindkey -t "[1;5B" resize -v -l +3
+# bindkey -t "[1;5C" resize -h -l +5
+# bindkey -t "[1;5D" resize -h -l -5
+# bindkey -t "" other
+
+# escape 
+# escape \377\377
+
+# 以下は C-tab で始まるシーケンスとして登録していたが、
+# maptimeout と競合するので取り敢えず今は無効にする。
+#
+# bindkey  -t "[27;5;9~" windowlist -b
+# bindkey  -t "[27;5;9~" command
+# bindkey  -t "[27;5;9~[A" focus up
+# bindkey  -t "[27;5;9~[B" focus down
+# bindkey  -t "[27;5;9~[C" focus right
+# bindkey  -t "[27;5;9~[D" focus left
+# bindkey  -t "[27;5;9~[1;5A" resize -v -l -3
+# bindkey  -t "[27;5;9~[1;5B" resize -v -l +3
+# bindkey  -t "[27;5;9~[1;5C" resize -h -l +5
+# bindkey  -t "[27;5;9~[1;5D" resize -h -l -5
+# bindkey  -t "[27;5;9~[27;5;9~" other
+
+caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
+windowlist string "%?%F%{= gW}%:%{ Wb}%?%4n %t%=%f"
+
+#defmousetrack on
+term screen-256color
+termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo rosaterm 'Co#256:pa#32767:'
