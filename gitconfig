@@ -1,0 +1,11 @@
+[user]
+	email = myoga.murase@gmail.com
+	name = Koichi Murase
+[core]
+	editor = emacs -nw
+	excludesfile = /home/murase/.gitignore
+	quotepath = false
+[color]
+	ui = auto
+[push]
+	default = simple

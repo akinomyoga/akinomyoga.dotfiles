@@ -60,3 +60,5 @@ command:link-dotfile bashrc ~/.bashrc
 command:link-dotfile emacs ~/.emacs
 command:link-dotfile screenrc ~/.screenrc
 command:link-dotfile blerc ~/.blerc
+command:link-dotfile gitconfig ~/.gitconfig
+command:link-dotfile gitignore ~/.gitignore
