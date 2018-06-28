@@ -4,6 +4,9 @@
 function is-known-file {
   local -a known_hash
   known_hash=(
+    # bash_logout
+    2584c4ba8b0d2a52d94023f420b7e356a1b1a3f2291ad5eba06683d58c48570d
+
     # screenrc
     a73072ecac6513802f7a53fc4315ba38175a0fbde563b9f52b73681c5d13a023
     4d82d10eb5646d1375ad8a92817e2750d497e927ffdd1256be5429cbf658e751

@@ -72,7 +72,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   source "$_dotfiles_mshex_path"/shrc/bashrc_common.sh
   if [[ $- == *i* ]]; then
     case ${HOSTNAME%%.*} in
-    (padparadscha)
+    (padparadscha|chatoyancy)
       if [[ $TTYREC ]]; then
         PS1=$'[\e[4;38;5;202mfoo@bar\e[m \\j \\W]\\$ '
       elif [[ "$TERM" == rosaterm || "$TERM" == *-256color ]]; then
@@ -120,6 +120,14 @@ if [[ $_dotfiles_mshex_path ]]; then
 
     export TEXMFHOME="$HOME/.local/share/texmf"
     #export TERMPATH="$HOME/.mwg/terminfo/rosaterm.tc:${TERMPATH:-$HOME/.termcap:/etc/termcap}"
+  }
+
+  function dotfiles/setup-path:chatoyancy {
+    PATH.prepend -v C_INCLUDE_PATH     "$HOME/local/include" # /usr/local/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH "$HOME/local/include" # /usr/local/include
+    PATH.prepend -v LIBRARY_PATH       "$HOME/local/lib"     # /usr/local/lib
+    PATH.prepend -v LD_LIBRARY_PATH    "$HOME/local/lib"     # /usr/local/lib
+    PATH.prepend -v PKG_CONFIG_PATH    "$HOME/local/lib/pkgconfig" # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
   }
 
   function dotfiles/setup-path:vaio2016 {
