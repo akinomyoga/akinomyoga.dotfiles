@@ -54,6 +54,7 @@ maptimeout 1
 # bindkey  -t "[27;5;9~[27;5;9~" other
 
 caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
+#windowlist string "%?%F%{= bW}%:%{ WK}%?%4n %t%=%f"
 windowlist string "%?%F%{= gW}%:%{ Wb}%?%4n %t%=%f"
 
 #defmousetrack on

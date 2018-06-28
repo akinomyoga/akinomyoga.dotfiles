@@ -5,6 +5,7 @@ function is-known-file {
   local -a known_hash
   known_hash=(
     # screenrc
+    a73072ecac6513802f7a53fc4315ba38175a0fbde563b9f52b73681c5d13a023
     4d82d10eb5646d1375ad8a92817e2750d497e927ffdd1256be5429cbf658e751
 
     # emacs
@@ -58,3 +59,4 @@ function command:link-dotfile {
 command:link-dotfile bashrc ~/.bashrc
 command:link-dotfile emacs ~/.emacs
 command:link-dotfile screenrc ~/.screenrc
+command:link-dotfile blerc ~/.blerc

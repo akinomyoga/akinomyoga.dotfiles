@@ -1,5 +1,20 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+case ${HOSTNAME%%.*} in
+(padparadscha)
+  # Source global definitions
+  if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+  fi
+
+  # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
+  #   source /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh
+  # fi
+  if [[ -f /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh ]]; then
+    source /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh
+  fi ;;
+esac
+
 umask 022
 
 #------------------------------------------------------------------------------
@@ -25,12 +40,15 @@ function dotfiles/find-blesh-path {
 
 dotfiles/find-blesh-path
 
+# for debugging ble.sh
+
+#_dotfiles_blesh_path=~/prog/ble/ble.sh
+#_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
+#bleopt_suppress_bash_output=
+
 if [[ ! $NOBLE && -s $_dotfiles_blesh_path && $- == *i* ]]; then
   bleopt_char_width_mode=emacs
-  if source "$_dotfiles_blesh_path" --noattach; then
-    bleopt indent_offset=2
-    bleopt decode_isolated_esc=esc
-  fi
+  source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
 fi
 
 #------------------------------------------------------------------------------
@@ -54,6 +72,14 @@ if [[ $_dotfiles_mshex_path ]]; then
   source "$_dotfiles_mshex_path"/shrc/bashrc_common.sh
   if [[ $- == *i* ]]; then
     case ${HOSTNAME%%.*} in
+    (padparadscha)
+      if [[ $TTYREC ]]; then
+        PS1=$'[\e[4;38;5;202mfoo@bar\e[m \\j \\W]\\$ '
+      elif [[ "$TERM" == rosaterm || "$TERM" == *-256color ]]; then
+        mshex/set-prompt $'\e[4;38;5;202m' $'\e[m'
+      else
+        mshex/set-prompt $'\e[4m' $'\e[m'
+      fi ;;
     (vaio2016) mshex/set-prompt '\e[31m' '\e[m' ;;
     (dyna2018) mshex/set-prompt '\e[32m' '\e[m' ;;
     (*)        mshex/set-prompt '\e[m' '\e[m' ;;
@@ -62,6 +88,10 @@ if [[ $_dotfiles_mshex_path ]]; then
     mwg_cdhist_config_BubbleHist=1
   fi
 
+  #----------------------------------------------------------------------------
+  # others
+
+  source "$_dotfiles_mshex_path"/shrc/less.sh
   [[ $OSTYPE == cygwin ]] &&
     source "$_dotfiles_mshex_path"/shrc/bashrc_cygwin.sh
 
@@ -72,6 +102,23 @@ if [[ $_dotfiles_mshex_path ]]; then
   PATH.prepend /usr/local/sbin:/usr/sbin
   PATH.prepend /usr/local/bin:/usr/bin:/bin
   PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
+
+  function dotfiles/setup-path:padparadscha {
+    PATH.prepend -v C_INCLUDE_PATH     ~/local/include # /usr/local/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/local/include # /usr/local/include
+    PATH.prepend -v LIBRARY_PATH       ~/local/lib     # /usr/local/lib
+    PATH.prepend -v LD_LIBRARY_PATH    ~/local/lib     # /usr/local/lib
+    PATH.prepend -v PKG_CONFIG_PATH    ~/local/lib/pkgconfig # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
+
+    # libmwg, libkashiwa
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/libmwg-201509/include{/i686-pc-linux-gnu-gcc-6.3.1+cxx98-debug,}
+    PATH.prepend -v LIBRARY_PATH       ~/opt/libmwg-201509/lib/i686-pc-linux-gnu-gcc-6.3.1+cxx98-debug
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/work/libkashiwa/src
+    PATH.prepend -v LIBRARY_PATH       ~/work/libkashiwa/out
+
+    export TEXMFHOME="$HOME/.local/share/texmf"
+    #export TERMPATH="$HOME/.mwg/terminfo/rosaterm.tc:${TERMPATH:-$HOME/.termcap:/etc/termcap}"
+  }
 
   function dotfiles/setup-path:vaio2016 {
     # libmwg/libkashiwa
@@ -107,6 +154,33 @@ if [[ $_dotfiles_mshex_path ]]; then
   fi
 fi
 
+if [[ $- == *i* ]]; then
+  if [[ $OSTYPE == linux-gnu ]]; then
+    alias p='ps uaxf'
+    alias ls='ls --color=auto'
+  fi
+
+  type -t colored &>/dev/null &&
+    alias diff='colored -F diff'
+
+  case ${HOSTNAME%%.*} in
+  (padparadscha)
+
+    #
+    # start_bg
+    #
+    function dotfiles/start_bg {
+      [[ ! $STY && $SSH_CONNECTION ]] || return 0
+
+      local rex='^127\.0\.0\.1 |^192\.168\.0\.'
+      [[ $SSH_CONNECTION =~ $rex ]] && return 0
+
+      "$HOME/.mwg/start_bg" 20 &
+      disown
+    }
+    dotfiles/start_bg
+  esac
+fi
 #------------------------------------------------------------------------------
 
 (($_ble_bash)) && ble-attach

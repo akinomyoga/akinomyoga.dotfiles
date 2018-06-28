@@ -1,0 +1,60 @@
+# blerc -*- mode: sh; mode: sh-bash -*-
+
+# Settings for ble.sh (https://github.com/akinomyoga/ble.sh)
+
+#bleopt_suppress_bash_output=
+
+set -o vi
+bleopt char_width_mode=emacs
+bleopt indent_offset=2
+bleopt stackdump_enabled=1
+bleopt decode_isolated_esc=esc
+
+ble/array#push _ble_keymap_vi_load_hook blerc/vim-load-hook
+function blerc/vim-load-hook {
+  bind 'set keyseq-timeout 1'
+
+  # bleopt term_vi_nmap="${_ble_term_Ss//@1/2}"
+  # bleopt term_vi_imap="${_ble_term_Ss//@1/5}"
+  # bleopt term_vi_omap="${_ble_term_Ss//@1/4}"
+  # bleopt term_vi_xmap="${_ble_term_Ss//@1/2}"
+  # bleopt term_vi_cmap="${_ble_term_Ss//@1/0}"
+  [[ $TERM != rosaterm ]] && _ble_term_Ss=$'\e[@1 q'
+  bleopt keymap_vi_nmap_cursor=2
+  bleopt keymap_vi_imap_cursor=5
+  bleopt keymap_vi_omap_cursor=4
+  bleopt keymap_vi_xmap_cursor=2
+  bleopt keymap_vi_cmap_cursor=0
+
+  source "$_ble_base/lib/vim-surround.sh"
+  bleopt vim_surround_q:=\'
+  bleopt vim_surround_Q:=\"
+
+  # C-w
+  ble-bind -f 'C-w'      'kill-region-or uword'
+  ble-bind -m vi_cmap -f 'C-w' 'kill-region-or uword'
+
+  # key bindings with Meta
+  ble-bind -f 'M-SP'      set-mark
+  ble-bind -f 'M-w'       'copy-region-or uword'
+  ble-bind -f 'M-\'       delete-horizontal-space
+
+  ble-bind -f 'M-right'   '@nomarked forward-sword'
+  ble-bind -f 'M-left'    '@nomarked backward-sword'
+  ble-bind -f 'S-M-right' '@marked forward-sword'
+  ble-bind -f 'S-M-left'  '@marked backward-sword'
+  ble-bind -f 'M-d'       'kill-forward-cword'
+  ble-bind -f 'M-h'       'kill-backward-cword'
+  ble-bind -f 'M-delete'  copy-forward-sword
+  ble-bind -f 'M-DEL'     copy-backward-sword
+
+  ble-bind -f 'M-f'       '@nomarked forward-cword'
+  ble-bind -f 'M-b'       '@nomarked backward-cword'
+  ble-bind -f 'M-F'       '@marked forward-cword'
+  ble-bind -f 'M-B'       '@marked backward-cword'
+
+  ble-bind -f 'M-m'       '@nomarked beginning-of-line'
+  ble-bind -f 'S-M-m'     '@marked beginning-of-line'
+
+  source ~/prog/ble/keymap/vi_test.sh
+}
