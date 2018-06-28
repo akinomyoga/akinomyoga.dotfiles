@@ -103,6 +103,8 @@ if [[ $_dotfiles_mshex_path ]]; then
   PATH.prepend /usr/local/bin:/usr/bin:/bin
   PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
 
+  PATH.append -v MANPATH /usr/share/man:/usr/local/man
+
   function dotfiles/setup-path:padparadscha {
     PATH.prepend -v C_INCLUDE_PATH     ~/local/include # /usr/local/include
     PATH.prepend -v CPLUS_INCLUDE_PATH ~/local/include # /usr/local/include
