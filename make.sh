@@ -63,3 +63,5 @@ command:link-dotfile screenrc ~/.screenrc
 command:link-dotfile blerc ~/.blerc
 command:link-dotfile gitconfig ~/.gitconfig
 command:link-dotfile gitignore ~/.gitignore
+command:link-dotfile aspell.conf ~/.aspell.conf
+command:link-dotfile aspell.en.pws ~/.aspell.en.pws
