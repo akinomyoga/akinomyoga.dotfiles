@@ -28,7 +28,7 @@ function is-known-file {
     # aspell.conf
     350c552dea4bc158e82506936727382f58b0178394afa327e08334e41dd7aa2c
   )
-  IFS=$'\n' eval 'local rex="${known_hash[*]/#/\^}"'
+  IFS=$'\n' eval 'local rex="${known_hash[*]/#/^}"'
   sha256sum "$file" | grep "$rex" &>/dev/null
 }
 
@@ -41,7 +41,7 @@ function command:link-dotfile {
   fi
 
 
-  if [[ -h $dst ]]; then
+  if [[ -h $dst && -s $dst ]]; then
     # seems to be already installed
     return
   elif [[ -d $dst ]]; then
