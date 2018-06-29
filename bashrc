@@ -13,6 +13,15 @@ case ${HOSTNAME%%.*} in
   if [[ -f /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh ]]; then
     source /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh
   fi ;;
+
+(laguerre*)
+  # Source global definitions
+  if [[ ! $LSF_LIBDIR && -f /etc/profile.local ]]; then
+    source /etc/profile.local &>/dev/null
+  fi
+  source /etc/bashrc &>/dev/null
+  source ~/.bashrc_default ;;
+
 esac
 
 umask 022
@@ -162,8 +171,58 @@ if [[ $_dotfiles_mshex_path ]]; then
       "$windir/Microsoft.NET/Framework/v4.0.30319"
   }
 
+  function dotfiles/setup-path:laguerre {
+    # default paths
+    PATH.prepend -v PKG_CONFIG_PATH \
+                 /usr/local/lib/pkgconfig \
+                 /usr/local/share/pkgconfig \
+                 /usr/lib/pkgconfig \
+                 /usr/share/lib/pkgconfig
+    PATH.prepend -v MANPATH \
+                 /opt/intel/man \
+                 /usr/local/share/man \
+                 /usr/share/man
+
+    PATH.prepend -v PKG_CONFIG_PATH ~/local/lib/pkgconfig
+    PATH.prepend -v MANPATH ~/local
+    PATH.prepend -v LD_LIBRARY_PATH \
+                 ~/opt/gcc/7.1.0/lib64 ~/opt/gcc/7.1.0/lib \
+                 ~/opt/gcc/5.1.0/lib64 ~/opt/gcc/5.1.0/lib \
+                 ~/opt/gcc/4.8.3/lib64 ~/opt/gcc/4.8.3/lib \
+                 /usr/lib64 /usr/lib
+
+    # for hydrojet
+    PATH.prepend -v INCLUDE_PATH ~/local/include
+    PATH.prepend -v LIBRARY_PATH ~/local/lib
+    PATH.prepend -v LD_LIBRARY_PATH ~/local/lib
+    PATH.prepend -v LD_AOUT_LIBRARY_PATH ~/local/lib
+
+    # for own libraries
+    PATH.prepend -v CPLUS_INCLUDE_PATH \
+                 ~/prog/libkashiwa/src \
+                 ~/opt/libmwg-201705/include/x86_64-unknown-linux-gnu-icc-13.1.3+default \
+                 ~/opt/libmwg-201705/include \
+                 ~/local/include \
+                 ~/local/include/laguerre01-icc
+    PATH.prepend -v LIBRARY_PATH \
+                 ~/prog/libkashiwa/out \
+                 ~/opt/libmwg-201705/lib/x86_64-unknown-linux-gnu-icc-13.1.3+default \
+                 ~/local/lib
+
+    # glib 2.53
+    PATH.prepend -v LD_LIBRARY_PATH \
+                 ~/opt/glib/2.53/lib
+    PATH.prepend -v PKG_CONFIG_PATH \
+                 ~/opt/glib/2.53/lib/pkgconfig
+
+    # for lava
+    PATH.prepend -v LD_LIBRARY_PATH "$LSF_LIBDIR"
+  }
+
   if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
     dotfiles/setup-path:"${HOSTNAME%%.*}"
+  elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
+    dotfiles/setup-path:laguerre
   fi
 fi
 
@@ -191,7 +250,32 @@ if [[ $- == *i* ]]; then
       "$HOME/.mwg/start_bg" 20 &
       disown
     }
-    dotfiles/start_bg
+    dotfiles/start_bg ;;
+
+  (laguerre*)
+    mshex/set-prompt $'\e[38;5;125m' $'\e[m'
+
+    alias bj='bjobs -u all'
+    alias last='last | grep -v "^ohtsuki .* (00:0[01])"'
+
+    function + {
+      # copy&exec to permit editting the original file while execution
+      if [[ -f  $1 ]]; then
+        local _base=./+.$(date +%Y%m%d).tmp _i=1
+        while
+          local _tmpname=$_base$((_i++))
+          [[ -e $_tmpname ]]
+        do :; done
+        /bin/cp "$1" "$_tmpname"
+        shift
+        "$_tmpname" "$@"
+        local _ret="$?"
+        /bin/rm -f "$_tmpname"
+        return "$_ret"
+      fi
+      
+      "$@"
+    } ;;
   esac
 fi
 #------------------------------------------------------------------------------

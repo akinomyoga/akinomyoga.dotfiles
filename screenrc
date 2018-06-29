@@ -62,3 +62,11 @@ term screen-256color
 termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
 termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
 termcapinfo rosaterm 'Co#256:pa#32767:'
+
+# multiuser on
+acladd hirono
+aclchg hirono +r-wx "#?"
+aclchg hirono +x "prev,next,select,detach"
+
+# multiuser on した後に、
+# /home/murase/local/bin/screen -r -x murase/sessionname としてもらう。

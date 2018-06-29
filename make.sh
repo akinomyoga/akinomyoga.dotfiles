@@ -17,6 +17,7 @@ function is-known-file {
 
     # gitconfig
     8634a13e65b96f9869459ca709b746e4e6b5986b13bfc8491d162efc5dbd4b84
+    b0a91a1be630d4b55e0dc6fd277936ca53b8d517c4b094076cf6cb013a791835
 
     # gitignore
     8e712bf84f7a596e96651d281812dfa6a740d9f819ddf968dfe7f864b51f67d5

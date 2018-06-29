@@ -18,6 +18,8 @@
 (put 'narrow-to-region 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 
+(setq inhibit-startup-message t)
+
 (custom-set-variables
  '(safe-local-variable-values
    (quote
@@ -174,7 +176,37 @@
 ;;         clang-completion-flags '("-std=c++11" "-w" "-ferror-limit" "1")
 ;;         clang-completion-suppress-error t)
 ;;   (setq ac-sources (append '(ac-source-clang-complete) ac-sources)))
+;;
+;; ;; laguerre に於ける設定
+;; (defun my-ac-cc-mode-clang-setup ()
+;;   (require 'auto-complete-clang)
+;;   (setq clang-completion-pch "/home/murase/.emacs.d/lisp/auto-complete-clang.pch"
+;;         clang-completion-flags '("-std=c++11" "--gcc-toolchain=/home/murase/opt/gcc/4.8.3"
+;;                                  "-w" )
+;;         ;; "-ferror-limit" "1" このオプションはあると×
+;;         clang-completion-suppress-error t)
+;;   (setq ac-sources (append '(ac-source-clang-complete) ac-sources)))
+;;
 ;; (add-hook 'c++-mode-hook 'my-ac-cc-mode-clang-setup)
+
+;;-----------------------------------------------------------------------------
+;; laguerre の既定の設定
+
+;; ;; enable visual feedback on selections
+;; ;(setq transient-mark-mode t)
+
+;; ;; default to better frame titles
+;; (setq frame-title-format
+;;       (concat  "%b - emacs@" (system-name)))
+
+;; ;; default to unified diffs
+;; (setq diff-switches "-u")
+
+;; ;; always end a file with a newline
+;; ;(setq require-final-newline 'query)
+
+;; ;;; uncomment for CJK utf-8 support for non-Asian users
+;; ;; (require 'un-define)
 
 ;;-----------------------------------------------------------------------------
 ;; 日本語入力の設定
