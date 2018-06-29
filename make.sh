@@ -2,6 +2,7 @@
 
 # 既知の古い設定ファイルの場合はバックアップしなくて良い
 function is-known-file {
+  local file=$1
   local -a known_hash
   known_hash=(
     # bash_logout
@@ -18,6 +19,7 @@ function is-known-file {
     # gitconfig
     8634a13e65b96f9869459ca709b746e4e6b5986b13bfc8491d162efc5dbd4b84
     b0a91a1be630d4b55e0dc6fd277936ca53b8d517c4b094076cf6cb013a791835
+    52f60887d3d0868b6069904d0a83f2853a020bd848efe28c4c83f607eeb75d47
 
     # gitignore
     8e712bf84f7a596e96651d281812dfa6a740d9f819ddf968dfe7f864b51f67d5
@@ -27,7 +29,7 @@ function is-known-file {
     350c552dea4bc158e82506936727382f58b0178394afa327e08334e41dd7aa2c
   )
   IFS=$'\n' eval 'local rex="${known_hash[*]/#/\^}"'
-  sha256sum "$dst" | grep "$rex" &>/dev/null
+  sha256sum "$file" | grep "$rex" &>/dev/null
 }
 
 function command:link-dotfile {
@@ -47,7 +49,7 @@ function command:link-dotfile {
     return 1
   else
     if [[ -s $dst ]]; then
-      if is-known-file; then
+      if is-known-file "$dst"; then
         echo "make.sh: existing file '$dst' has known contents, so it will be overwritten." >&2
       else
         local dstbk=${dst}.old i=0

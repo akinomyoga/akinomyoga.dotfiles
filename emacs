@@ -31,6 +31,7 @@
 ;;-----------------------------------------------------------------------------
 ;; mwg.el (https://github.com/akinomyoga/myemacs)
 
+(load "cc-mode") ;; somehow this is needed in neumann
 (load "mwg")
 (mwg-init-tabwidth 2)
 (mwg-init-pcmark)

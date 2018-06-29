@@ -93,6 +93,8 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt '\e[32m' '\e[m' ;;
     (vaio2016|dyna2018)
       mshex/set-prompt '\e[31m' '\e[m' ;;
+    (laguerre*|neumann)
+      mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
     esac
@@ -117,12 +119,16 @@ if [[ $_dotfiles_mshex_path ]]; then
 
   PATH.append -v MANPATH /usr/share/man:/usr/local/man
 
-  function dotfiles/setup-path:padparadscha {
+  function dotfiles/setup-path-local {
     PATH.prepend -v C_INCLUDE_PATH     ~/local/include # /usr/local/include
     PATH.prepend -v CPLUS_INCLUDE_PATH ~/local/include # /usr/local/include
     PATH.prepend -v LIBRARY_PATH       ~/local/lib     # /usr/local/lib
     PATH.prepend -v LD_LIBRARY_PATH    ~/local/lib     # /usr/local/lib
     PATH.prepend -v PKG_CONFIG_PATH    ~/local/lib/pkgconfig # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
+  }
+
+  function dotfiles/setup-path:padparadscha {
+    dotfiles/setup-path-local
 
     # libmwg, libkashiwa
     PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/libmwg-201509/include{/i686-pc-linux-gnu-gcc-6.3.1+cxx98-debug,}
@@ -135,11 +141,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   }
 
   function dotfiles/setup-path:chatoyancy {
-    PATH.prepend -v C_INCLUDE_PATH     "$HOME/local/include" # /usr/local/include
-    PATH.prepend -v CPLUS_INCLUDE_PATH "$HOME/local/include" # /usr/local/include
-    PATH.prepend -v LIBRARY_PATH       "$HOME/local/lib"     # /usr/local/lib
-    PATH.prepend -v LD_LIBRARY_PATH    "$HOME/local/lib"     # /usr/local/lib
-    PATH.prepend -v PKG_CONFIG_PATH    "$HOME/local/lib/pkgconfig" # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
+    dotfiles/setup-path-local
   }
 
   function dotfiles/setup-path:vaio2016 {
@@ -192,9 +194,9 @@ if [[ $_dotfiles_mshex_path ]]; then
                  /usr/lib64 /usr/lib
 
     # for hydrojet
-    PATH.prepend -v INCLUDE_PATH ~/local/include
-    PATH.prepend -v LIBRARY_PATH ~/local/lib
-    PATH.prepend -v LD_LIBRARY_PATH ~/local/lib
+    PATH.prepend -v INCLUDE_PATH         ~/local/include
+    PATH.prepend -v LIBRARY_PATH         ~/local/lib
+    PATH.prepend -v LD_LIBRARY_PATH      ~/local/lib
     PATH.prepend -v LD_AOUT_LIBRARY_PATH ~/local/lib
 
     # for own libraries
@@ -217,6 +219,10 @@ if [[ $_dotfiles_mshex_path ]]; then
 
     # for lava
     PATH.prepend -v LD_LIBRARY_PATH "$LSF_LIBDIR"
+  }
+
+  function dotfiles/setup-path:neumann {
+    dotfiles/setup-path-local
   }
 
   if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
@@ -253,8 +259,6 @@ if [[ $- == *i* ]]; then
     dotfiles/start_bg ;;
 
   (laguerre*)
-    mshex/set-prompt $'\e[38;5;125m' $'\e[m'
-
     alias bj='bjobs -u all'
     alias last='last | grep -v "^ohtsuki .* (00:0[01])"'
 
