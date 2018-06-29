@@ -200,8 +200,8 @@
 ;; (setq frame-title-format
 ;;       (concat  "%b - emacs@" (system-name)))
 
-;; ;; default to unified diffs
-;; (setq diff-switches "-u")
+;; default to unified diffs
+(setq diff-switches "-u")
 
 ;; ;; always end a file with a newline
 ;; ;(setq require-final-newline 'query)

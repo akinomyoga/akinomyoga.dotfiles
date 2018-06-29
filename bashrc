@@ -93,7 +93,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt '\e[32m' '\e[m' ;;
     (vaio2016|dyna2018)
       mshex/set-prompt '\e[31m' '\e[m' ;;
-    (laguerre*|neumann)
+    (laguerre*|neumann|mathieu)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
@@ -225,6 +225,29 @@ if [[ $_dotfiles_mshex_path ]]; then
     dotfiles/setup-path-local
   }
 
+  function dotfiles/setup-path:mathieu {
+    # ~/opt/ncurses-6.0
+    PATH.prepend -v C_INCLUDE_PATH ~/opt/ncurses-6.0/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/ncurses-6.0/include
+    PATH.prepend -v LIBRARY_PATH ~/opt/ncurses-6.0/lib
+
+    # ~/opt/xz-5.2.3
+    PATH.prepend -v C_INCLUDE_PATH ~/opt/xz-5.2.3/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/xz-5.2.3/include
+    PATH.prepend -v LIBRARY_PATH ~/opt/xz-5.2.3/lib
+    PATH.prepend -v LD_LIBRARY_PATH ~/opt/xz-5.2.3/lib
+
+    # ~/opt/zlib-1.2.1
+    PATH.prepend -v C_INCLUDE_PATH ~/opt/zlib-1.2.1/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/zlib-1.2.1/include
+    PATH.prepend -v LIBRARY_PATH ~/opt/zlib-1.2.1/lib
+    PATH.prepend -v LD_LIBRARY_PATH ~/opt/zlib-1.2.1/lib
+
+    # ~/opt/libmwg-20170609
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/libmwg-20170609/include
+    PATH.prepend -v LIBRARY_PATH ~/opt/libmwg-20170609/lib
+  }
+
   if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
     dotfiles/setup-path:"${HOSTNAME%%.*}"
   elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
@@ -243,7 +266,6 @@ if [[ $- == *i* ]]; then
 
   case ${HOSTNAME%%.*} in
   (padparadscha)
-
     #
     # start_bg
     #
