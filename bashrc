@@ -78,37 +78,6 @@ function dotfiles/find-mshex-path {
 dotfiles/find-mshex-path
 
 if [[ $_dotfiles_mshex_path ]]; then
-  source "$_dotfiles_mshex_path"/shrc/bashrc_common.sh
-  if [[ $- == *i* ]]; then
-    case ${HOSTNAME%%.*} in
-    (padparadscha|chatoyancy)
-      if [[ $TTYREC ]]; then
-        PS1=$'[\e[4;38;5;202mfoo@bar\e[m \\j \\W]\\$ '
-      elif [[ "$TERM" == rosaterm || "$TERM" == *-256color ]]; then
-        mshex/set-prompt $'\e[4;38;5;202m' $'\e[m'
-      else
-        mshex/set-prompt $'\e[4m' $'\e[m'
-      fi ;;
-    (magnate2016|gauge)
-      mshex/set-prompt '\e[32m' '\e[m' ;;
-    (vaio2016|dyna2018)
-      mshex/set-prompt '\e[31m' '\e[m' ;;
-    (laguerre*|neumann|mathieu)
-      mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
-    (*)
-      mshex/set-prompt '\e[m'   '\e[m' ;;
-    esac
-
-    mwg_cdhist_config_BubbleHist=1
-  fi
-
-  #----------------------------------------------------------------------------
-  # others
-
-  source "$_dotfiles_mshex_path"/shrc/less.sh
-  [[ $OSTYPE == cygwin ]] &&
-    source "$_dotfiles_mshex_path"/shrc/bashrc_cygwin.sh
-
   #----------------------------------------------------------------------------
   # setup path
 
@@ -253,6 +222,41 @@ if [[ $_dotfiles_mshex_path ]]; then
   elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
     dotfiles/setup-path:laguerre
   fi
+
+  #----------------------------------------------------------------------------
+  # mshex/bashrc_common
+
+  # 中で alias の設定を行う時に参照するので PATH よりも後
+  source "$_dotfiles_mshex_path"/shrc/bashrc_common.sh
+  if [[ $- == *i* ]]; then
+    case ${HOSTNAME%%.*} in
+    (padparadscha|chatoyancy)
+      if [[ $TTYREC ]]; then
+        PS1=$'[\e[4;38;5;202mfoo@bar\e[m \\j \\W]\\$ '
+      elif [[ "$TERM" == rosaterm || "$TERM" == *-256color ]]; then
+        mshex/set-prompt $'\e[4;38;5;202m' $'\e[m'
+      else
+        mshex/set-prompt $'\e[4m' $'\e[m'
+      fi ;;
+    (magnate2016|gauge)
+      mshex/set-prompt '\e[32m' '\e[m' ;;
+    (vaio2016|dyna2018)
+      mshex/set-prompt '\e[31m' '\e[m' ;;
+    (laguerre*|neumann|mathieu)
+      mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
+    (*)
+      mshex/set-prompt '\e[m'   '\e[m' ;;
+    esac
+
+    mwg_cdhist_config_BubbleHist=1
+  fi
+
+  #----------------------------------------------------------------------------
+  # others
+
+  source "$_dotfiles_mshex_path"/shrc/less.sh
+  [[ $OSTYPE == cygwin ]] &&
+    source "$_dotfiles_mshex_path"/shrc/bashrc_cygwin.sh
 fi
 
 if [[ $- == *i* ]]; then
