@@ -256,14 +256,6 @@ if [[ $_dotfiles_mshex_path ]]; then
 fi
 
 if [[ $- == *i* ]]; then
-  if [[ $OSTYPE == linux-gnu ]]; then
-    alias p='ps uaxf'
-    alias ls='ls --color=auto'
-  fi
-
-  type -t colored &>/dev/null &&
-    alias diff='colored -F diff'
-
   case ${HOSTNAME%%.*} in
   (padparadscha)
     #
