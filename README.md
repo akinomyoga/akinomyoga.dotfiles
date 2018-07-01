@@ -11,7 +11,7 @@ dotfiles - my settings for actual hosts
 ### Optional
 
 - source-highlight
-- akinomyoga/colored
+- [akinomyoga/colored](https://github.com/akinomyoga/colored.git) - colored `ls`, `diff`
 - [akinomyoga/psforest](https://github.com/akinomyoga/psforest.git) - `ps` with process tree graph
 
 ## Download
