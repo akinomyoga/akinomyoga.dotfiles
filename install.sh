@@ -193,47 +193,35 @@ function install.user-dirs {
   ' "$HOME/.config/user-dirs.dirs"
 }
 
+function install.dotfiles {
+  ( mkcd "$MWGDIR/src" &&
+      myset/update-git akinomyoga.dotfiles https://github.com/akinomyoga/akinomyoga.dotfiles.git &&
+      make install )
+}
+
 function install.mshex {
   ( mkcd "$MWGDIR/src" &&
       myset/update-git mshex https://github.com/akinomyoga/mshex.git &&
       make install )
 }
 
-function install.modls {
-  local tar="$PWD/pkg/modls.tar.xz"
+function install.colored {
   ( mkcd "$MWGDIR/src" &&
-      tar xJvf "$tar" &&
-      cd modls &&
-      make all &&
+      myset/update-git colored https://github.com/akinomyoga/colored.git &&
       make install )
 }
 
 function install.screen {
-  local tar="$PWD/pkg/screen-4.3.1.tar.xz"
+  local url=https://github.com/akinomyoga/screen/releases/download/myoga%2Fv4.6.2/screen-4.6.2.tar.xz
   ( mkcd "$MWGDIR/src" &&
-      tar xJvf "$tar" &&
-      cd screen-4.3.1 &&
-      if [[ $OSTYPE == cygwin ]]; then
-        CC=/usr/bin/gcc ./configure --prefix="$HOME"/local --enable-colors256 --enable-ut_time
-      else
-        ./configure --prefix="$HOME"/local --enable-colors256
-      fi &&
+      wget "$url" &&
+      tar xJvf "${url##*/}" &&
+      cd screen-4.6.2 &&
+      ./configure --prefix="$HOME"/local --enable-colors256 &&
       make all &&
-      make install ) &&
-    updaterc screenrc "$HOME/.screenrc"
+      make install )
 }
-function install.git {
-  git config --global core.editor 'emacs -nw'
-  git config --global push.default simple
-  git config --global core.quotepath false # 日本語ファイル名を表示するため
-  updaterc gitignore "$HOME/.gitignore" &&
-    git config --global core.excludesfile $HOME/.gitignore
 
-  if [[ $USER == murase || $USER == koichi ]]; then
-    git config --global user.name 'Koichi Murase'
-    git config --global user.email myoga.murase@gmail.com
-  fi
-}
 function install.github {
   # create ~/.ssh/config
   local fconfig=~/.ssh/config
@@ -275,8 +263,7 @@ function install.mwgpp {
 function install.myemacs {
   ( mkcd "$MWGDIR/src" &&
       myset/update-git myemacs https://github.com/akinomyoga/myemacs.git &&
-      make package-install install &&
-      updaterc emacs.new "$HOME/.emacs" "$HOME/.emacs.new" )
+      make package-install install )
 }
 
 function install.ble {
