@@ -43,7 +43,6 @@ function command:link-dotfile {
     return 1
   fi
 
-
   if [[ -h $dst && -s $dst ]]; then
     # seems to be already installed
     return
