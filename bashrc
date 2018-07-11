@@ -276,6 +276,32 @@ if [[ $- == *i* ]]; then
     }
     dotfiles/start_bg ;;
 
+  (chatoyancy)
+    function dotfiles/ps_pta {
+      ps -u "$USER" -o pid,tty,args | tail -n +2 | awk '{ if ($2 == "??") $2 = "-"; print }'
+    }
+
+    function dotfiles/start_bg {
+      local interval=${1:-60}
+
+      [[ ! $STY && $SSH_CONNECTION ]] || return 0
+      # [[ $TERM != cygwin ]] && return 0
+
+      local rex='^127\.0\.0\.1 |^192\.168\.0\.'
+      [[ $SSH_CONNECTION =~ $rex ]] && return 0
+
+      tty=$(dotfiles/ps_pta | awk '$1 == '"$$"' { print $2; }')
+      [[ $tty == '-' ]] && return 0
+
+      pid=$(dotfiles/ps_pta a | grep '[s]tart_bg' | awk '$2 == "'$tty'" { print $1; }')
+      [[ ! $pid ]] && return 0
+
+      #echo "dotfiles/start_bg ($$): $tty $pid" >> ~/a.txt
+      ( while sleep "$interval"; do echo -n $'\005'; done ) &
+      disown
+    }
+    dotfiles/start_bg 20 ;;
+
   (laguerre*)
     alias bj='bjobs -u all'
     alias last='last | grep -v "^ohtsuki .* (00:0[01])"'
