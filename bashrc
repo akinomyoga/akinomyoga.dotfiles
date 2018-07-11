@@ -260,47 +260,51 @@ if [[ $_dotfiles_mshex_path ]]; then
 fi
 
 if [[ $- == *i* ]]; then
+  function dotfiles/heartbeat/ps_ppta {
+    ps -u "$USER" -o pid,ppid,tty,args | tail -n +2 | awk '{ if ($3 == "??") $3 = "-"; print }'
+  }
+
+  function dotfiles/heartbeat/clear {
+    local -a pidlist=$(dotfiles/heartbeat/ps_ppta | awk '/[s]tart_bg/ && $2 ~ /^1$|\?/ {print $1}')
+    [[ $pidlist ]] && kill $pidlist
+    return 0
+  }
+
+  function dotfiles/start_bg {
+    dotfiles/heartbeat/clear
+    local interval=${1:-60}
+
+    [[ ! $STY && $SSH_CONNECTION ]] || return 0
+    # [[ $TERM != cygwin ]] && return 0
+
+    local rex='^127\.0\.0\.1 |^192\.168\.0\.'
+    [[ $SSH_CONNECTION =~ $rex ]] && return 0
+
+    local tty=$(dotfiles/heartbeat/ps_ppta | awk '$1 == '"$$"' {print $3}')
+    [[ $tty != '-' ]] || return 0
+
+    local pid=$(dotfiles/heartbeat/ps_ppta | awk '/[s]tart_bg/ && $3 == "'"$tty"'" {print $1}')
+    [[ ! $pid ]] || return 0
+
+    #echo "dotfiles/start_bg ($$): $tty $pid" >> ~/a.txt
+    bash -c "while sleep $interval; do echo -n \$'\005'; done # tag: start_bg" &
+    disown
+  }
+
+  function dotfiles/close_bg {
+    dotfiles/heartbeat/clear
+    local tty=$(dotfiles/heartbeat/ps_ppta | awk '$1 == '"$$"' {print $3}')
+    local pid=$(dotfiles/heartbeat/ps_ppta | awk '/[s]tart_bg/ && $2 == "'"$$"'" && $3 == "'"$tty"'" {print $1}')
+    [[ $pid ]] && kill $pid
+    return 0
+  }
+
   case ${HOSTNAME%%.*} in
   (padparadscha)
-    #
-    # start_bg
-    #
-    function dotfiles/start_bg {
-      [[ ! $STY && $SSH_CONNECTION ]] || return 0
-
-      local rex='^127\.0\.0\.1 |^192\.168\.0\.'
-      [[ $SSH_CONNECTION =~ $rex ]] && return 0
-
-      "$HOME/.mwg/start_bg" 20 &
-      disown
-    }
-    dotfiles/start_bg ;;
+    dotfiles/start_bg 20 ;;
 
   (chatoyancy)
-    function dotfiles/ps_pta {
-      ps -u "$USER" -o pid,tty,args | tail -n +2 | awk '{ if ($2 == "??") $2 = "-"; print }'
-    }
-
-    function dotfiles/start_bg {
-      local interval=${1:-60}
-
-      [[ ! $STY && $SSH_CONNECTION ]] || return 0
-      # [[ $TERM != cygwin ]] && return 0
-
-      local rex='^127\.0\.0\.1 |^192\.168\.0\.'
-      [[ $SSH_CONNECTION =~ $rex ]] && return 0
-
-      tty=$(dotfiles/ps_pta | awk '$1 == '"$$"' { print $2; }')
-      [[ $tty == '-' ]] && return 0
-
-      pid=$(dotfiles/ps_pta a | grep '[s]tart_bg' | awk '$2 == "'$tty'" { print $1; }')
-      [[ ! $pid ]] && return 0
-
-      #echo "dotfiles/start_bg ($$): $tty $pid" >> ~/a.txt
-      ( while sleep "$interval"; do echo -n $'\005'; done ) &
-      disown
-    }
-    dotfiles/start_bg 20 ;;
+    dotfiles/start_bg 60 ;;
 
   (laguerre*)
     alias bj='bjobs -u all'
