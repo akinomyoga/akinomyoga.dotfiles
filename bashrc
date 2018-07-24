@@ -43,6 +43,7 @@ function dotfiles/find-blesh-path {
   for path in "${candidates[@]}"; do
     if [[ -s $path ]]; then
       _dotfiles_blesh_path=$path
+      break
     fi
   done
 }
@@ -54,7 +55,6 @@ dotfiles/find-blesh-path
 #_dotfiles_blesh_path=~/prog/ble/ble.sh
 #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
 #bleopt_suppress_bash_output=
-
 if [[ ! $NOBLE && -s $_dotfiles_blesh_path && $- == *i* ]]; then
   bleopt_char_width_mode=emacs
   source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
