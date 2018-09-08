@@ -9,6 +9,8 @@ bleopt char_width_mode=emacs
 bleopt indent_offset=2
 bleopt stackdump_enabled=1
 bleopt decode_isolated_esc=esc
+bleopt complete_auto_delay=100
+bind 'set skip-completed-text on'
 
 ble/array#push _ble_keymap_vi_load_hook blerc/vim-load-hook
 function blerc/vim-load-hook {
