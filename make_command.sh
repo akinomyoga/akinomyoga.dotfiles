@@ -35,7 +35,7 @@ function is-known-file {
   sha256sum "$file" | grep "$rex" &>/dev/null
 }
 
-function command:link-dotfile {
+function make/link-dotfile {
   local src=$1
   local dst=$2
   if ! [[ $src && $dst ]]; then
@@ -75,13 +75,32 @@ function command:link-dotfile {
   fi
 }
 
-command:link-dotfile bashrc ~/.bashrc
-command:link-dotfile bash_logout ~/.bash_logout
-command:link-dotfile emacs ~/.emacs
-command:link-dotfile screenrc ~/.screenrc
-command:link-dotfile tmux.conf ~/.tmux.conf
-command:link-dotfile blerc ~/.blerc
-command:link-dotfile gitconfig ~/.gitconfig
-command:link-dotfile gitignore ~/.gitignore
-command:link-dotfile aspell.conf ~/.aspell.conf
-command:link-dotfile aspell.en.pws ~/.aspell.en.pws
+function subcommand:install {
+  make/link-dotfile bashrc ~/.bashrc
+  make/link-dotfile bash_logout ~/.bash_logout
+  make/link-dotfile emacs ~/.emacs
+  make/link-dotfile screenrc ~/.screenrc
+  make/link-dotfile tmux.conf ~/.tmux.conf
+  make/link-dotfile blerc ~/.blerc
+  make/link-dotfile gitconfig ~/.gitconfig
+  make/link-dotfile gitignore ~/.gitignore
+  make/link-dotfile aspell.conf ~/.aspell.conf
+  make/link-dotfile aspell.en.pws ~/.aspell.en.pws
+}
+
+function subcommand:sort-aspell-dictionary {
+  local infile=aspell.en.pws
+  local tmpfile=$infile.part
+  {
+    head -1 "$infile"
+    tail -n +2 "$infile" | sort
+  } > $tmpfile &&
+    mv "$infile" "$infile~" &&
+    mv "$tmpfile" "$infile"
+}
+
+if declare -f subcommand:"$1" &>/dev/null; then
+  subcommand:"$@"
+else
+  exit 1
+fi
