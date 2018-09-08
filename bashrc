@@ -48,16 +48,49 @@ function dotfiles/find-blesh-path {
   done
 }
 
-dotfiles/find-blesh-path
+if [[ ! $NOBLE && $- == *i* ]]; then
+  dotfiles/find-blesh-path
 
-# for debugging ble.sh
+  #
+  # Selection of devel ble.sh
+  #
 
-#_dotfiles_blesh_path=~/prog/ble/ble.sh
-#_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
-#bleopt_suppress_bash_output=
-if [[ ! $NOBLE && -s $_dotfiles_blesh_path && $- == *i* ]]; then
-  bleopt_char_width_mode=emacs
-  source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
+  #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
+  #_dotfiles_blesh_path=~/prog/ble/ble.sh
+  #_dotfiles_blesh_path=~/prog/ble-dev/out/ble.sh
+  #_dotfiles_blesh_path=~/prog/ble-0.1/out/ble.sh
+  #_dotfiles_blesh_path=~/prog/ble-0.2/out/ble.sh
+
+  #
+  # Debug settings
+  #
+  #bleopt_suppress_bash_output=
+
+  [[ -s $_dotfiles_blesh_path ]] &&
+    source "$_dotfiles_blesh_path" --attach=prompt --rcfile ~/.blerc
+
+  # Note: The option "--attach=prompt" is an experimental feature.
+  #   Basically you should use "--noattach" and manual
+  #   "((_ble_bash)) && ble-attach" instead.
+
+  #
+  # Tests for ble.sh
+  #
+
+  if [[ ${HOSTNAME%%.*} == padparadscha ]]; then
+    shopt -s failglob
+    shopt -s checkjobs
+    ble-color-setface syntax_default none
+
+    # if ble/is-function ble/util/idle.push; then
+    #   function bashrc/task/show-time {
+    #     ble/util/idle.sleep 1000
+    #     local ret; printf -v ret '%(%F %T %Z)T'
+    #     ble-edit/info/immediate-show text "$ret"
+    #   }
+    #   ble/util/idle.push-background 'bashrc/task/show-time'
+    # fi
+  fi
 fi
 
 #------------------------------------------------------------------------------
@@ -331,5 +364,3 @@ if [[ $- == *i* ]]; then
   esac
 fi
 #------------------------------------------------------------------------------
-
-((_ble_bash)) && ble-attach
