@@ -1,13 +1,18 @@
-personal_ws-1.1 en 97 
+personal_ws-1.1 en 106 
 Abelian
 Adare
 Baym
+Bjorken
 Brookhaven
+CERN
 Chromo
 EoS
+Eqs
 GeV
 Glauber
 Hirano
+JSPS
+KAKENHI
 Kadanoff
 Kawaguchi
 Koichi
@@ -16,8 +21,10 @@ Kutta
 Langevin
 Lindblom
 MeV
+Minkowski
 Minkowskian
 Murase
+Navier
 PHENIX
 PYTHIA
 QCD
@@ -64,6 +71,7 @@ isothermal
 isotropization
 iteratively
 kenji
+massless
 mesoscopic
 midrapidity
 minima
@@ -93,6 +101,7 @@ sigmoid
 spacetime
 thermalization
 thermalized
+traceless
 translational
 trustable
 unphysical
