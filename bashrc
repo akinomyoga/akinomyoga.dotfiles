@@ -19,6 +19,16 @@ case ${HOSTNAME%%.*} in
     source /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh
   fi ;;
 
+(gell-mann)
+  # Source global definitions
+  if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+  fi
+
+  # Uncomment the following line if you don't like systemctl's auto-paging feature:
+  # export SYSTEMD_PAGER=
+  ;;
+
 (laguerre*)
   # Source global definitions
   if [[ ! $LSF_LIBDIR && -f /etc/profile.local ]]; then
@@ -121,19 +131,41 @@ if [[ $_dotfiles_mshex_path ]]; then
   #----------------------------------------------------------------------------
   # setup path
 
-  source "$_dotfiles_mshex_path"/shrc/path.sh
-  PATH.prepend /usr/local/sbin:/usr/sbin
-  PATH.prepend /usr/local/bin:/usr/bin:/bin
-  PATH.prepend "$HOME/bin:$HOME/.mwg/bin:$HOME/local/bin"
-
-  PATH.append -v MANPATH /usr/share/man:/usr/local/man
-
   function dotfiles/setup-path-local {
     PATH.prepend -v C_INCLUDE_PATH     ~/local/include # /usr/local/include
     PATH.prepend -v CPLUS_INCLUDE_PATH ~/local/include # /usr/local/include
-    PATH.prepend -v LIBRARY_PATH       ~/local/lib     # /usr/local/lib
-    PATH.prepend -v LD_LIBRARY_PATH    ~/local/lib     # /usr/local/lib
-    PATH.prepend -v PKG_CONFIG_PATH    ~/local/lib/pkgconfig # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
+    PATH.prepend -v LIBRARY_PATH       ~/local/lib{,64}     # /usr/local/lib
+    PATH.prepend -v LD_LIBRARY_PATH    ~/local/lib{,64}     # /usr/local/lib
+    PATH.prepend -v PKG_CONFIG_PATH    ~/local/lib{,64}/pkgconfig # /usr/local/lib/pkgconfig:/usr/local/share/pkgconfig:/usr/lib/pkgconfig:/usr/share/lib/pkgconfig
+  }
+  function dotfiles/prepend-binary-path {
+    local prefix=$1
+    [[ -d $prefix/bin ]] &&
+      PATH.prepend "$prefix"/bin
+    [[ -d $prefix/share/man ]] &&
+      PATH.prepend -v MANPATH "$prefix"/share/man
+  }
+  function dotfiles/prepend-runtime-path {
+    local prefix=$1
+    [[ -d $prefix/lib ]] &&
+      PATH.prepend -v LD_LIBRARY_PATH  "$prefix"/lib
+    [[ -d $prefix/lib64 ]] &&
+      PATH.prepend -v LD_LIBRARY_PATH  "$prefix"/lib64
+  }
+  function dotfiles/prepend-devel-path {
+    local prefix=$1
+    [[ -d $prefix/lib ]] &&
+      PATH.prepend -v LIBRARY_PATH     "$prefix"/lib
+    [[ -d $prefix/lib64 ]] &&
+      PATH.prepend -v LIBRARY_PATH     "$prefix"/lib64
+    if [[ -d $prefix/include ]]; then
+      PATH.prepend -v C_INCLUDE_PATH   "$prefix"/include
+      PATH.prepend -v CPLUS_INCLUDE_PATH "$prefix"/include
+    fi
+    [[ -d $prefix/lib/pkgconfig ]] &&
+      PATH.prepend -v PKG_CONFIG_PATH  "$prefix"/lib/pkgconfig
+    [[ -d $prefix/lib64/pkgconfig ]] &&
+      PATH.prepend -v PKG_CONFIG_PATH  "$prefix"/lib64/pkgconfig
   }
 
   function dotfiles/setup-path:padparadscha {
@@ -250,6 +282,16 @@ if [[ $_dotfiles_mshex_path ]]; then
     dotfiles/setup-path-local
   }
 
+  function dotfiles/setup-path:gell-mann {
+    dotfiles/prepend-binary-path  ~/opt/perl-5.28.0
+    dotfiles/prepend-binary-path  ~/opt/git-2.19.0
+    dotfiles/prepend-binary-path  ~/opt/openssh-7.8p1
+    dotfiles/prepend-binary-path  ~/opt/emacs-26.1
+    dotfiles/prepend-binary-path  ~/opt/gcc-8.2.0
+    dotfiles/prepend-runtime-path ~/opt/gcc-8.2.0
+    dotfiles/setup-path-local
+  }
+
   function dotfiles/setup-path:mathieu {
     # ~/opt/ncurses-6.0
     PATH.prepend -v C_INCLUDE_PATH ~/opt/ncurses-6.0/include
@@ -282,11 +324,18 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend -v LIBRARY_PATH ~/opt/ncurses-6.1/lib
   }
 
+  source "$_dotfiles_mshex_path"/shrc/path.sh
+  PATH.prepend /usr/local/sbin:/usr/sbin
+  PATH.prepend /usr/local/bin:/usr/bin:/bin
+  PATH.prepend -v MANPATH /usr/share/man:/usr/local/man
+
   if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
     dotfiles/setup-path:"${HOSTNAME%%.*}"
   elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
     dotfiles/setup-path:laguerre
   fi
+
+  PATH.prepend "$HOME"/{,.mwg/,local/,.local/}bin
 
   #----------------------------------------------------------------------------
   # mshex/bashrc_common
@@ -307,7 +356,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt '\e[32m' '\e[m' ;;
     (vaio2016|dyna2018)
       mshex/set-prompt '\e[31m' '\e[m' ;;
-    (laguerre*|neumann|mathieu|hankel)
+    (laguerre*|neumann|mathieu|gell-mann|hankel)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
