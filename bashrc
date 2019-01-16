@@ -67,7 +67,8 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #bleopt_suppress_bash_output=
 
   [[ -s $_dotfiles_blesh_path ]] &&
-    source "$_dotfiles_blesh_path" --attach=prompt --rcfile ~/.blerc
+    #source "$_dotfiles_blesh_path" --attach=prompt --rcfile ~/.blerc
+    source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
 
   # Note: The option "--attach=prompt" is an experimental feature.
   #   Basically you should use "--noattach" and manual
@@ -77,11 +78,12 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   # Tests for ble.sh
   #
 
-  if [[ ${HOSTNAME%%.*} == padparadscha ]]; then
-    shopt -s failglob
-    shopt -s checkjobs
-    ble-color-setface syntax_default none
+  if ((_ble_bash)) && [[ ${HOSTNAME%%.*} == padparadscha ]]; then
+    bleopt edit_vbell=1
+    # shopt -s failglob
+    # shopt -s checkjobs
 
+    # ble/util/idle の確認
     # if ble/is-function ble/util/idle.push; then
     #   function bashrc/task/show-time {
     #     ble/util/idle.sleep 1000
@@ -140,6 +142,8 @@ if [[ $_dotfiles_mshex_path ]]; then
 
     export TEXMFHOME="$HOME/.local/share/texmf"
     #export TERMPATH="$HOME/.mwg/terminfo/rosaterm.tc:${TERMPATH:-$HOME/.termcap:/etc/termcap}"
+
+    export GOPATH=$HOME/local/go
   }
 
   function dotfiles/setup-path:chatoyancy {
@@ -364,3 +368,5 @@ if [[ $- == *i* ]]; then
   esac
 fi
 #------------------------------------------------------------------------------
+
+((_ble_bash)) && ble-attach
