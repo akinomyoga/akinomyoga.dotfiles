@@ -93,7 +93,7 @@ function subcommand:sort-aspell-dictionary {
   local tmpfile=$infile.part
   {
     head -1 "$infile"
-    tail -n +2 "$infile" | sort
+    tail -n +2 "$infile" | LC_ALL=C sort
   } > $tmpfile &&
     mv "$infile" "$infile~" &&
     mv "$tmpfile" "$infile"
