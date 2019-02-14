@@ -55,6 +55,7 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   # Selection of devel ble.sh
   #
 
+  _dotfiles_blesh_manual_attach=
   #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
   #_dotfiles_blesh_path=~/prog/ble/ble.sh
   #_dotfiles_blesh_path=~/prog/ble-dev/out/ble.sh
@@ -67,12 +68,14 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #bleopt_suppress_bash_output=
 
   [[ -s $_dotfiles_blesh_path ]] &&
-    #source "$_dotfiles_blesh_path" --attach=prompt --rcfile ~/.blerc
-    source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
-
-  # Note: The option "--attach=prompt" is an experimental feature.
-  #   Basically you should use "--noattach" and manual
-  #   "((_ble_bash)) && ble-attach" instead.
+    if [[ $_dotfiles_blesh_manual_attach ]]; then
+      source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
+    else
+      source "$_dotfiles_blesh_path" --attach=prompt
+      # Note: The option "--attach=prompt" is an experimental feature.
+      #   Basically you should use "--noattach" and manual
+      #   "((_ble_bash)) && ble-attach" instead.
+    fi
 
   #
   # Tests for ble.sh
@@ -370,4 +373,5 @@ if [[ $- == *i* ]]; then
 fi
 #------------------------------------------------------------------------------
 
-((_ble_bash)) && ble-attach
+[[ $_dotfiles_blesh_manual_attach ]] &&
+  ((_ble_bash)) && ble-attach
