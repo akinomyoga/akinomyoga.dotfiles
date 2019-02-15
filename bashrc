@@ -76,26 +76,6 @@ if [[ ! $NOBLE && $- == *i* ]]; then
       #   Basically you should use "--noattach" and manual
       #   "((_ble_bash)) && ble-attach" instead.
     fi
-
-  #
-  # Tests for ble.sh
-  #
-
-  if ((_ble_bash)) && [[ ${HOSTNAME%%.*} == padparadscha ]]; then
-    bleopt edit_vbell=1
-    # shopt -s failglob
-    # shopt -s checkjobs
-
-    # ble/util/idle の確認
-    # if ble/is-function ble/util/idle.push; then
-    #   function bashrc/task/show-time {
-    #     ble/util/idle.sleep 1000
-    #     local ret; printf -v ret '%(%F %T %Z)T'
-    #     ble-edit/info/immediate-show text "$ret"
-    #   }
-    #   ble/util/idle.push-background 'bashrc/task/show-time'
-    # fi
-  fi
 fi
 
 #------------------------------------------------------------------------------

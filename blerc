@@ -42,3 +42,52 @@ function blerc/vim-load-hook {
 
   source "$_ble_base"/keymap/vi_test.sh
 }
+
+#------------------------------------------------------------------------------
+#
+# (devel) tests
+#
+#------------------------------------------------------------------------------
+
+if [[ ${HOSTNAME%%.*} == padparadscha ]]; then
+  bleopt edit_vbell=1
+  # shopt -s failglob
+  # shopt -s checkjobs
+
+  # ble/util/idle の確認
+  # if ble/is-function ble/util/idle.push; then
+  #   function bashrc/task/show-time {
+  #     ble/util/idle.sleep 1000
+  #     local ret; printf -v ret '%(%F %T %Z)T'
+  #     ble-edit/info/immediate-show text "$ret"
+  #   }
+  #   ble/util/idle.push-background 'bashrc/task/show-time'
+  # fi
+
+  # core-complete.sh 遅延ロードテスト
+  # ble/array#push _ble_complete_load_hook bashrc/complete-load-hook
+  # function bashrc/complete-load-hook {
+  #   ble-color-setface auto_complete fg=246
+  #   ble-bind -m auto_complete -f 'C-x C-i' 'auto_complete/insert'
+  # }
+
+  # 減色の確認
+  # bleopt term_index_colors=0
+  # _ble_term_colors=8
+
+  # 2019-01-27 complete -I のテスト
+  # if ((_ble_bash>=50000)); then
+  #   _comp_initial_word() {
+  #     echo "f: args=($*)" >>/dev/pts/16
+  #     local globchars='*?['
+  #     shopt -q extglob && globchars+='!@+'
+  #     local head=${3%%["$globchars"]*}
+  #     COMPREPLY=($(compgen -c -X '!'"$3*" -- "$head"))
+  #   }
+  #   complete -I -F _comp_initial_word -o bashdefault
+  # fi
+
+  # 2019-02-09 結合テスト
+  #source ~/.bashrc.bash-it
+  #source ~/.bashrc.oh-my-bash
+fi
