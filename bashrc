@@ -1,12 +1,14 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+# Source global definitions
+if [[ -f /etc/profile ]]; then
+  . /etc/profile
+elif [[ -f /etc/bashrc ]]; then
+  . /etc/bashrc
+fi
+
 case ${HOSTNAME%%.*} in
 (padparadscha)
-  # Source global definitions
-  if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
-  fi
-
   # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
   #   source /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh
   # fi
