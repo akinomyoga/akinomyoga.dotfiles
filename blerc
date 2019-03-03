@@ -43,6 +43,37 @@ function blerc/vim-load-hook {
   source "$_ble_base"/keymap/vi_test.sh
 }
 
+ble/array#push _ble_complete_load_hook blerc/complete-load-hook
+function blerc/complete-load-hook {
+  [[ $OSTYPE == cygwin ]] &&
+    ble-sabbrev '\I'='| iconv -c -f cp932 -t utf-8'
+
+  # sabbrev \branch
+  function blerc/sabbrev-git-branch {
+    ble/util/assign-array COMPREPLY "git branch | sed 's/^\*\{0,1\}[[:space:]]*//'"
+  }
+  ble-sabbrev -m '\branch'=blerc/sabbrev-git-branch
+
+  # sabbrev \date
+  ble-sabbrev -m '\date'='ble/util/assign COMPREPLY "date +%F"'
+
+  # sabbrev \commit
+  function blerc/sabbrev-git-commit {
+    bleopt sabbrev_menu_style=desc
+    bleopt sabbrev_menu_opts=enter_menu
+
+    local arr; ble/util/assign-array arr 'git log --pretty=format:"%h %s"'
+    local line hash subject
+    for line in "${arr[@]}"; do
+      builtin read hash subject <<< "$line"
+      ble-complete/cand/yield word "$hash" "$subject"
+    done
+  }
+  ble-sabbrev -m '\commit'='blerc/sabbrev-git-commit'
+
+  #bleopt complete_menu_style=desc
+}
+
 #------------------------------------------------------------------------------
 #
 # (devel) tests
