@@ -66,13 +66,85 @@ function blerc/complete-load-hook {
     local line hash subject
     for line in "${arr[@]}"; do
       builtin read hash subject <<< "$line"
-      ble-complete/cand/yield word "$hash" "$subject"
+      ble/complete/cand/yield word "$hash" "$subject"
     done
   }
   ble-sabbrev -m '\commit'='blerc/sabbrev-git-commit'
-
-  #bleopt complete_menu_style=desc
 }
+
+
+#
+# Settings for rps1
+#
+
+_blerc_prompt_git_vars=(git_base)
+
+## 関数 blerc/prompt/git/initialize
+function blerc/prompt/git/initialize {
+  type git &>/dev/null || return 1
+  # [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) ]]
+  local path=$PWD
+  while
+    if [[ -f $path/.git/HEAD ]]; then
+      git_base=$path
+      return 0
+    fi
+    [[ $path == */* ]]
+  do path=${path%/*}; done
+  return 1
+}
+function blerc/prompt/git/get-head-name { # 1 fork
+  ret=
+  local head=$git_base/.git/HEAD head_content=
+  [[ -s $head ]] && ble/util/mapfile head_content < "$head"
+  if [[ $head_content == *'ref: refs/heads/'* ]]; then
+    local sgr=$'\e[1;34m' sgr0=$'\e[m'
+    ret=$sgr${head_content#*refs/heads/}$sgr0
+    return
+  fi
+
+  local DETACHED=$'\e[91mDETACHED\e[m'
+
+  # Note: どうせ次の contains で tag/... という形式で得られる。
+  # ble/util/assign-array ret 'git describe --tags --exact-match 2>/dev/null'
+  # if [[ $ret ]]; then
+  #   local sgr=$'\e[32m' sgr0=$'\e[m'
+  #   ret="($DETACHED at $sgr$ret$sgr0)"
+  #   return
+  # fi
+
+  ble/util/assign-array ret 'git describe --contains --all 2>/dev/null'
+  if [[ $ret ]]; then
+    local sgr=$'\e[32m' sgr0=$'\e[m'
+    ret="($DETACHED at $sgr$ret$sgr0)"
+    return
+  fi
+
+  ret=${head_content::7}
+  if [[ $ret ]]; then
+    local sgr=$'\e[1;34m' sgr0=$'\e[m'
+    ret="($DETACHED at $sgr$ret$sgr0)"
+    return
+  fi
+
+  ret=$'(\e[91mUNKNOWN\e[m)'
+}
+function ble-edit/prompt/backslash:X {
+  local "${_blerc_prompt_git_vars[@]}"
+  if blerc/prompt/git/initialize; then
+    local sgr=$'\e[1m' sgr0=$'\e[m'
+    local name=$sgr${git_base##*?/}$sgr0
+    local ret; blerc/prompt/git/get-head-name; local branch=$ret
+    ble-edit/prompt/print "$name $branch"
+    [[ $PWD == "$git_base"/?* ]] &&
+      ble-edit/prompt/print " /${PWD#$git_base/}"
+  else
+    ble-edit/prompt/process-prompt-string '\w'
+  fi
+
+  return 0
+}
+bleopt rps1='\X'
 
 #------------------------------------------------------------------------------
 #
