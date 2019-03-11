@@ -99,48 +99,92 @@ function blerc/prompt/git/initialize {
   do path=${path%/*}; done
   return 1
 }
-function blerc/prompt/git/get-head-name { # 1 fork
+## 関数 blerc/prompt/git/get-head-information
+##   @var[out] hash branch
+function blerc/prompt/git/get-head-information {
+  branch= hash=
+
+  local head_file=$git_base/.git/HEAD
+  [[ -s $head_file ]] || return
+  local content; ble/util/mapfile content < "$head_file"
+
+  if [[ $content == *'ref: refs/heads/'* ]]; then
+    branch=${content#*refs/heads/}
+
+    local branch_file=$git_base/.git/refs/heads/$branch
+    [[ -s $branch_file ]] || return
+    local content; ble/util/mapfile content < "$branch_file"
+  fi
+
+  [[ ! ${content//[0-9a-fA-F]} ]] && hash=$content
+  return 0
+}
+## 関数 blerc/prompt/git/get-tag-name hash
+##   @var[out] tag
+function blerc/prompt/git/get-tag-name {
+  # ble/util/assign-array tag 'git describe --tags --exact-match 2>/dev/null'
+  tag=
+  local hash=$1; [[ $hash ]] || return 1
+
+  local file tagsdir=$git_base/.git/refs/tags hash1
+  for file in "$tagsdir"/*; do
+    local tag1=${file#$tagsdir/}
+    [[ -s $file ]] || continue
+    ble/util/mapfile hash1 < "$file"
+    if [[ $hash1 == "$hash" ]]; then
+      tag=$tag1
+      return
+    fi
+  done
+}
+
+function blerc/prompt/git/describe-head {
   ret=
-  local head=$git_base/.git/HEAD head_content=
-  [[ -s $head ]] && ble/util/mapfile head_content < "$head"
-  if [[ $head_content == *'ref: refs/heads/'* ]]; then
+
+  local hash branch
+  blerc/prompt/git/get-head-information
+  if [[ $branch ]]; then
     local sgr=$'\e[1;34m' sgr0=$'\e[m'
-    ret=$sgr${head_content#*refs/heads/}$sgr0
+    ret=$sgr$branch$sgr0
+    [[ $hash ]] && ret="$ret (${hash::7})"
     return
   fi
 
   local DETACHED=$'\e[91mDETACHED\e[m'
 
-  # Note: どうせ次の contains で tag/... という形式で得られる。
-  # ble/util/assign-array ret 'git describe --tags --exact-match 2>/dev/null'
+  local tag
+  blerc/prompt/git/get-tag-name "$hash"
+  if [[ $ret ]]; then
+    local sgr=$'\e[1;32m' sgr0=$'\e[m'
+    ret=$sgr$tag$sgr0
+    [[ $hash ]] && ret="$ret ${hash::7}"
+    ret="$DETACHED ($ret)"
+    return
+  fi
+
+  # "master~23" 等の分かりにくい説明なのでこれは使わない
+  # ble/util/assign-array ret 'git describe --contains --all 2>/dev/null'
   # if [[ $ret ]]; then
   #   local sgr=$'\e[32m' sgr0=$'\e[m'
   #   ret="($DETACHED at $sgr$ret$sgr0)"
   #   return
   # fi
 
-  ble/util/assign-array ret 'git describe --contains --all 2>/dev/null'
-  if [[ $ret ]]; then
-    local sgr=$'\e[32m' sgr0=$'\e[m'
-    ret="($DETACHED at $sgr$ret$sgr0)"
+  if [[ $hash ]]; then
+    ret="$DETACHED (${hash::7})"
     return
   fi
 
-  ret=${head_content::7}
-  if [[ $ret ]]; then
-    local sgr=$'\e[1;34m' sgr0=$'\e[m'
-    ret="($DETACHED at $sgr$ret$sgr0)"
-    return
-  fi
-
-  ret=$'(\e[91mUNKNOWN\e[m)'
+  ret=$'\e[91mUNKNOWN\e[m'
 }
 function ble-edit/prompt/backslash:X {
+  ((COLUMNS>=120)) || return 0
+
   local "${_blerc_prompt_git_vars[@]}"
   if blerc/prompt/git/initialize; then
     local sgr=$'\e[1m' sgr0=$'\e[m'
     local name=$sgr${git_base##*?/}$sgr0
-    local ret; blerc/prompt/git/get-head-name; local branch=$ret
+    local ret; blerc/prompt/git/describe-head; local branch=$ret
     ble-edit/prompt/print "$name $branch"
     [[ $PWD == "$git_base"/?* ]] &&
       ble-edit/prompt/print " /${PWD#$git_base/}"
