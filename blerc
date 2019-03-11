@@ -12,7 +12,7 @@ bleopt complete_auto_delay=1
 bleopt internal_stackdump_enabled=1
 bind 'set skip-completed-text on'
 
-ble-color-setface auto_complete fg=246
+#ble-color-setface auto_complete fg=246
 
 #bleopt filename_ls_colors="$LS_COLORS"
 
