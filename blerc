@@ -6,11 +6,20 @@
 
 set -o vi
 bleopt char_width_mode=emacs
+bleopt char_width_mode=auto
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
 bleopt complete_auto_delay=1
 bleopt internal_stackdump_enabled=1
-bind 'set skip-completed-text on'
+
+((_ble_bash>=40100)) && bind 'set skip-completed-text on'
+((_ble_bash>=40300)) && bind 'set colored-stats on'
+((_ble_bash>=40400)) && bind 'set colored-completion-prefix on'
+
+bleopt vbell_align=right
+bleopt edit_vbell=1
+
+bleopt menu_linewise_prefix=$' \e[1;32m>\e[m '
 
 #ble-color-setface auto_complete fg=246
 
@@ -35,10 +44,12 @@ function blerc/vim-load-hook {
   bleopt vim_surround_Q:=\"
 
   # C-w
-  ble-bind -f 'C-w'      'kill-region-or uword'
-  ble-bind -m vi_cmap -f 'C-w' 'kill-region-or uword'
+  ble-bind -f 'C-w'      'kill-region-or kill-uword'
+  ble-bind -m vi_cmap -f 'C-w' 'kill-region-or kill-uword'
 
   ble-decode/keymap:vi_imap/define-meta-bindings
+
+  bleopt keymap_vi_imap_undo=more
 
   source "$_ble_base"/keymap/vi_test.sh
 }
@@ -58,9 +69,9 @@ function blerc/complete-load-hook {
   ble-sabbrev -m '\date'='ble/util/assign COMPREPLY "date +%F"'
 
   # sabbrev \commit
-  ble/color/defface blerc_git_commit_id bold,fg=navy
+  ble/color/defface blerc_git_commit_id fg=navy
   ble/complete/action/inherit-from blerc_git_commit_id word
-  function ble/complete/action:blerc_git_commit_id/getg {
+  function ble/complete/action:blerc_git_commit_id/init-menu-item {
     ble/color/face2g blerc_git_commit_id
   }
   function blerc/sabbrev-git-commit {

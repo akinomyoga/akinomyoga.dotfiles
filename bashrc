@@ -67,7 +67,7 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #
   # Debug settings
   #
-  #bleopt_suppress_bash_output=
+  #bleopt_internal_suppress_bash_output=
 
   [[ -s $_dotfiles_blesh_path ]] &&
     if [[ $_dotfiles_blesh_manual_attach ]]; then
