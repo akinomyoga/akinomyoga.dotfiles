@@ -58,11 +58,19 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #
 
   _dotfiles_blesh_manual_attach=
+
+  if [[ $HOSTNAME == padparadscha ]]; then
+    _dotfiles_blesh_devel=~/prog
+  else
+    _dotfiles_blesh_devel=~/.mwg/src
+  fi
+
   #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
   #_dotfiles_blesh_path=~/prog/ble/ble.sh
-  #_dotfiles_blesh_path=~/prog/ble-dev/out/ble.sh
-  #_dotfiles_blesh_path=~/prog/ble-0.1/out/ble.sh
-  #_dotfiles_blesh_path=~/prog/ble-0.2/out/ble.sh
+  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-dev/out/ble.sh
+  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.1/out/ble.sh
+  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.2/out/ble.sh
+  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.3/out/ble.sh
 
   #
   # Debug settings
