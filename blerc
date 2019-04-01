@@ -206,6 +206,7 @@ function ble-edit/prompt/backslash:X {
   return 0
 }
 bleopt rps1='\X'
+#bleopt rps1_transient=1
 
 #------------------------------------------------------------------------------
 #
