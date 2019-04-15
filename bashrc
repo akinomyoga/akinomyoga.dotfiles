@@ -36,7 +36,6 @@ function dotfiles/find-blesh-path {
 
   local -a candidates
   candidates=(
-    "$HOME"/prog/ble/out/ble.sh
     "$HOME"/.mwg/src/ble.sh/out/ble.sh
     ${XDG_DATA_HOME:+"$XDG_DATA_HOME"/blesh/ble.sh}
     "$HOME"/.local/share/blesh/ble.sh )
@@ -58,12 +57,7 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #
 
   _dotfiles_blesh_manual_attach=
-
-  if [[ $HOSTNAME == padparadscha ]]; then
-    _dotfiles_blesh_devel=~/prog
-  else
-    _dotfiles_blesh_devel=~/.mwg/src
-  fi
+  _dotfiles_blesh_devel=~/.mwg/src
 
   #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
   #_dotfiles_blesh_path=~/prog/ble/ble.sh
