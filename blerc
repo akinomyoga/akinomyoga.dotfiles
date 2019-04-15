@@ -138,7 +138,8 @@ function blerc/prompt/git/get-tag-name {
   local hash=$1; [[ $hash ]] || return 1
 
   local file tagsdir=$git_base/.git/refs/tags hash1
-  for file in "$tagsdir"/*; do
+  local files ret; ble/util/eval-pathname-expansion '"$tagsdir"/*'; files=("${ret[@]}")
+  for file in "${files[@]}"; do
     local tag1=${file#$tagsdir/}
     [[ -s $file ]] || continue
     ble/util/mapfile hash1 < "$file"
