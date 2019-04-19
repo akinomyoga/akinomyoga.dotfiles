@@ -21,6 +21,8 @@ bleopt edit_vbell=1
 
 bleopt menu_linewise_prefix=$' \e[1;32m>\e[m '
 
+bleopt decode_error_cseq_vbell=1 # for debugging
+
 #ble-color-setface auto_complete fg=246
 
 #bleopt filename_ls_colors="$LS_COLORS"
