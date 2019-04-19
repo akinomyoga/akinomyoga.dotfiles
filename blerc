@@ -61,7 +61,7 @@ function blerc/complete-load-hook {
 
   # sabbrev \branch
   function blerc/sabbrev-git-branch {
-    ble/util/assign-array COMPREPLY "git branch | sed 's/^\*\{0,1\}[[:space:]]*//'"
+    ble/util/assign-array COMPREPLY "git branch | sed 's/^\*\{0,1\}[[:space:]]*//'" 2>/dev/null
   }
   ble-sabbrev -m '\branch'=blerc/sabbrev-git-branch
 
