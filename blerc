@@ -4,6 +4,8 @@
 
 #bleopt_suppress_bash_output=
 
+shopt -u no_empty_cmd_completion
+
 set -o vi
 bleopt char_width_mode=emacs
 bleopt char_width_mode=auto
