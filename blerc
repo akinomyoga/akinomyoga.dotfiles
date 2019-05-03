@@ -38,10 +38,10 @@ function blerc/vim-load-hook {
     _ble_term_Ss=$'\e[@1 q' ;;
   esac
   bleopt keymap_vi_nmap_cursor=2
-  bleopt keymap_vi_imap_cursor=5
+  bleopt keymap_vi_imap_cursor=0
   bleopt keymap_vi_omap_cursor=4
   bleopt keymap_vi_xmap_cursor=2
-  bleopt keymap_vi_cmap_cursor=0
+  bleopt keymap_vi_cmap_cursor=5
 
   source "$_ble_base/lib/vim-surround.sh"
   bleopt vim_surround_q:=\'
