@@ -1,10 +1,13 @@
 # -*- mode: sh; mode: sh-bash -*-
 
 # Source global definitions
-if [[ -f /etc/profile ]]; then
-  . /etc/profile
-elif [[ -f /etc/bashrc ]]; then
-  . /etc/bashrc
+if [[ $OSTYPE != cygwin ]]; then
+  # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
+  if [[ -f /etc/profile ]]; then
+    . /etc/profile
+  elif [[ -f /etc/bashrc ]]; then
+    . /etc/bashrc
+  fi
 fi
 
 case ${HOSTNAME%%.*} in

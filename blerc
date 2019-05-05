@@ -1,5 +1,4 @@
 # blerc -*- mode: sh; mode: sh-bash -*-
-
 # Settings for ble.sh (https://github.com/akinomyoga/ble.sh)
 
 #bleopt_suppress_bash_output=
@@ -196,6 +195,9 @@ function blerc/prompt/git/describe-head {
 function ble-edit/prompt/backslash:X {
   ((COLUMNS>=120)) || return 0
 
+  # [[ $_ble_term_DA2R == '67;*' ]] &&
+  #   ble-edit/prompt/print $'\e[1l\e[6h\eV'
+
   local "${_blerc_prompt_git_vars[@]}"
   if blerc/prompt/git/initialize; then
     local sgr=$'\e[1m' sgr0=$'\e[m'
@@ -207,6 +209,9 @@ function ble-edit/prompt/backslash:X {
   else
     ble-edit/prompt/process-prompt-string '\w'
   fi
+
+  # [[ $_ble_term_DA2R == '67;*' ]] &&
+  #   ble-edit/prompt/print $'\eW'
 
   return 0
 }
