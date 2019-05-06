@@ -1,4 +1,4 @@
-personal_ws-1.1 en 212 
+personal_ws-1.1 en 219 
 AGS
 Aarts
 Abelian
@@ -36,6 +36,7 @@ HIAF
 Hartree
 Hermitian
 Hirano
+Hirono
 Hongo
 JSPS
 Jacobian
@@ -52,6 +53,7 @@ Kubo
 Kurita
 Kutta
 LHC
+LRF
 Langevin
 Lett
 Lindblom
@@ -78,6 +80,7 @@ RHIC
 ReLU
 Runge
 Ryuichi
+SPDE
 SPS
 SSFT
 Searles
@@ -97,6 +100,7 @@ Weibel
 Weise
 Werner
 Yazaki
+Yuji
 Yuki
 acausal
 al
@@ -140,6 +144,7 @@ equilibrated
 et
 excitations
 feedforward
+femtometer
 fermions
 gluon
 gluons
@@ -160,6 +165,7 @@ isotropization
 iteratively
 kaons
 kenji
+linearized
 massless
 mesoscopic
 midrapidity
@@ -197,6 +203,7 @@ reparametrization
 reproducibility
 rescaled
 rescatterings
+sQGP
 sigmoid
 spacetime
 synchrotron
