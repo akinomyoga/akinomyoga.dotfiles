@@ -7,7 +7,7 @@ shopt -u no_empty_cmd_completion
 
 set -o vi
 bleopt char_width_mode=emacs
-bleopt char_width_mode=auto
+#bleopt char_width_mode=auto
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
 bleopt complete_auto_delay=1

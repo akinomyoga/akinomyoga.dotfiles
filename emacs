@@ -23,7 +23,9 @@
 (custom-set-variables
  '(safe-local-variable-values
    (quote
-    ((ps-mode-tab . 2)
+    ((sh-indent-comment . t)
+     (flycheck-sh-bash-args "-O" "extglob")
+     (ps-mode-tab . 2)
      (mwg-no-delete-trailing-whitespaces . t)
      (c-basic-offset 2)
      (eval sh-set-shell "bash")))))
@@ -247,3 +249,4 @@
 ;; (setq evil-insert-state-map nil)
 
 ;;-----------------------------------------------------------------------------
+
