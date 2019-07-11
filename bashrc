@@ -52,6 +52,7 @@ function dotfiles/find-blesh-path {
   done
 }
 
+
 if [[ ! $NOBLE && $- == *i* ]]; then
   dotfiles/find-blesh-path
 
@@ -62,12 +63,17 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   _dotfiles_blesh_manual_attach=
   _dotfiles_blesh_devel=~/.mwg/src
 
+  _dotfiles_blesh_version=400
+  if ((_dotfiles_blesh_version==300)); then
+    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.3/out/ble.sh
+  elif ((_dotfiles_blesh_version==200)); then
+    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.2/out/ble.sh
+  elif ((_dotfiles_blesh_version==100)); then
+    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.1/out/ble.sh
+  fi
   #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
   #_dotfiles_blesh_path=~/prog/ble/ble.sh
   #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-dev/out/ble.sh
-  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.1/out/ble.sh
-  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.2/out/ble.sh
-  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.3/out/ble.sh
 
   #
   # Debug settings
@@ -75,13 +81,23 @@ if [[ ! $NOBLE && $- == *i* ]]; then
   #bleopt_internal_suppress_bash_output=
 
   [[ -s $_dotfiles_blesh_path ]] &&
-    if [[ $_dotfiles_blesh_manual_attach ]]; then
-      source "$_dotfiles_blesh_path" --noattach --rcfile ~/.blerc
-    else
-      source "$_dotfiles_blesh_path" --attach=prompt
-      # Note: The option "--attach=prompt" is an experimental feature.
-      #   Basically you should use "--noattach" and manual
-      #   "((_ble_bash)) && ble-attach" instead.
+    if ((_dotfiles_blesh_version>=400)); then
+      source "$_dotfiles_blesh_path"
+    elif ((_dotfiles_blesh_version==300)); then
+      if [[ $_dotfiles_blesh_manual_attach ]]; then
+        source "$_dotfiles_blesh_path" --noattach
+      else
+        source "$_dotfiles_blesh_path" --attach=prompt
+        # Note: The option "--attach=prompt" is an experimental feature.
+        #   Basically you should use "--noattach" and manual
+        #   "((_ble_bash)) && ble-attach" instead.
+      fi
+    elif ((_dotfiles_blesh_version==200)); then
+      _dotfiles_blesh_manual_attach=1
+      source "$_dotfiles_blesh_path" --noattach
+    elif ((_dotfiles_blesh_version==100)); then
+      _dotfiles_blesh_manual_attach=1
+      source "$_dotfiles_blesh_path" noattach
     fi
 fi
 
