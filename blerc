@@ -28,7 +28,6 @@ bleopt decode_error_cseq_vbell=1 # for debugging
 
 #bleopt filename_ls_colors="$LS_COLORS"
 
-ble/array#push _ble_keymap_vi_load_hook blerc/vim-load-hook
 function blerc/vim-load-hook {
   bind 'set keyseq-timeout 1'
 
@@ -56,8 +55,12 @@ function blerc/vim-load-hook {
 
   source "$_ble_base"/keymap/vi_test.sh
 }
+if ((_ble_version>=400)); then
+  blehook/eval-after-load keymap_vi blerc/vim-load-hook
+else
+  ble/array#push _ble_keymap_vi_load_hook blerc/vim-load-hook
+fi
 
-ble/array#push _ble_complete_load_hook blerc/complete-load-hook
 function blerc/complete-load-hook {
   [[ $OSTYPE == cygwin ]] &&
     ble-sabbrev '\I'='| iconv -c -f cp932 -t utf-8'
@@ -91,6 +94,11 @@ function blerc/complete-load-hook {
   }
   ble-sabbrev -m '\commit'='blerc/sabbrev-git-commit'
 }
+if ((_ble_version>=400)); then
+  blehook/eval-after-load complete blerc/complete-load-hook
+else
+  ble/array#push _ble_complete_load_hook blerc/complete-load-hook
+fi
 
 #------------------------------------------------------------------------------
 #
