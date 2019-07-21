@@ -13,9 +13,11 @@ bleopt decode_isolated_esc=esc
 bleopt complete_auto_delay=1
 bleopt internal_stackdump_enabled=1
 
-((_ble_bash>=40100)) && bind 'set skip-completed-text on'
-((_ble_bash>=40300)) && bind 'set colored-stats on'
-((_ble_bash>=40400)) && bind 'set colored-completion-prefix on'
+if ((_ble_version<400)); then
+  ((_ble_bash>=40100)) && bind 'set skip-completed-text on'
+  ((_ble_bash>=40300)) && bind 'set colored-stats on'
+  ((_ble_bash>=40400)) && bind 'set colored-completion-prefix on'
+fi
 
 bleopt vbell_align=right
 bleopt edit_vbell=1

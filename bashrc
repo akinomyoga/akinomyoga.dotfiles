@@ -52,7 +52,6 @@ function dotfiles/find-blesh-path {
   done
 }
 
-
 if [[ ! $NOBLE && $- == *i* ]]; then
   dotfiles/find-blesh-path
 
