@@ -229,6 +229,19 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend -v PKG_CONFIG_PATH \
                  ~/opt/glib/2.53/lib/pkgconfig
 
+    # 2019-03-30 glibc-2.14.1, tiff-4.0.10
+    PATH.append -v LD_LIBRARY_PATH \
+                ~/opt/glibc/2.14.1/lib \
+                ~/opt/tiff/4.0.10/lib \
+                ~/opt/libpng/1.5.30/lib \
+                ~/opt/libpng/1.6.36/lib \
+                ~/opt/glib/2.58.3/lib
+    PATH.append -v PKG_CONFIG_PATH \
+                ~/opt/tiff/4.0.10/lib/pkgconfig \
+                ~/opt/libpng/1.5.30/lib/pkgconfig \
+                ~/opt/libpng/1.6.36/lib/pkgconfig \
+                ~/opt/glib/2.58.3/lib/pkgconfig
+
     # for lava
     PATH.prepend -v LD_LIBRARY_PATH "$LSF_LIBDIR"
   }
