@@ -84,6 +84,7 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+;; 2019-02-02 marmalade が使えなくなっている?
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 ;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)

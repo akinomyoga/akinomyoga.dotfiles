@@ -273,6 +273,15 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend -v LIBRARY_PATH ~/opt/libmwg-20170609/lib
   }
 
+  function dotfiles/setup-path:hankel {
+    dotfiles/setup-path-local
+
+    # ~/opt/ncurses-6.0 (ncurses, ncursesw)
+    PATH.prepend -v C_INCLUDE_PATH ~/opt/ncurses-6.1/include
+    PATH.prepend -v CPLUS_INCLUDE_PATH ~/opt/ncurses-6.1/include
+    PATH.prepend -v LIBRARY_PATH ~/opt/ncurses-6.1/lib
+  }
+
   if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
     dotfiles/setup-path:"${HOSTNAME%%.*}"
   elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
@@ -298,7 +307,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt '\e[32m' '\e[m' ;;
     (vaio2016|dyna2018)
       mshex/set-prompt '\e[31m' '\e[m' ;;
-    (laguerre*|neumann|mathieu)
+    (laguerre*|neumann|mathieu|hankel)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
