@@ -354,7 +354,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       fi ;;
     (magnate2016|gauge)
       mshex/set-prompt '\e[32m' '\e[m' ;;
-    (vaio2016|dyna2018)
+    (vaio2016|dyna2018|letsnote2019)
       mshex/set-prompt '\e[31m' '\e[m' ;;
     (laguerre*|neumann|mathieu|gell-mann|hankel)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
