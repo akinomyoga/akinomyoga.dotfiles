@@ -175,22 +175,19 @@ function install.yum {
 #------------------------------------------------------------------------------
 
 function install.user-dirs {
-  local dir
+  local -a dirnames
+  dirnames=(デスクトップ ダウンロード テンプレート 公開 ドキュメント 音楽 画像 ビデオ
+            Desktop Downloads Templates Public Documents Music Pictures Videos)
+
   mkd "$HOME/User"
-  for dir in デスクトップ ダウンロード テンプレート 公開 ドキュメント 音楽 画像 ビデオ; do
+
+  local dir
+  for dir in "${dirnames[@]}"; do
     [[ -d $HOME/$dir ]] && mv "$HOME/$dir" "$HOME/User/$dir"
   done
 
-  sed -i '
-    s|/デスクトップ|/User&|g
-    s|/ダウンロード|/User&|g
-    s|/テンプレート|/User&|g
-    s|/公開|/User&|g
-    s|/ドキュメント|/User&|g
-    s|/音楽|/User&|g
-    s|/画像|/User&|g
-    s|/ビデオ|/User&|g
-  ' "$HOME/.config/user-dirs.dirs"
+  local sed_script=$(printf 's|/%s|/User&|g\n' "${dirnames[@]}")
+  sed -i "$sed_script" "$HOME/.config/user-dirs.dirs"
 }
 
 function install.dotfiles {
