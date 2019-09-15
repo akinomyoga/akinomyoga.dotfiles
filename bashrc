@@ -324,6 +324,28 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend -v LIBRARY_PATH ~/opt/ncurses-6.1/lib
   }
 
+  function dotfiles/setup-path:hp2019 {
+    dotfiles/setup-path-local
+    source ~/opt/dlang/dmd-2.088.0/activate.murase
+  }
+
+  function dotfiles/setup-path:song-HP-Z820-Workstation {
+    dotfiles/setup-path-local
+    LC_ADDRESS=
+    LC_ALL=
+    LC_IDENTIFICATION=
+    LC_MEASUREMENT=
+    LC_MONETARY=
+    LC_NAME=
+    LC_NUMERIC=
+    LC_PAPER=
+    LC_TELEPHONE=
+    LC_TIME=
+  }
+  function dotfiles/setup-path:song-HP-Z840-Workstation {
+    dotfiles/setup-path:song-HP-Z840-Workstation
+  }
+
   source "$_dotfiles_mshex_path"/shrc/path.sh
   PATH.prepend /usr/local/sbin:/usr/sbin
   PATH.prepend /usr/local/bin:/usr/bin:/bin
@@ -355,9 +377,11 @@ if [[ $_dotfiles_mshex_path ]]; then
     (magnate2016|gauge)
       mshex/set-prompt '\e[32m' '\e[m' ;;
     (vaio2016|dyna2018|letsnote2019)
-      mshex/set-prompt '\e[31m' '\e[m' ;;
+      mshex/set-prompt '\e[34m' '\e[m' ;;
     (laguerre*|neumann|mathieu|gell-mann|hankel)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
+    (hp2019|song-*)
+      mshex/set-prompt $'\e[31m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
     esac
