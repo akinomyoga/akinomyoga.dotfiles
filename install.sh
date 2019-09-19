@@ -14,6 +14,11 @@
 
 function mkd { [[ -d $1 ]] || mkdir -p "$1"; }
 function mkcd { mkd "$1" && cd "$1"; }
+function array#push {
+  local __script='ARR[${#ARR[@]}]=$1'
+  __script=${__script//ARR/"$1"}; shift
+  while (($#)); do eval "$__script"; shift; done
+}
 
 MWGDIR=$HOME/.mwg
 LOGDIR=$MWGDIR/log/myset
@@ -221,12 +226,14 @@ function install.colored {
 
 function install.screen {
   local url=https://github.com/akinomyoga/screen/releases/download/myoga%2Fv4.6.2/screen-4.6.2.tar.xz
+  local -a make_options=()
+  type nproc &>/dev/null && array#push make_options -j $(nproc)
   ( mkcd "$MWGDIR/src" &&
       wget "$url" &&
       tar xJvf "${url##*/}" &&
       cd screen-4.6.2 &&
       ./configure --prefix="$HOME"/local --enable-colors256 &&
-      make all &&
+      make "${make_options[@]}" all &&
       make install )
 }
 
