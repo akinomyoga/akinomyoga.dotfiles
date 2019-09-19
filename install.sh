@@ -23,8 +23,8 @@ mkd "$LOGDIR"
 # update commands
 
 function updaterc {
-  local src="$1"
-  local dst="$2"
+  local src=$1
+  local dst=$2
   local fallback="${3:-${dst%/*}/${src##*/}.new}"
   if [[ -e $dst ]]; then
     diff -q "$dst" "$src" ||
@@ -35,12 +35,23 @@ function updaterc {
 }
 
 function myset/update-git {
-  local name="$1"
-  local base="$2"
+  local name=$1
+  local base=$2
   if [[ -d $name ]]; then
     cd "$name" && git pull
   else
     git clone "$base" && cd "$name"
+  fi
+}
+function myset/update-github {
+  local name=$1
+  local repository=${2%.git}.git
+  local keys;
+  keys=("$HOME"/.ssh/id_rsa-github@*)
+  if ((${#keys[@]})); then
+    myset/update-git "$name" "git@github.com:$repository"
+  else
+    myset/update-git "$name" "https://github.com/$repository"
   fi
 }
 
@@ -192,19 +203,19 @@ function install.user-dirs {
 
 function install.dotfiles {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git akinomyoga.dotfiles https://github.com/akinomyoga/akinomyoga.dotfiles.git &&
+      myset/update-github akinomyoga.dotfiles akinomyoga/akinomyoga.dotfiles.git &&
       make install )
 }
 
 function install.mshex {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git mshex https://github.com/akinomyoga/mshex.git &&
+      myset/update-github mshex akinomyoga/mshex.git &&
       make install )
 }
 
 function install.colored {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git colored https://github.com/akinomyoga/colored.git &&
+      myset/update-github colored akinomyoga/colored.git &&
       make install )
 }
 
@@ -259,13 +270,13 @@ function install.mwgpp {
 
 function install.myemacs {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git myemacs https://github.com/akinomyoga/myemacs.git &&
+      myset/update-github myemacs akinomyoga/myemacs.git &&
       make package-install install )
 }
 
 function install.ble {
   ( mkcd "$MWGDIR/src" &&
-      myset/update-git ble.sh https://github.com/akinomyoga/ble.sh.git &&
+      myset/update-github ble.sh akinomyoga/ble.sh.git &&
       make all )
 }
 
@@ -274,7 +285,7 @@ function show_status {
   while read line; do
     if [[ $line == 'declare -f install.'* ]]; then
       alpha=${line#declare -f install.}
-      [[ $alpha == *[^a-zA-Z_-]* ]] && continue
+      [[ $alpha == *[!a-zA-Z_-]* ]] && continue
       if [[ -e $LOGDIR/$alpha.stamp ]]; then
         echo "  done [32m$alpha[m"
       else
@@ -298,7 +309,7 @@ declare -a alphas
 alphas=()
 fUpdate=
 while (($#)); do
-  declare arg="$1"
+  declare arg=$1
   shift
   case "$arg" in
   (--update)
