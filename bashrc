@@ -343,7 +343,7 @@ if [[ $_dotfiles_mshex_path ]]; then
     LC_TIME=
   }
   function dotfiles/setup-path:song-HP-Z840-Workstation {
-    dotfiles/setup-path:song-HP-Z840-Workstation
+    dotfiles/setup-path:song-HP-Z820-Workstation
   }
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
@@ -380,7 +380,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt '\e[34m' '\e[m' ;;
     (laguerre*|neumann|mathieu|gell-mann|hankel)
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
-    (hp2019|song-*)
+    (hp2019|song-*|song???)
       mshex/set-prompt $'\e[31m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
