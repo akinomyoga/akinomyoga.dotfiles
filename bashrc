@@ -341,9 +341,8 @@ if [[ $_dotfiles_mshex_path ]]; then
     LC_PAPER=
     LC_TELEPHONE=
     LC_TIME=
-  }
-  function dotfiles/setup-path:song-HP-Z840-Workstation {
-    dotfiles/setup-path:song-HP-Z820-Workstation
+
+    alias ssh='ssh -F ~/.ssh/config'
   }
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
@@ -351,7 +350,9 @@ if [[ $_dotfiles_mshex_path ]]; then
   PATH.prepend /usr/local/bin:/usr/bin:/bin
   PATH.prepend -v MANPATH /usr/share/man:/usr/local/man
 
-  if declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
+  if [[ $HOSTNAME == song??? || $HOSTNAME == song-* ]]; then
+    dotfiles/setup-path:song-HP-Z820-Workstation
+  elif declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
     dotfiles/setup-path:"${HOSTNAME%%.*}"
   elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
     dotfiles/setup-path:laguerre
