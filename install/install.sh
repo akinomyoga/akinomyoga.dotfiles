@@ -280,16 +280,15 @@ EOF
   fi
 }
 function install.mwgpp {
-  mkd "$MWGDIR/bin"
-  cp -p mwg_pp.awk "$MWGDIR/bin/"
+  ( mkcd "$MWGDIR/src" &&
+      myset/update-github mwg_pp akinomyoga/mwg_pp.git &&
+      make install )
 }
-
 function install.myemacs {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github myemacs akinomyoga/myemacs.git &&
       make package-install install )
 }
-
 function install.ble {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github ble.sh akinomyoga/ble.sh.git &&
