@@ -23,7 +23,8 @@
 (custom-set-variables
  '(safe-local-variable-values
    (quote
-    ((sh-indent-comment . t)
+    ((coding: utf-8-unix)
+     (sh-indent-comment . t)
      (flycheck-sh-bash-args "-O" "extglob")
      (ps-mode-tab . 2)
      (mwg-no-delete-trailing-whitespaces . t)
