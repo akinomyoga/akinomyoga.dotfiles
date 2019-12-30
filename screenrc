@@ -8,9 +8,6 @@ defshell /bin/bash
 defscrollback 1000
 deflogin off
 
-cjkwidth east
-cjkwidth emacs
-
 bind w windowlist -b
 bind  windowlist -b
 
@@ -54,14 +51,32 @@ maptimeout 1
 # bindkey  -t "[27;5;9~[27;5;9~" other
 
 caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
-#windowlist string "%?%F%{= bW}%:%{ WK}%?%4n %t%=%f"
-windowlist string "%?%F%{= gW}%:%{ Wb}%?%4n %t%=%f"
 
 #defmousetrack on
 term screen-256color
 termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
 termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
 termcapinfo rosaterm 'Co#256:pa#32767:'
+
+#------------------------------------------------------------------------------
+# 改造版 screen 独自コマンド
+
+# Note: screen-4.6.2 では %F は常に false なので windowlist の着色には使えない。
+#   screen-4.6.2m では %F は選択されている時に true になる様に改造した。
+#   更に 4.99.0 では %{ fb} という設定 (f=fg, b=bg) ができなくなった。
+#   4.99.0m では無理やりその機能を復元する patch を当てている。
+windowlist string "%?%F%{= Wb}%:%{ bW}%?%4n %t%=%f"
+# rendition silence "= RW"
+# rendition monitor "=u RW"
+# rendition bell "=ub RW"
+
+cjkwidth east
+cjkwidth emacs # myoga
+truecolor on
+attach_password off # myoga
+
+# Note: 4.99.0m では xterm-256color に等価?
+term screen.xterm-256color
 
 #------------------------------------------------------------------------------
 # Multi-user mode の設定方法
