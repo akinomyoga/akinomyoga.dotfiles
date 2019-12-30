@@ -65,7 +65,7 @@ termcapinfo rosaterm 'Co#256:pa#32767:'
 #   screen-4.6.2m では %F は選択されている時に true になる様に改造した。
 #   更に 4.99.0 では %{ fb} という設定 (f=fg, b=bg) ができなくなった。
 #   4.99.0m では無理やりその機能を復元する patch を当てている。
-windowlist string "%?%F%{= Wb}%:%{ bW}%?%4n %t%=%f"
+windowlist string "%?%F%{= bW}%:%{= Wb}%?%4n %t%=%f"
 # rendition silence "= RW"
 # rendition monitor "=u RW"
 # rendition bell "=ub RW"
