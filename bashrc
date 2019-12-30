@@ -350,6 +350,8 @@ if [[ $_dotfiles_mshex_path ]]; then
   PATH.prepend /usr/local/bin:/usr/bin:/bin
   PATH.prepend -v MANPATH /usr/share/man:/usr/local/man
 
+  export TEXMFHOME=$HOME/.local/share/texmf
+
   if [[ $HOSTNAME == song??? || $HOSTNAME == song-* ]]; then
     dotfiles/setup-path:song-HP-Z820-Workstation
   elif declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
