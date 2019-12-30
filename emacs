@@ -53,6 +53,8 @@
 (mwg-setup-mwg-doxygen)
 (mwg-add-hook-js2-mode)
 
+(require 'mwg-decode-map)
+
 ;; (setq auto-mode-alist (append
 ;;                        '(("\\.\\([xs]?html?\\)$" . xml-mode))
 ;;                        auto-mode-alist))
