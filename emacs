@@ -45,7 +45,7 @@
 (mwg-init-custom-color)
 
 (mwg-add-hook-csharp) ;; recursive load error??
-(mwg-add-hook-gnuplot "C:\\usr\\prog\\gnuplot\\bin\\pgnuplot.exe")
+(add-to-list 'auto-mode-alist '("\\.\\(gp\\|plt\\)$" . sh-mode))
 (mwg-add-hook-bashfc)
 (mwg-add-hook-xml-mode)
 (mwg-add-hook-mwg-c++exp)
