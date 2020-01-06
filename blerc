@@ -59,6 +59,11 @@ function blerc/vim-load-hook {
   bleopt keymap_vi_imap_undo=more
 
   source "$_ble_base"/keymap/vi_test.sh
+
+  # # test arpeggio
+  # source "$_ble_base/lib/vim-arpeggio.sh"
+  # bleopt vim_arpeggio_timeoutlen=40
+  # ble/lib/vim-arpeggio.sh/bind -f jk vi_imap/normal-mode
 }
 if ((_ble_version>=400)); then
   blehook/eval-after-load keymap_vi blerc/vim-load-hook
