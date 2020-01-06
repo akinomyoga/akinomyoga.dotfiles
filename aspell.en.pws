@@ -1,4 +1,4 @@
-personal_ws-1.1 en 249 
+personal_ws-1.1 en 255 
 AGS
 Aarts
 Abelian
@@ -22,10 +22,12 @@ CBM
 CEE
 CERN
 CGC
+CMS
 Chromo
 Conf
 DOI
 Danmarks
+EKRT
 EoS
 EoSs
 Eqs
@@ -50,6 +52,7 @@ JSPS
 Jacobian
 Jia
 KAKENHI
+KLN
 Kadanoff
 Kapusta
 Kawaguchi
@@ -81,6 +84,7 @@ Noether
 Ohnishi
 Okai
 Otuka
+PCE
 PHENIX
 PRD
 PYTHIA
@@ -205,6 +209,7 @@ pQCD
 parametrization
 parametrize
 parametrized
+parametrizes
 parton
 partonic
 partons
@@ -217,6 +222,7 @@ plasmas
 pointwise
 polytrope
 polytropic
+pre
 pseudorapidity
 quarkyonic
 quartic
