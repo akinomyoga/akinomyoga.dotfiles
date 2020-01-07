@@ -327,6 +327,12 @@ if [[ $_dotfiles_mshex_path ]]; then
   function dotfiles/setup-path:hp2019 {
     dotfiles/setup-path-local
     source ~/opt/dlang/dmd-2.088.0/activate.murase
+    export HOMEBREW_PREFIX=$HOME/opt/linuxbrew
+    export HOMEBREW_CELLAR=$HOMEBREW_PREFIX/Cellar
+    export HOMEBREW_REPOSITORY=$HOMEBREW_PREFIX/Homebrew
+    PATH.prepend "$HOMEBREW_PREFIX"/{bin,sbin}
+    PATH.prepend -v MANPATH "$HOMEBREW_PREFIX"/share/man
+    PATH.prepend -v INFOPATH "$HOMEBREW_PREFIX"/share/info
   }
 
   function dotfiles/setup-path:song-HP-Z820-Workstation {
