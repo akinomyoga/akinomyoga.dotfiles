@@ -1,0 +1,9 @@
+# gitignore
+
+# backup files
+*~
+backup
+
+# generated files
+
+/dist
