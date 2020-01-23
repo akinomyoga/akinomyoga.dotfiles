@@ -11,7 +11,6 @@ bleopt char_width_mode=emacs emoji_width=
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
 bleopt complete_auto_delay=1
-bleopt internal_stackdump_enabled=1
 
 if ((_ble_version<400)); then
   ((_ble_bash>=40100)) && bind 'set skip-completed-text on'
@@ -24,14 +23,19 @@ bleopt edit_vbell=1
 
 bleopt menu_linewise_prefix=$' \e[1;32m>\e[m '
 
-bleopt decode_error_cseq_vbell=1 # for debugging
-
 #ble-color-setface auto_complete fg=246
 
 #bleopt filename_ls_colors="$LS_COLORS"
 
 [[ $TERM == screen-256color ]] &&
   bleopt term_true_colors=
+
+if ((_ble_version<400)); then
+  function blehook/eval-after-load {
+    local hook=_ble_${1}_load_hook
+    ble/array#push "$hook" "$2"
+  }
+fi
 
 function blerc/vim-load-hook {
   bind 'set keyseq-timeout 1'
@@ -65,11 +69,7 @@ function blerc/vim-load-hook {
   # bleopt vim_arpeggio_timeoutlen=40
   # ble/lib/vim-arpeggio.sh/bind -f jk vi_imap/normal-mode
 }
-if ((_ble_version>=400)); then
-  blehook/eval-after-load keymap_vi blerc/vim-load-hook
-else
-  ble/array#push _ble_keymap_vi_load_hook blerc/vim-load-hook
-fi
+blehook/eval-after-load keymap_vi blerc/vim-load-hook
 
 function blerc/complete-load-hook {
   [[ $OSTYPE == cygwin ]] &&
@@ -104,11 +104,28 @@ function blerc/complete-load-hook {
   }
   ble-sabbrev -m '\commit'='blerc/sabbrev-git-commit'
 }
-if ((_ble_version>=400)); then
-  blehook/eval-after-load complete blerc/complete-load-hook
-else
-  ble/array#push _ble_complete_load_hook blerc/complete-load-hook
-fi
+blehook/eval-after-load complete blerc/complete-load-hook
+
+#------------------------------------------------------------------------------
+# for debugging
+
+bleopt internal_stackdump_enabled=1
+bleopt decode_error_cseq_vbell=1 # for debugging
+function ble/widget/debug/toggle-debug-switch {
+  if [[ $ble_debug ]]; then
+    ble_debug=
+  else
+    ble_debug=1
+  fi
+}
+function blerc/debug/print-undo-history {
+  printf '%s\n' "${_ble_edit_undo[@]}"
+}
+function blerc/debug/vim-hook {
+  ble-bind -f 'f11' debug/toggle-debug-switch
+  ble-bind -c 'f12' blerc/debug/print-undo-history
+}
+blehook/eval-after-load keymap_vi blerc/debug/vim-hook
 
 #------------------------------------------------------------------------------
 #
