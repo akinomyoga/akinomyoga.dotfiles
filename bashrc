@@ -1,5 +1,11 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+case $HOSTNAME in
+(song???)
+  [[ $- == *i* && ${BASH_VERSINFO[0]} == [34] && -x ~/bin/bash-5.0 ]] &&
+    exec ~/bin/bash-5.0 ;;
+esac
+
 # Source global definitions
 if [[ $OSTYPE != cygwin ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
