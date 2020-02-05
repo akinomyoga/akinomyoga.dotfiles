@@ -355,6 +355,8 @@ if [[ $_dotfiles_mshex_path ]]; then
     LC_TIME=
 
     alias ssh='ssh -F ~/.ssh/config'
+    alias scp='scp -p -F ~/.ssh/config'
+    export GIT_SSH_COMMAND='ssh -F ~/.ssh/config'
   }
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
