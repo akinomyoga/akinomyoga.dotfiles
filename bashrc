@@ -1,9 +1,15 @@
 # -*- mode: sh; mode: sh-bash -*-
 
-case $HOSTNAME in
+function dotfiles/exec-bash {
+  local bash=$1
+  [[ $- != *i* || $BASH == $bash ]] && return 0
+  [[ -x $bash ]] || return 1
+  exec $bash
+}
+case ${HOSTNAME%%.*} in
 (song???)
-  [[ $- == *i* && ${BASH_VERSINFO[0]} == [34] && -x ~/bin/bash-5.0 ]] &&
-    exec ~/bin/bash-5.0 ;;
+  dotfiles/exec-bash /opt/bash/5.0.11/bin/bash
+  dotfiles/exec-bash ~/bin/bash-5.0 ;;
 esac
 
 # Source global definitions
@@ -30,7 +36,7 @@ case ${HOSTNAME%%.*} in
   if [ -f /etc/bashrc ]; then
     . /etc/bashrc
   fi
-
+  
   # Uncomment the following line if you don't like systemctl's auto-paging feature:
   # export SYSTEMD_PAGER=
   ;;
