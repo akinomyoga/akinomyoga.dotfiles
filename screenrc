@@ -54,7 +54,7 @@ caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
 
 #defmousetrack on
 term screen-256color
-termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:mh=\E[9m:sa=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m:'
 termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
 termcapinfo rosaterm 'Co#256:pa#32767:'
 
