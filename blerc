@@ -88,7 +88,9 @@ function blerc/complete-load-hook {
   ble/color/defface blerc_git_commit_id fg=navy
   ble/complete/action/inherit-from blerc_git_commit_id word
   function ble/complete/action:blerc_git_commit_id/init-menu-item {
+    local ret
     ble/color/face2g blerc_git_commit_id
+    g=$ret
   }
   function blerc/sabbrev-git-commit {
     bleopt sabbrev_menu_style=desc-raw
