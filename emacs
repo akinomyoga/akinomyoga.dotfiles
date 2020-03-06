@@ -38,7 +38,7 @@
 (load "mwg")
 (mwg-init-tabwidth 2)
 (mwg-init-pcmark)
-(mwg-init-mouse)
+;;(mwg-init-mouse)
 
 (custom-set-variables
  '(frame-background-mode 'light))
