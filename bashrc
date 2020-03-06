@@ -493,5 +493,50 @@ if [[ $- == *i* ]]; then
 fi
 #------------------------------------------------------------------------------
 
+function a {
+  #echo "$*" | bc -l
+  awk "BEGIN{print $*;exit;}"
+}
+## 関数 ble/widget/xword.locate-backward.1 index
+##   @param[in] index
+##   @var[out] ret
+function ble/widget/xword.locate-backward.1 {
+  local index=$1
+  if ble/syntax/completion-context/.search-last-istat "$((index-1))"; then
+    local istat=$ret stat wlen
+    ble/string#split-words stat "${_ble_syntax_stat[istat]}"
+    if (((wlen=stat[1])>=0)); then
+      ((ret=istat-wlen))
+      return 0
+    fi
+
+    local rex='^[^()<>|&:;$_ble_term_IFS]'
+    if ((_ble_syntax_bash_command_BeginCtx[stat[0]])) && 
+         [[ ${_ble_edit_str:istat} =~ $rex ]]; then
+      ((ret=istat))
+      return 0
+    fi
+  fi
+  ret=-1
+  return 1
+}
+function ble/widget/quote-xword {
+  [[ $_ble_edit_str ]] || return
+
+  local ret
+  ble/widget/xword.locate-backward.1 "$_ble_edit_ind"
+  local beg=$ret end=$_ble_edit_ind
+  ((beg>=0)) || return
+  local ins=${_ble_edit_str:beg:end-beg} q=\' Q="'\''"
+  ins="'${ins//$q/$Q}'"
+
+  ble-edit/content/replace "$beg" "$end" "$ins"
+  ((_ble_edit_ind=beg+${#ins}-1,
+    _ble_edit_mark>${#_ble_edit_str}&&(
+      _ble_edit_mark=${#_ble_edit_str})))
+  return 0
+}
+ble-bind -f 'C-x q' quote-xword
+
 [[ $_dotfiles_blesh_manual_attach ]] &&
   ((_ble_bash)) && ble-attach
