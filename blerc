@@ -58,6 +58,8 @@ function blerc/vim-load-hook {
   ble-bind -f 'C-w'      'kill-region-or kill-uword'
   ble-bind -m vi_cmap -f 'C-w' 'kill-region-or kill-uword'
 
+  ble-bind -m vi_imap -f 'C-o' 'accept-and-next'
+
   ble-decode/keymap:vi_imap/define-meta-bindings
 
   bleopt keymap_vi_imap_undo=more
@@ -123,11 +125,10 @@ function ble/widget/debug/toggle-debug-switch {
 function blerc/debug/print-undo-history {
   printf '%s\n' "${_ble_edit_undo[@]}"
 }
-function blerc/debug/vim-hook {
-  ble-bind -f 'f11' debug/toggle-debug-switch
-  ble-bind -c 'f12' blerc/debug/print-undo-history
-}
-blehook/eval-after-load keymap_vi blerc/debug/vim-hook
+ble-bind -m vi_imap -f 'f11' debug/toggle-debug-switch
+ble-bind -m vi_nmap -f 'f11' debug/toggle-debug-switch
+ble-bind -m vi_imap -c 'f12' blerc/debug/print-undo-history
+ble-bind -m vi_nmap -c 'f12' blerc/debug/print-undo-history
 
 #------------------------------------------------------------------------------
 #
