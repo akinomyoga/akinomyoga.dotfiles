@@ -12,16 +12,6 @@ case ${HOSTNAME%%.*} in
   dotfiles/exec-bash ~/bin/bash-5.0 ;;
 esac
 
-# Source global definitions
-if [[ $OSTYPE != cygwin ]]; then
-  # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
-  if [[ -f /etc/profile ]]; then
-    . /etc/profile
-  elif [[ -f /etc/bashrc ]]; then
-    . /etc/bashrc
-  fi
-fi
-
 case ${HOSTNAME%%.*} in
 (padparadscha)
   # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
@@ -120,6 +110,34 @@ if [[ ! $NOBLE && $- == *i* ]]; then
       _dotfiles_blesh_manual_attach=1
       source "$_dotfiles_blesh_path" noattach
     fi
+fi
+
+
+# Source global definitions
+if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
+  # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
+  if ((_ble_bash)); then
+    # /etc/profile.d/*.sh の読み込みが遅い
+    bashrc_source_guard=:
+    bashrc_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
+    bashrc_source_delayed_list=flatpak.sh:modules.sh:bash_completion.sh
+    function bashrc/source.advice {
+      local arg=${ADVICE_WORDS[1]}
+      [[ $bashrc_source_guard == *:"$arg":* ]] && return
+      [[ :$bashrc_source_exclude_list: == *:"${arg##*/}":* ]] && return
+      if [[ :$bashrc_source_delayed_list: == *:"${arg##*/}":* ]]; then
+        ble-import -d "$arg"
+        return
+      fi
+      bashrc_source_guard=$bashrc_source_guard$1:
+      ble/function#advice/do
+    }
+    ble/function#advice around . bashrc/source.advice
+    . /etc/bashrc
+    ble/function#advice remove .
+  else
+    . /etc/bashrc
+  fi
 fi
 
 #------------------------------------------------------------------------------
@@ -539,6 +557,10 @@ if [[ $- == *i* ]]; then
   }
   ble-bind -f 'C-x q' quote-xword
 fi
+
+# To test fzf
+#((_ble_bash)) && ble-import -d ~/.fzf.bash
+#[[ $- == *i* ]] && source ~/.fzf.bash
 
 [[ $_dotfiles_blesh_manual_attach ]] &&
   ((_ble_bash)) && ble-attach
