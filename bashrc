@@ -386,7 +386,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   source "$_dotfiles_mshex_path"/shrc/path.sh
   PATH.prepend /usr/local/sbin:/usr/sbin
   PATH.prepend /usr/local/bin:/usr/bin:/bin
-  PATH.prepend -v MANPATH /usr/share/man:/usr/local/man
+  PATH.prepend -v MANPATH /usr/share/man:/usr/local/share/man:/usr/local/man
 
   export TEXMFHOME=$HOME/.local/share/texmf
 
