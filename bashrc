@@ -216,6 +216,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   function dotfiles/setup-path:chatoyancy {
     dotfiles/setup-path-local
     export GOPATH=$HOME/go
+    PATH.append PATH ~/prog/ext-github/oilshell.oil/bin
   }
 
   function dotfiles/setup-path:vaio2016 {
@@ -559,8 +560,10 @@ if [[ $- == *i* ]]; then
 fi
 
 # To test fzf
-#((_ble_bash)) && ble-import -d ~/.fzf.bash
-#[[ $- == *i* ]] && source ~/.fzf.bash
+# ((_ble_bash)) && ble-import -d ~/.fzf.bash
+# _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+# ble-import -d contrib/fzf-completion
+# ble-import -d contrib/fzf-key-bindings
 
 [[ $_dotfiles_blesh_manual_attach ]] &&
   ((_ble_bash)) && ble-attach
