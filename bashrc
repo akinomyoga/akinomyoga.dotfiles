@@ -1,5 +1,7 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
+
 function dotfiles/exec-bash {
   local bash=$1
   [[ $- != *i* || $BASH == $bash ]] && return 0
