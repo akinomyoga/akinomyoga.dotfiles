@@ -122,7 +122,8 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     # /etc/profile.d/*.sh の読み込みが遅い
     bashrc_source_guard=:
     bashrc_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
-    bashrc_source_delayed_list=flatpak.sh:modules.sh:bash_completion.sh
+    bashrc_source_exclude_list=$bashrc_source_exclude_list:bash_completion.sh
+    bashrc_source_delayed_list=flatpak.sh:modules.sh
     function bashrc/source.advice {
       local arg=${ADVICE_WORDS[1]}
       [[ $bashrc_source_guard == *:"$arg":* ]] && return
@@ -137,6 +138,10 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     ble/function#advice around . bashrc/source.advice
     . /etc/bashrc
     ble/function#advice remove .
+
+    # bash_completion は関数内で source すると動かない
+    [[ -f /etc/profile.d/bash_completion.sh ]] &&
+      . /etc/profile.d/bash_completion.sh
   else
     . /etc/bashrc
   fi
