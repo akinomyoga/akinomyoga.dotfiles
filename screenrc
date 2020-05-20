@@ -26,11 +26,27 @@ maptimeout 1
 # bindkey -t "[B" focus down
 # bindkey -t "[C" focus right
 # bindkey -t "[D" focus left
+# bindkey -t "OA" focus up
+# bindkey -t "OB" focus down
+# bindkey -t "OC" focus right
+# bindkey -t "OD" focus left
 # bindkey -t "[1;5A" resize -v -l -3
 # bindkey -t "[1;5B" resize -v -l +3
 # bindkey -t "[1;5C" resize -h -l +5
 # bindkey -t "[1;5D" resize -h -l -5
 # bindkey -t "" other
+
+# s-up, etc. to move region
+bindkey "[1;9A" focus up
+bindkey "[1;9B" focus down
+bindkey "[1;9C" focus right
+bindkey "[1;9D" focus left
+
+# C-s-up, etc. to resize region
+bindkey "[1;13A" resize -v -l -3
+bindkey "[1;13B" resize -v -l -3
+bindkey "[1;13C" resize -h -l +5
+bindkey "[1;13D" resize -h -l -5
 
 # escape 
 # escape \377\377
