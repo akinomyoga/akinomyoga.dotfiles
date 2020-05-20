@@ -564,12 +564,6 @@ if [[ $BLE_VERSION ]]; then
     return 0
   }
   ble-bind -f 'C-x q' quote-xword
-
-  # To test fzf
-  #((_ble_bash)) && ble-import -d ~/.fzf.bash
-  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
-  # ble-import -d contrib/fzf-completion
-  # ble-import -d contrib/fzf-key-bindings
 fi
 
 [[ $_dotfiles_blesh_manual_attach ]] &&

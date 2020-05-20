@@ -68,6 +68,10 @@ function blerc/vim-load-hook {
 
   source "$_ble_base"/keymap/vi_test.sh
 
+  # bleopt keymap_vi_mode_name_{insert=挿入,replace=置換,vreplace=仮想置換}
+  # bleopt keymap_vi_mode_name_{visual=ビジュアル,select=選択}
+  # bleopt keymap_vi_mode_name_{linewise=行,blockwise=矩形}
+
   # # test arpeggio
   # source "$_ble_base/lib/vim-arpeggio.sh"
   # bleopt vim_arpeggio_timeoutlen=40
@@ -160,8 +164,8 @@ bleopt rps1='\q{blerc/git}'
 #
 #------------------------------------------------------------------------------
 
-if [[ ${HOSTNAME%%.*} == padparadscha ]]; then
-  bleopt edit_vbell=1
+if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
+  #bleopt edit_vbell=1
   # shopt -s failglob
   # shopt -s checkjobs
 
@@ -201,4 +205,15 @@ if [[ ${HOSTNAME%%.*} == padparadscha ]]; then
   # 2019-02-09 結合テスト
   #source ~/.bashrc.bash-it
   #source ~/.bashrc.oh-my-bash
+
+  # 2020-02-09 fzfテスト
+  #((_ble_bash)) && ble-import -d ~/.fzf.bash
+  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  # ble-import -d contrib/fzf-completion
+  # ble-import -d contrib/fzf-key-bindings
+
+  # 2020-05-20
+  #ble-import contrib/prompt-vim-mode
+  #ble-import contrib/prompt-git
+  # PS1='\q{contrib/vim-mode}'
 fi
