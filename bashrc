@@ -474,7 +474,7 @@ if [[ $- == *i* ]]; then
     [[ ! $pid ]] || return 0
 
     #echo "dotfiles/start_bg ($$): $tty $pid" >> ~/a.txt
-    bash -c "while sleep $interval; do echo -n \$'\005'; done # tag: start_bg" &
+    bash -c "while sleep $interval && kill -0 $$ 2>/dev/null; do echo -n \$'\005'; done # tag: start_bg" &
     disown
   }
 
@@ -519,7 +519,7 @@ if [[ $- == *i* ]]; then
 fi
 #------------------------------------------------------------------------------
 
-if [[ $- == *i* ]]; then
+if [[ $BLE_VERSION ]]; then
   function a {
     #echo "$*" | bc -l
     awk "BEGIN{print $*;exit;}"
@@ -564,13 +564,13 @@ if [[ $- == *i* ]]; then
     return 0
   }
   ble-bind -f 'C-x q' quote-xword
-fi
 
-# To test fzf
-# ((_ble_bash)) && ble-import -d ~/.fzf.bash
-# _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
-# ble-import -d contrib/fzf-completion
-# ble-import -d contrib/fzf-key-bindings
+  # To test fzf
+  #((_ble_bash)) && ble-import -d ~/.fzf.bash
+  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  # ble-import -d contrib/fzf-completion
+  # ble-import -d contrib/fzf-key-bindings
+fi
 
 [[ $_dotfiles_blesh_manual_attach ]] &&
   ((_ble_bash)) && ble-attach
