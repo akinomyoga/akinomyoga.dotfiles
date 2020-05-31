@@ -144,19 +144,20 @@ ble-bind -m vi_nmap -c 'f12' blerc/debug/print-undo-history
 function ble/prompt/backslash:blerc/git {
   ((COLUMNS>=120)) || return 0
 
-  # [[ $_ble_term_DA2R == '67;*' ]] &&
+  # [[ $_ble_term_DA2R == '99;'* ]] &&
   #   ble-edit/prompt/print $'\e[1l\e[6h\eV'
 
-  ble/prompt/process-prompt-string '\q{contrib/git-info}'
+  ble/prompt/backslash:contrib/git-info ||
+    ble-edit/prompt/process-prompt-string '\w'
 
-  # [[ $_ble_term_DA2R == '67;*' ]] &&
+  # [[ $_ble_term_DA2R == '99;'* ]] &&
   #   ble-edit/prompt/print $'\eW'
 
   return 0
 }
 ble-import contrib/prompt-git
-bleopt rps1='\q{blerc/git}'
-#bleopt rps1_transient=1
+bleopt prompt_rps1='\q{blerc/git}'
+#bleopt prompt_rps1_transient=1
 
 #------------------------------------------------------------------------------
 #
@@ -164,7 +165,7 @@ bleopt rps1='\q{blerc/git}'
 #
 #------------------------------------------------------------------------------
 
-if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
+if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then :
   #bleopt edit_vbell=1
   # shopt -s failglob
   # shopt -s checkjobs
