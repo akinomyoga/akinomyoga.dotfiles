@@ -1,4 +1,4 @@
-personal_ws-1.1 en 281 
+personal_ws-1.1 en 285 
 AGS
 Aarts
 Abelian
@@ -144,6 +144,8 @@ anisotropies
 anisotropy
 ansatz
 antisymmetric
+attractor
+attractors
 autocorrelation
 autocorrelations
 autoencoder
@@ -172,6 +174,7 @@ datasets
 decompositions
 deconfined
 decorrelation
+decorrelations
 deformability
 diagonalized
 differentiable
