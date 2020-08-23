@@ -25,10 +25,6 @@ bleopt edit_vbell=1
 
 bleopt menu_linewise_prefix=$' \e[1;32m>\e[m '
 
-#ble-color-setface auto_complete fg=246
-
-#bleopt filename_ls_colors="$LS_COLORS"
-
 [[ $TERM == screen-256color ]] &&
   bleopt term_true_colors=
 
@@ -165,31 +161,25 @@ bleopt prompt_rps1='\q{blerc/git}'
 #
 #------------------------------------------------------------------------------
 
-if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then :
-  #bleopt edit_vbell=1
-  # shopt -s failglob
-  # shopt -s checkjobs
+if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
+  # 2020-08-22
+  bleopt complete_auto_menu=300
+  #bleopt complete_menu_maxlines=10
 
-  # ble/util/idle の確認
-  # if ble/is-function ble/util/idle.push; then
-  #   function bashrc/task/show-time {
-  #     ble/util/idle.sleep 1000
-  #     local ret; printf -v ret '%(%F %T %Z)T'
-  #     ble-edit/info/immediate-show text "$ret"
-  #   }
-  #   ble/util/idle.push-background 'bashrc/task/show-time'
-  # fi
+  # 2020-05-20
+  #ble-import contrib/prompt-vim-mode
+  #ble-import contrib/prompt-git
+  # PS1='\q{contrib/vim-mode}'
 
-  # core-complete.sh 遅延ロードテスト
-  # ble/array#push _ble_complete_load_hook bashrc/complete-load-hook
-  # function bashrc/complete-load-hook {
-  #   ble-color-setface auto_complete fg=246
-  #   ble-bind -m auto_complete -f 'C-x C-i' 'auto_complete/insert'
-  # }
+  # 2020-02-09 fzfテスト
+  # ((_ble_bash)) && ble-import -d ~/.fzf.bash
+  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  # ble-import -d contrib/fzf-completion
+  # ble-import -d contrib/fzf-key-bindings
 
-  # 減色の確認
-  # bleopt term_index_colors=0
-  # _ble_term_colors=8
+  # 2019-02-09 結合テスト
+  #source ~/.bashrc.bash-it
+  #source ~/.bashrc.oh-my-bash
 
   # 2019-01-27 complete -I のテスト
   # if ((_ble_bash>=50000)); then
@@ -203,18 +193,30 @@ if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then :
   #   complete -I -F _comp_initial_word -o bashdefault
   # fi
 
-  # 2019-02-09 結合テスト
-  #source ~/.bashrc.bash-it
-  #source ~/.bashrc.oh-my-bash
+  # 減色の確認
+  # bleopt term_index_colors=0
+  # _ble_term_colors=8
 
-  # 2020-02-09 fzfテスト
-  #((_ble_bash)) && ble-import -d ~/.fzf.bash
-  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
-  # ble-import -d contrib/fzf-completion
-  # ble-import -d contrib/fzf-key-bindings
+  # core-complete.sh 遅延ロードテスト
+  # ble/array#push _ble_complete_load_hook bashrc/complete-load-hook
+  # function bashrc/complete-load-hook {
+  #   ble-color-setface auto_complete fg=246
+  #   ble-bind -m auto_complete -f 'C-x C-i' 'auto_complete/insert'
+  # }
 
-  # 2020-05-20
-  #ble-import contrib/prompt-vim-mode
-  #ble-import contrib/prompt-git
-  # PS1='\q{contrib/vim-mode}'
+  # ble/util/idle の確認
+  # if ble/is-function ble/util/idle.push; then
+  #   function bashrc/task/show-time {
+  #     ble/util/idle.sleep 1000
+  #     local ret; printf -v ret '%(%F %T %Z)T'
+  #     ble-edit/info/immediate-show text "$ret"
+  #   }
+  #   ble/util/idle.push-background 'bashrc/task/show-time'
+  # fi
+
+  # bleopt edit_vbell=1
+  # shopt -s failglob
+  # shopt -s checkjobs
+  # ble-color-setface auto_complete fg=246
+  # bleopt filename_ls_colors="$LS_COLORS"
 fi
