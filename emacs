@@ -86,25 +86,26 @@
 ;;
 (require 'package)
 (setq package-enable-at-startup nil)
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 ;; 2019-02-02 marmalade が使えなくなっている?
+;; 2020-09-02 melpa.milkbox.net も使えなくなった。
 ;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-;;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;;(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
-;; 2018-06-28: 以下の padparadscha 由来の設定が
-;;   何のためにあったのか不明
-(defvar mwg/config/package.guard nil)
-(eval-after-load "package"
-  (unless mwg/config/package.guard
-    (setq mwg/config/package.guard t)
-    (require 'package)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.org/packages/") t)
-    (when (< emacs-major-version 24)
-      ;; For important compatibility libraries like cl-lib
-      (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-    (package-initialize)))
+;; 2018-06-28: 以下の padparadscha 由来の設定が何のためにあったのか不明
+;; 2020-09-02 Emacs 27 にしたらエラーを出力する様になったのでコメントアウト。
+;; (defvar mwg/config/package.guard nil)
+;; (eval-after-load "package"
+;;   (unless mwg/config/package.guard
+;;     (setq mwg/config/package.guard t)
+;;     (require 'package)
+;;     (add-to-list 'package-archives
+;;                  '("melpa" . "http://melpa.org/packages/") t)
+;;     (when (< emacs-major-version 24)
+;;       ;; For important compatibility libraries like cl-lib
+;;       (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+;;     (package-initialize)))
 
 ;;-----------------------------------------------------------------------------
 ;; settings for auto-complete-mode
