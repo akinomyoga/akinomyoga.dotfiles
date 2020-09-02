@@ -62,7 +62,7 @@ function myset/update-github {
 
 #------------------------------------------------------------------------------
 
-function install.tic {
+function install:tic {
   echo registering rosaterm.ti...
   tic terminfo/rosaterm.ti || exit 1
   echo registering screen-256color.ti...
@@ -158,7 +158,7 @@ _yum_packages=(
 )
 
 ## @var[out] YUM
-function install.yum/determine-packager {
+function install:yum/determine-packager {
   YUM=yum
   if [[ -f /etc/os-release ]]; then
     # read systemd /etc/os-release
@@ -177,20 +177,20 @@ function install.yum/determine-packager {
     fi
   fi
 }
-function install.yum-minimal {
-  local YUM; install.yum/determine-packager
+function install:yum-minimal {
+  local YUM; install:yum/determine-packager
   sudo $YUM install $_yum_packages_minimal || exit 1
   touch "$LOGDIR"/yum.stamp
 }
-function install.yum {
-  local YUM; install.yum/determine-packager
+function install:yum {
+  local YUM; install:yum/determine-packager
   sudo $YUM install "${_yum_packages[@]}" || exit 1
   touch "$LOGDIR"/yum.stamp
 }
 
 #------------------------------------------------------------------------------
 
-function install.user-dirs {
+function install:user-dirs {
   local -a dirnames
   dirnames=(デスクトップ ダウンロード テンプレート 公開 ドキュメント 音楽 画像 ビデオ
             Desktop Downloads Templates Public Documents Music Pictures Videos)
@@ -206,26 +206,26 @@ function install.user-dirs {
   sed -i "$sed_script" "$HOME/.config/user-dirs.dirs"
 }
 
-function install.dotfiles {
+function install:dotfiles {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github akinomyoga.dotfiles akinomyoga/akinomyoga.dotfiles.git &&
       make install )
 }
 
-function install.mshex {
+function install:mshex {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github mshex akinomyoga/mshex.git &&
       make install )
 }
 
-function install.colored {
+function install:colored {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github colored akinomyoga/colored.git &&
       make install )
 }
 
 # cygwin では ncurses-devel と libcrypt-devel が必要である
-function install.screen {
+function install:screen {
   local url=https://github.com/akinomyoga/screen/releases/download/myoga%2Fv4.6.2/screen-4.6.2.tar.xz
   local -a make_options=()
   type nproc &>/dev/null && array#push make_options -j $(nproc)
@@ -238,7 +238,7 @@ function install.screen {
       make install )
 }
 
-function install.contra {
+function install:contra {
   local -a make_options=()
   type nproc &>/dev/null && array#push make_options -j $(nproc)
   ( mkcd "$MWGDIR/src" &&
@@ -246,27 +246,27 @@ function install.contra {
       make "${make_options[@]}" all )
 }
 
-function install.github {
+function install:github {
   # create ~/.ssh/config
   local fconfig=~/.ssh/config
   if [[ ! -e $fconfig ]]; then
     ( umask 077
       mkd ~/.ssh
       echo '# ssh_config' > "$fconfig" )
-    echo "myset (install.github): $fconfig is generated"
+    echo "myset (install:github): $fconfig is generated"
   fi
 
   # create ~/.ssh/id_rsa-github
   local fkey=~/.ssh/id_rsa-github@${HOSTNAME%%.*}
   if [[ ! -e $fkey ]]; then
-    echo "myset (install.github): generating $fkey..."
+    echo "myset (install:github): generating $fkey..."
     ssh-keygen -t rsa -b 4096 -f "$fkey"
   fi
 
   if ! grep -q '\bgithub.com\b' "$fconfig"; then
     cat <<EOF >> "$fconfig"
 
-# GitHub (automatically added by myset/install.github)
+# GitHub (automatically added by myset/install:github)
 Host github.com
   HostName github.com
   Port 22
@@ -274,34 +274,53 @@ Host github.com
   IdentityFile $fkey
 
 EOF
-    echo "myset (install.github): github.com is added to ssh_config ($fconfig)."
+    echo "myset (install:github): github.com is added to ssh_config ($fconfig)."
   else
-    echo "myset (install.github): ssh_config ($fconfig) seems to already have a github.com entry."
+    echo "myset (install:github): ssh_config ($fconfig) seems to already have a github.com entry."
   fi
 }
-function install.mwgpp {
+
+function install:mwgpp {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github mwg_pp akinomyoga/mwg_pp.git &&
       make install )
 }
-function install.myemacs {
+function install:myemacs/completed {
+  [[ -f ~/.mwg/bin/mwg_pp.awk ]]
+}
+
+function install:myemacs {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github myemacs akinomyoga/myemacs.git &&
       make package-install install )
 }
-function install.ble {
+function install:myemacs/completed {
+  [[ -f ~/.emacs.d/my/mwg.elc ]]
+}
+
+function install:blesh {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github ble.sh akinomyoga/ble.sh.git &&
       make all )
 }
+function install:blesh/completed {
+  [[ -f $MWGDIR/src/ble.sh/out/ble.sh ]]
+}
 
+function show_status/completed {
+  local alpha=$1
+  declare -f "install:$alpha/completed" &>/dev/null &&
+    "install:$alpha/completed"  &&
+    return 0
+  [[ -e $LOGDIR/$alpha.stamp ]]
+}
 function show_status {
   local line alpha
   while read line; do
-    if [[ $line == 'declare -f install.'* ]]; then
-      alpha=${line#declare -f install.}
+    if [[ $line == 'declare -f install:'* ]]; then
+      alpha=${line#declare -f install:}
       [[ $alpha == *[!a-zA-Z_-]* ]] && continue
-      if [[ -e $LOGDIR/$alpha.stamp ]]; then
+      if show_status/completed "$alpha"; then
         echo "  done [32m$alpha[m"
       else
         echo "  todo [31m$alpha[m"
@@ -338,7 +357,7 @@ done
 
 declare alpha
 for alpha in "${alphas[@]}"; do
-  if ! declare -f "install.$alpha" &>/dev/null; then
+  if ! declare -f "install:$alpha" &>/dev/null; then
     echo "myset-install.sh: command $alpha not found" >&2
     continue
   fi
@@ -349,5 +368,5 @@ for alpha in "${alphas[@]}"; do
     continue
   fi
 
-  "install.$alpha" && touch "$fstamp"
+  "install:$alpha" && touch "$fstamp"
 done

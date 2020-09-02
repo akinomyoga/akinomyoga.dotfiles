@@ -26,7 +26,10 @@ copyfiles+=screenrc
 
 $(copyfiles):
 	cp -p $< $@
-all: $(copyfiles)
+
+copy-from-local: $(copyfiles)
+.PHONY: copy-from-local
+#all: copy-from-local
 
 install:
 	./install.sh
