@@ -114,7 +114,6 @@ if [[ ! $NOBLE && $- == *i* ]]; then
     fi
 fi
 
-
 # Source global definitions
 if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
@@ -124,6 +123,10 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     bashrc_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
     bashrc_source_exclude_list=$bashrc_source_exclude_list:bash_completion.sh
     bashrc_source_delayed_list=flatpak.sh:modules.sh
+    case $HOSTNAME in
+    (ln23.para.bscc)
+      bashrc_source_exclude_list=$bashrc_source_exclude_list:login_new.sh ;;
+    esac
     function bashrc/source.advice {
       local arg=${ADVICE_WORDS[1]}
       [[ $bashrc_source_guard == *:"$arg":* ]] && return
@@ -389,6 +392,34 @@ if [[ $_dotfiles_mshex_path ]]; then
     alias ssh='ssh -F ~/.ssh/config'
     alias scp='scp -p -F ~/.ssh/config'
     export GIT_SSH_COMMAND='ssh -F ~/.ssh/config'
+  }
+
+  function dotfiles/setup-path:ln23 {
+    dotfiles/setup-path-local
+    PATH.prepend -v LD_LIBRARY_PATH /usr/lib/gcc/x86_64-redhat-linux
+    PATH.append -v LD_LIBRARY_PATH ~/opt/gcc/10.2.0/lib
+    PATH.append -v LD_LIBRARY_PATH ~/opt/gcc/10.2.0/lib64
+    PATH.append -v LD_LIBRARY_PATH ~/opt/mpfr/4.1.0/lib
+    PATH.append -v LD_LIBRARY_PATH ~/opt/gmp/6.2.0/lib
+    PATH.append -v LD_LIBRARY_PATH ~/opt/mpc/1.2.0/lib
+
+    #export SYSTEMD_PAGER=
+    #module load anaconda/3-Python3.7.4-RSeQC-wxl
+    module load python/3.7.3-Leicc
+    module load szip/2.1.1-wzm
+    module load hdf5/1.8.13-gcc-zyq
+    module load gcc/8.3.0-wzm
+    module load intel/18.0.2-thc
+    module load mpi/intel/18.0.2-thc
+    module load mpich/3.1.3_fengjy
+    module load boost/172-gcc-cjj
+    module load lapack/3.9.0-wxl
+    module load gsl/2.5-cjj
+    module load cmake/3.15.5-szf
+    #PATH.append -v C_INCLUDE_PATH /WORK/app/boost/1_58_0-gcc492-MPI/include
+
+    PATH.remove /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin
+    PATH.append /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin
   }
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
