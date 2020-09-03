@@ -119,26 +119,26 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
   if ((_ble_bash)); then
     # /etc/profile.d/*.sh の読み込みが遅い
-    bashrc_source_guard=:
-    bashrc_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
-    bashrc_source_exclude_list=$bashrc_source_exclude_list:bash_completion.sh
-    bashrc_source_delayed_list=flatpak.sh:modules.sh
+    _dotfiles_source_guard=:
+    _dotfiles_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
+    _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:bash_completion.sh
+    _dotfiles_source_delayed_list=flatpak.sh:modules.sh
     case $HOSTNAME in
     (ln23.para.bscc)
-      bashrc_source_exclude_list=$bashrc_source_exclude_list:login_new.sh ;;
+      _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:login_new.sh ;;
     esac
-    function bashrc/source.advice {
+    function dotfiles/source.advice {
       local arg=${ADVICE_WORDS[1]}
-      [[ $bashrc_source_guard == *:"$arg":* ]] && return
-      [[ :$bashrc_source_exclude_list: == *:"${arg##*/}":* ]] && return
-      if [[ :$bashrc_source_delayed_list: == *:"${arg##*/}":* ]]; then
+      [[ $_dotfiles_source_guard == *:"$arg":* ]] && return
+      [[ :$_dotfiles_source_exclude_list: == *:"${arg##*/}":* ]] && return
+      if [[ :$_dotfiles_source_delayed_list: == *:"${arg##*/}":* ]]; then
         ble-import -d "$arg"
         return
       fi
-      bashrc_source_guard=$bashrc_source_guard$1:
+      _dotfiles_source_guard=$_dotfiles_source_guard$1:
       ble/function#advice/do
     }
-    ble/function#advice around . bashrc/source.advice
+    ble/function#advice around . dotfiles/source.advice
     . /etc/bashrc
     ble/function#advice remove .
 
