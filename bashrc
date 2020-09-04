@@ -14,35 +14,6 @@ case ${HOSTNAME%%.*} in
   dotfiles/exec-bash ~/bin/bash-5.0 ;;
 esac
 
-case ${HOSTNAME%%.*} in
-(padparadscha)
-  # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
-  #   source /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh
-  # fi
-  if [[ -f /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh ]]; then
-    source /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh
-  fi ;;
-
-(gell-mann)
-  # Source global definitions
-  if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
-  fi
-
-  # Uncomment the following line if you don't like systemctl's auto-paging feature:
-  # export SYSTEMD_PAGER=
-  ;;
-
-(laguerre*)
-  # Source global definitions
-  if [[ ! $LSF_LIBDIR && -f /etc/profile.local ]]; then
-    source /etc/profile.local &>/dev/null
-  fi
-  source /etc/bashrc &>/dev/null
-  source ~/.bashrc_default ;;
-
-esac
-
 umask 022
 
 #------------------------------------------------------------------------------
@@ -120,8 +91,8 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
   if ((_ble_bash)); then
     # /etc/profile.d/*.sh の読み込みが遅い
     _dotfiles_source_guard=:
-    _dotfiles_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh:which2.sh:vte.sh:vim.sh:gawk.sh
-    _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:bash_completion.sh
+    _dotfiles_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh
+    _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:which2.sh:vte.sh:vim.sh:gawk.sh:bash_completion.sh
     _dotfiles_source_delayed_list=flatpak.sh:modules.sh
     case $HOSTNAME in
     (ln23.para.bscc)
@@ -149,6 +120,28 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     . /etc/bashrc
   fi
 fi
+
+
+case ${HOSTNAME%%.*} in
+(padparadscha)
+  # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
+  #   source /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh
+  # fi
+  if [[ -f /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh ]]; then
+    source /opt/intel/composer_xe_2013_sp1.3.174/bin/ia32/idbvars.sh
+  fi ;;
+
+(gell-mann)
+  # export SYSTEMD_PAGER=
+  ;;
+
+(laguerre*)
+  # Source global definitions
+  if [[ ! $LSF_LIBDIR && -f /etc/profile.local ]]; then
+    source /etc/profile.local &>/dev/null
+  fi
+  source ~/.bashrc_default ;;
+esac
 
 #------------------------------------------------------------------------------
 # load common settings from mshex
