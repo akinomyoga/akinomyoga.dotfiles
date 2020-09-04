@@ -2,17 +2,19 @@
 
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
-function dotfiles/exec-bash {
-  local bash=$1
-  [[ $- != *i* || $BASH == $bash ]] && return 0
-  [[ -x $bash ]] || return 1
-  exec $bash
-}
-case ${HOSTNAME%%.*} in
-(song???)
-  dotfiles/exec-bash /opt/bash/5.0.11/bin/bash
-  dotfiles/exec-bash ~/bin/bash-5.0 ;;
-esac
+if [[ $- == *i* ]]; then
+  function dotfiles/exec-bash {
+    local bash=$1
+    [[ $BASH == $bash ]] && return 0
+    [[ -x $bash ]] || return 1
+    exec $bash
+  }
+  case ${HOSTNAME%%.*} in
+  (song???)
+    dotfiles/exec-bash /opt/bash/5.0.11/bin/bash
+    dotfiles/exec-bash ~/bin/bash-5.0 ;;
+  esac
+fi
 
 umask 022
 
