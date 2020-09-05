@@ -9,10 +9,20 @@ if [[ $- == *i* ]]; then
     [[ -x $bash ]] || return 1
     exec $bash
   }
-  case ${HOSTNAME%%.*} in
-  (song???)
+  case $HOSTNAME in
+  (song???*)
     dotfiles/exec-bash /opt/bash/5.0.11/bin/bash
     dotfiles/exec-bash ~/bin/bash-5.0 ;;
+  (ln23.para.bscc)
+    if [[ $TERM == *+WmHxaQ ]]; then
+      TERM=${TERM%+*}
+      HOME=/public1/home/sc50150/murase
+      cd "$HOME"
+      dotfiles/exec-bash ~/opt/bash/5.0.18/bin/bash
+      exec /bin/bash
+    else
+      dotfiles/exec-bash ~/opt/bash/5.0.18/bin/bash
+    fi ;;
   esac
 fi
 
@@ -413,6 +423,7 @@ if [[ $_dotfiles_mshex_path ]]; then
     module load cmake/3.15.5-szf
     #PATH.append -v C_INCLUDE_PATH /WORK/app/boost/1_58_0-gcc492-MPI/include
 
+    PATH.prepend ~/.opt/idt/bin
     PATH.remove /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin
     PATH.append /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin
   }
@@ -512,7 +523,7 @@ if [[ $- == *i* ]]; then
     return 0
   }
 
-  case ${HOSTNAME%%.*} in
+  case $HOSTNAME in
   (padparadscha)
     dotfiles/start_bg 20 ;;
 
@@ -541,6 +552,16 @@ if [[ $- == *i* ]]; then
 
       "$@"
     } ;;
+  (ln23.para.bscc)
+    alias q='idtsub'
+    # 何故か mode_XtermFocusEventMouse が有効になるので off にする。
+    # 例えば他のウィンドウに移っている時には優先度を下げるなどの処置に使う?
+    # 然し実際に処理されていないから ble.sh や他の application が受信する。
+    printf '\e[?1014l'
+    if [[ $BASH_VERSION ]]; then
+      ble-bind -k 'SS3 I' focus
+      ble-bind -k 'ESC O I' focus
+    fi ;;
   esac
 fi
 #------------------------------------------------------------------------------

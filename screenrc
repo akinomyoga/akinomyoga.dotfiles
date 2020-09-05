@@ -86,6 +86,9 @@ windowlist string "%?%F%{= bW}%:%{= Wb}%?%4n %t%=%f"
 # rendition monitor "=u RW"
 # rendition bell "=ub RW"
 
+# For dark background
+#windowlist string "%?%F%{=b}%:%{= .B}%?%4n %t%=%f"
+
 cjkwidth east
 cjkwidth emacs # myoga
 truecolor on
