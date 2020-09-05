@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function mkd { [[ -d $1 ]] || mkdir -p "$1"; }
-function ble/is-function { delclare -f "$1" &>/dev/null; }
+function ble/is-function { declare -f "$1" &>/dev/null; }
 function ble/function#try {
   ble/is-function "$1" || return 127
   "$@"
@@ -14,9 +14,11 @@ OPTDIR=$HOME/opt
 
 function pkg/download {
   local url=$1
-  local file=${1%%'?'*}; file=${file##*/}
+  local file=${1%%'?'*}
+  file=$PKGDIR/${file##*/}
+  [[ $flags != *f* && -s $file ]] && return 0
   mkd "$PKGDIR"
-  wget -nv "$url" -O "$PKGDIR/$file"
+  wget "$url" -O "$file"
 }
 
 function pkg/extract {
@@ -50,6 +52,8 @@ function pkg/parse-name-version {
       sed -En 's/(\.tar\.(gz|xz|bz2|zst)|\.zip)$//p' |
       sort -Vr | head -1)
   [[ $version ]] && return 0
+
+  ble/is-function "pkg:$name/get" && return 0
 
   echo "pkg.sh: unknown package '$1'" >&2
   return 2
@@ -186,18 +190,97 @@ function pkg:emacs/install {
   install/type:configure emacs
 }
 
+function pkg:mpfr/get { pkg/download https://ftp.gnu.org/gnu/mpfr/mpfr-4.1.0.tar.xz; }
+function pkg:mpfr/depends { dependencies=(gmp); }
+function pkg:mpfr/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  install/type:configure mpfr -Wc,--with-gmp="$gmp_prefix"
+}
+
+function pkg:mpc/get { pkg/download https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz; }
+function pkg:mpc/depends { dependencies=(mpfr gmp); }
+function pkg:mpc/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  pkg/get-installed-version mpfr || return 1
+  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
+
+  install/type:configure mpc -Wc,--with-mpfr="$mpfr_prefix",--with-gmp="$gmp_prefix"
+}
+
+function pkg:gcc/get { pkg/download https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz; }
+function pkg:gcc/depends { dependencies=(mpc mpfr gmp); }
+function pkg:gcc/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  pkg/get-installed-version mpfr || return 1
+  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
+
+  pkg/get-installed-version mpc || return 1
+  local mpc_prefix=$OPTDIR/mpc/$name/$version
+
+  local -x LD_LIBRARY_PATH=$gmp_prefix/lib:$mpfr_prefix/lib:$mpc_prefix/lib
+  install/type:configure \
+    gcc \
+    -Wc,--with-gmp="$gmp_prefix" \
+    -Wc,--with-mpfr="$mpfr_prefix" \
+    -Wc,--with-mpc="$mpc_prefix" \
+    -Wc,--disable-multilib
+}
+
+function pkg/clone/readargs {
+  flags=
+  name=
+  path_local=
+  path_github=
+  while (($#)); do
+    local arg=$1; shift
+    if [[ $flags != *R* && $arg == -* ]]; then
+      case $arg in
+      (-l)  path_local=$1; shift ;;
+      (-l*) path_local=${arg:2} ;;
+      (--github=*) path_github=${arg#*=} ;;
+      (--github)   path_github=$1; shift ;;
+      (--local=*)  path_local=${arg#*=} ;;
+      (--local)    path_local=$1; shift ;;
+      (--)  flags=R$flags ;;
+      (*)   echo "pkg/clone: unrecognized option '$arg'" >&2
+            flags=E$flags ;;
+      esac
+    else
+      name=$arg
+    fi
+  done
+  [[ $flags != *E* ]]
+}
+
 # .mwg/src よりコピーする
+function pkg/clone {
+  local flags name path_local path_github
+  pkg/clone/readargs "$@"
+
+  local name=$1
+  local dst=$PKGDIR/$name.tar.xz
+  [[ $flags != *f* && -s $dst ]] && return 1
+  if [[ $path_local && -d $path_local ]]; then
+    (cd "$path_local"; git gc)
+    git clone --recursive "$path_local" "$TMPDIR/$name"
+  elif [[ $path_github ]]; then
+    git clone --recursive "$path_github" "$TMPDIR/$name"
+  fi || return 1
+  ( cd "$TMPDIR" &&
+    tar caf "$dst" "./$name" &&#
+    rm -rf "$TMPDIR/$name" )
+}
 function pkg/clone:mwg {
   local name=$1
-  if [[ -d ~/.mwg/src/$name ]]; then
-    git clone --recursive "$HOME/.mwg/src/$name" "$TMPDIR/$name"
-  else
-    git clone --recursive "git@github.com:akinomyoga/$name.git" "$TMPDIR/$name"
-  fi || return 1
-  ( cd "$TMPDIR/$name"; git gc )
-  ( cd "$TMPDIR" &&
-    tar caf "$PKGDIR/$name.tar.xz" "./$name" &&#
-    rm -rf "$TMPDIR/$name" )
+  pkg/clone "$name" \
+            --local="$HOME/.mwg/src/$name" \
+            --github="git@github.com:akinomyoga/$name.git"
 }
 
 function pkg:akinomyoga.dotfiles/get { pkg/clone:mwg akinomyoga.dotfiles; }
@@ -209,17 +292,56 @@ function pkg:contra/get   { pkg/clone:mwg contra  ; }
 function pkg:psforest/get { pkg/clone:mwg psforest; }
 function pkg:screen/get   { pkg/clone:mwg screen  ; }
 
+function pkg:hprism/get {
+  pkg/clone hprism --local ~/work/idt/hprism --github git@github.com:akinomyoga/hprism.git
+}
+function pkg:hydro2jam/get {
+  pkg/clone hydro2jam --local ~/work/idt/hydro2jam --github git@github.com:akinomyoga/hydro2jam.git
+}
+function pkg:pku/get {
+  pkg/clone pku --local ~/work/pku --github git@github.com:akinomyoga/pku-work.git
+}
+
 function sub:package {
-  local package flags=
-  for package; do
-    if ble/is-function "pkg:$package"/get; then
-      "pkg:$package"/get
+  local packages flags=
+  packages=()
+  while (($#)); do
+    local arg=$1; shift
+    if [[ $arg == -* ]]; then
+      case $arg in
+      (-f)
+        flags=${arg:1:1}$flags ;;
+      (--force)
+        flags=${arg:2:1}$flags ;;
+      (*)
+        echo "pkg.sh package: unknown option " >&2
+        flags=E$flags
+      esac
     else
-      echo "pkg.sh: unknown package '$package'" >&2
-      flags=e$flags
+      local name version
+      if pkg/parse-name-version "$arg" && ble/is-function "pkg:$name"/get; then
+        packages+=("$arg")
+      else
+        echo "pkg.sh: unknown package '$arg'" >&2
+        flags=E$flags
+      fi
     fi
   done
-  [[ $flags != *e* ]]
+  [[ $flags == *E* ]] && return 1
+
+  local package dependencies depend
+  for package in "${packages[@]}"; do
+    local name version
+    pkg/parse-name-version "$package"
+
+    # 依存関係のチェック
+    dependencies=()
+    ble/function#try "pkg:$name"/depends "$package"
+    ((${#dependencies[@]})) && sub:package "${dependencies[@]}"
+
+    "pkg:$name"/get "$package" || return 1
+  done
+  return 0
 }
 
 if (($#==0)); then
