@@ -21,6 +21,49 @@ function pkg/download {
   wget "$url" -O "$file"
 }
 
+function pkg/clone/.readargs {
+  flags=
+  name=
+  path_local=
+  path_github=
+  while (($#)); do
+    local arg=$1; shift
+    if [[ $flags != *R* && $arg == -* ]]; then
+      case $arg in
+      (-l)  path_local=$1; shift ;;
+      (-l*) path_local=${arg:2} ;;
+      (--github=*) path_github=${arg#*=} ;;
+      (--github)   path_github=$1; shift ;;
+      (--local=*)  path_local=${arg#*=} ;;
+      (--local)    path_local=$1; shift ;;
+      (--)  flags=R$flags ;;
+      (*)   echo "pkg/clone: unrecognized option '$arg'" >&2
+            flags=E$flags ;;
+      esac
+    else
+      name=$arg
+    fi
+  done
+  [[ $flags != *E* ]]
+}
+function pkg/clone {
+  local flags name path_local path_github
+  pkg/clone/.readargs "$@"
+
+  local name=$1
+  local dst=$PKGDIR/$name.tar.xz
+  [[ $flags != *f* && -s $dst ]] && return 1
+  if [[ $path_local && -d $path_local ]]; then
+    (cd "$path_local"; git gc)
+    git clone --recursive "$path_local" "$TMPDIR/$name"
+  elif [[ $path_github ]]; then
+    git clone --recursive "$path_github" "$TMPDIR/$name"
+  fi || return 1
+  ( cd "$TMPDIR" &&
+    tar caf "$dst" "./$name" &&#
+    rm -rf "$TMPDIR/$name" )
+}
+
 function pkg/extract {
   local tar
   for tar in "$PKGDIR/$1".*; do
@@ -77,7 +120,7 @@ function pkg/get-installed-version {
   return 2
 }
 
-function install/type:configure {
+function pkg/install:configure {
   local name version
   pkg/parse-name-version "$1" || return "$?"; shift
 
@@ -97,7 +140,7 @@ function install/type:configure {
       make -j install )
 }
 
-function pkg/install {
+function cmd:install {
   local package=$1
   local name version
   pkg/parse-name-version "$package" || return 1
@@ -107,7 +150,7 @@ function pkg/install {
   ble/function#try "pkg:$name/depends"
   local depend
   for depend in "${dependencies[@]}"; do
-    install "$depend" || return 1
+    cmd:install "$depend" || return 1
   done
 
   if ble/is-function "pkg:$package/install"; then
@@ -126,180 +169,6 @@ function pkg/install {
 
   echo "pkg: rule not found for '$name'." >&2
   return 2
-}
-
-#------------------------------------------------------------------------------
-
-function pkg:giflib/get {
-  local url='https://downloads.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz'
-  local query='?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fgiflib%2Ffiles%2Fgiflib-5.2.1.tar.gz%2Fdownload%3Fuse_mirror%3Djaist&ts=1599077287'
-  pkg/download "$url$query"
-}
-function pkg:giflib/install {
-  local name version
-  pkg/parse-name-version "$1" || return 1
-  ( mkcd "$TMPDIR" &&
-      pkg/extract "$1" &&
-      make -j PREFIX="$OPTDIR/$name/$version" all &&
-      make -j PREFIX="$OPTDIR/$name/$version" install )
-}
-
-function pkg:tiff/get { pkg/download https://download.osgeo.org/libtiff/tiff-4.1.0.tar.gz; }
-function pkg:tiff/install { install/type:configure tiff; }
-
-function pkg:gmp/get { pkg/download https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz; }
-function pkg:gmp/install { install/type:configure gmp; }
-
-function pkg:nettle/get {
-  case $1 in
-  (nettle-2.5)
-    pkg/download https://ftp.gnu.org/gnu/nettle/nettle-2.5.tar.gz ;;
-  (*)
-    pkg/download https://ftp.gnu.org/gnu/nettle/nettle-3.6.tar.gz
-  esac
-}
-function pkg:nettle/depends {
-  #dependencies=(gmp) # 実は不要?
-  dependencies=()
-} 
-function pkg:nettle/install { install/type:configure "$1"; }
-
-function pkg:gnutls/get { pkg/download https://ftp.gnu.org/gnu/gnutls/gnutls-3.1.5.tar.xz; }
-function pkg:gnutls/depends { dependencies=(nettle-2.5); }
-function pkg:gnutls/install { install/type:configure gnutls -Wc,--with-libnettle-prefix=$OPTDIR/nettle/2.5; }
-
-function pkg:emacs/get { pkg/download http://mirrors.kernel.org/gnu/emacs/emacs-27.1.tar.xz; }
-function pkg:emacs/depends { dependencies=(giflib tiff gnutls); }
-function pkg:emacs/install {
-  local -x CPPFLAGS= LDFLAGS= PKG_CONFIG_PATH=
-
-  local name version
-  pkg/get-installed-version gnutls || return 1
-  PKG_CONFIG_PATH=$OPTDIR/$name/$version/lib/pkgconfig
-
-  pkg/get-installed-version tiff || return 1
-  CPPFLAGS+=" -I $OPTDIR/$name/$version/include"
-  LDFLAGS+=" -L $OPTDIR/$name/$version/lib"
-  LDFLAGS+=" -Wl,-rpath,$OPTDIR/$name/$version/lib"
-
-  pkg/get-installed-version giflib || return 1
-  CPPFLAGS+=" -I $OPTDIR/$name/$version/include"
-  LDFLAGS+=" -L $OPTDIR/$name/$version/lib"
-  LDFLAGS+=" -Wl,-rpath,$OPTDIR/$name/$version/lib"
-
-  install/type:configure emacs
-}
-
-function pkg:mpfr/get { pkg/download https://ftp.gnu.org/gnu/mpfr/mpfr-4.1.0.tar.xz; }
-function pkg:mpfr/depends { dependencies=(gmp); }
-function pkg:mpfr/install {
-  pkg/get-installed-version gmp || return 1
-  local gmp_prefix=$OPTDIR/gmp/$name/$version
-
-  install/type:configure mpfr -Wc,--with-gmp="$gmp_prefix"
-}
-
-function pkg:mpc/get { pkg/download https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz; }
-function pkg:mpc/depends { dependencies=(mpfr gmp); }
-function pkg:mpc/install {
-  pkg/get-installed-version gmp || return 1
-  local gmp_prefix=$OPTDIR/gmp/$name/$version
-
-  pkg/get-installed-version mpfr || return 1
-  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
-
-  install/type:configure mpc -Wc,--with-mpfr="$mpfr_prefix",--with-gmp="$gmp_prefix"
-}
-
-function pkg:gcc/get { pkg/download https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz; }
-function pkg:gcc/depends { dependencies=(mpc mpfr gmp); }
-function pkg:gcc/install {
-  pkg/get-installed-version gmp || return 1
-  local gmp_prefix=$OPTDIR/gmp/$name/$version
-
-  pkg/get-installed-version mpfr || return 1
-  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
-
-  pkg/get-installed-version mpc || return 1
-  local mpc_prefix=$OPTDIR/mpc/$name/$version
-
-  local -x LD_LIBRARY_PATH=$gmp_prefix/lib:$mpfr_prefix/lib:$mpc_prefix/lib
-  install/type:configure \
-    gcc \
-    -Wc,--with-gmp="$gmp_prefix" \
-    -Wc,--with-mpfr="$mpfr_prefix" \
-    -Wc,--with-mpc="$mpc_prefix" \
-    -Wc,--disable-multilib
-}
-
-function pkg/clone/readargs {
-  flags=
-  name=
-  path_local=
-  path_github=
-  while (($#)); do
-    local arg=$1; shift
-    if [[ $flags != *R* && $arg == -* ]]; then
-      case $arg in
-      (-l)  path_local=$1; shift ;;
-      (-l*) path_local=${arg:2} ;;
-      (--github=*) path_github=${arg#*=} ;;
-      (--github)   path_github=$1; shift ;;
-      (--local=*)  path_local=${arg#*=} ;;
-      (--local)    path_local=$1; shift ;;
-      (--)  flags=R$flags ;;
-      (*)   echo "pkg/clone: unrecognized option '$arg'" >&2
-            flags=E$flags ;;
-      esac
-    else
-      name=$arg
-    fi
-  done
-  [[ $flags != *E* ]]
-}
-
-# .mwg/src よりコピーする
-function pkg/clone {
-  local flags name path_local path_github
-  pkg/clone/readargs "$@"
-
-  local name=$1
-  local dst=$PKGDIR/$name.tar.xz
-  [[ $flags != *f* && -s $dst ]] && return 1
-  if [[ $path_local && -d $path_local ]]; then
-    (cd "$path_local"; git gc)
-    git clone --recursive "$path_local" "$TMPDIR/$name"
-  elif [[ $path_github ]]; then
-    git clone --recursive "$path_github" "$TMPDIR/$name"
-  fi || return 1
-  ( cd "$TMPDIR" &&
-    tar caf "$dst" "./$name" &&#
-    rm -rf "$TMPDIR/$name" )
-}
-function pkg/clone:mwg {
-  local name=$1
-  pkg/clone "$name" \
-            --local="$HOME/.mwg/src/$name" \
-            --github="git@github.com:akinomyoga/$name.git"
-}
-
-function pkg:akinomyoga.dotfiles/get { pkg/clone:mwg akinomyoga.dotfiles; }
-function pkg:ble.sh/get   { pkg/clone:mwg ble.sh  ; }
-function pkg:mshex/get    { pkg/clone:mwg mshex   ; }
-function pkg:myemacs/get  { pkg/clone:mwg myemacs ; }
-function pkg:colored/get  { pkg/clone:mwg colored ; }
-function pkg:contra/get   { pkg/clone:mwg contra  ; }
-function pkg:psforest/get { pkg/clone:mwg psforest; }
-function pkg:screen/get   { pkg/clone:mwg screen  ; }
-
-function pkg:hprism/get {
-  pkg/clone hprism --local ~/work/idt/hprism --github git@github.com:akinomyoga/hprism.git
-}
-function pkg:hydro2jam/get {
-  pkg/clone hydro2jam --local ~/work/idt/hydro2jam --github git@github.com:akinomyoga/hydro2jam.git
-}
-function pkg:pku/get {
-  pkg/clone pku --local ~/work/pku --github git@github.com:akinomyoga/pku-work.git
 }
 
 function sub:package {
@@ -343,6 +212,143 @@ function sub:package {
   done
   return 0
 }
+
+#------------------------------------------------------------------------------
+
+function pkg:giflib/get {
+  local url='https://downloads.sourceforge.net/project/giflib/giflib-5.2.1.tar.gz'
+  local query='?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fgiflib%2Ffiles%2Fgiflib-5.2.1.tar.gz%2Fdownload%3Fuse_mirror%3Djaist&ts=1599077287'
+  pkg/download "$url$query"
+}
+function pkg:giflib/install {
+  local name version
+  pkg/parse-name-version "$1" || return 1
+  ( mkcd "$TMPDIR" &&
+      pkg/extract "$1" &&
+      make -j PREFIX="$OPTDIR/$name/$version" all &&
+      make -j PREFIX="$OPTDIR/$name/$version" install )
+}
+
+function pkg:tiff/get { pkg/download https://download.osgeo.org/libtiff/tiff-4.1.0.tar.gz; }
+function pkg:tiff/install { pkg/install:configure tiff; }
+
+function pkg:gmp/get { pkg/download https://ftp.gnu.org/gnu/gmp/gmp-6.2.0.tar.xz; }
+function pkg:gmp/install { pkg/install:configure gmp; }
+
+function pkg:nettle/get {
+  case $1 in
+  (nettle-2.5)
+    pkg/download https://ftp.gnu.org/gnu/nettle/nettle-2.5.tar.gz ;;
+  (*)
+    pkg/download https://ftp.gnu.org/gnu/nettle/nettle-3.6.tar.gz
+  esac
+}
+function pkg:nettle/depends {
+  #dependencies=(gmp) # 実は不要?
+  dependencies=()
+} 
+function pkg:nettle/install { pkg/install:configure "$1"; }
+
+function pkg:gnutls/get { pkg/download https://ftp.gnu.org/gnu/gnutls/gnutls-3.1.5.tar.xz; }
+function pkg:gnutls/depends { dependencies=(nettle-2.5); }
+function pkg:gnutls/install { pkg/install:configure gnutls -Wc,--with-libnettle-prefix=$OPTDIR/nettle/2.5; }
+
+function pkg:emacs/get { pkg/download http://mirrors.kernel.org/gnu/emacs/emacs-27.1.tar.xz; }
+function pkg:emacs/depends { dependencies=(giflib tiff gnutls); }
+function pkg:emacs/install {
+  local -x CPPFLAGS= LDFLAGS= PKG_CONFIG_PATH=
+
+  local name version
+  pkg/get-installed-version gnutls || return 1
+  PKG_CONFIG_PATH=$OPTDIR/$name/$version/lib/pkgconfig
+
+  pkg/get-installed-version tiff || return 1
+  CPPFLAGS+=" -I $OPTDIR/$name/$version/include"
+  LDFLAGS+=" -L $OPTDIR/$name/$version/lib"
+  LDFLAGS+=" -Wl,-rpath,$OPTDIR/$name/$version/lib"
+
+  pkg/get-installed-version giflib || return 1
+  CPPFLAGS+=" -I $OPTDIR/$name/$version/include"
+  LDFLAGS+=" -L $OPTDIR/$name/$version/lib"
+  LDFLAGS+=" -Wl,-rpath,$OPTDIR/$name/$version/lib"
+
+  pkg/install:configure emacs
+}
+
+function pkg:mpfr/get { pkg/download https://ftp.gnu.org/gnu/mpfr/mpfr-4.1.0.tar.xz; }
+function pkg:mpfr/depends { dependencies=(gmp); }
+function pkg:mpfr/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  pkg/install:configure mpfr -Wc,--with-gmp="$gmp_prefix"
+}
+
+function pkg:mpc/get { pkg/download https://ftp.gnu.org/gnu/mpc/mpc-1.2.0.tar.gz; }
+function pkg:mpc/depends { dependencies=(mpfr gmp); }
+function pkg:mpc/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  pkg/get-installed-version mpfr || return 1
+  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
+
+  pkg/install:configure mpc -Wc,--with-mpfr="$mpfr_prefix",--with-gmp="$gmp_prefix"
+}
+
+function pkg:gcc/get { pkg/download https://ftp.gnu.org/gnu/gcc/gcc-10.2.0/gcc-10.2.0.tar.xz; }
+function pkg:gcc/depends { dependencies=(mpc mpfr gmp); }
+function pkg:gcc/install {
+  pkg/get-installed-version gmp || return 1
+  local gmp_prefix=$OPTDIR/gmp/$name/$version
+
+  pkg/get-installed-version mpfr || return 1
+  local mpfr_prefix=$OPTDIR/mpfr/$name/$version
+
+  pkg/get-installed-version mpc || return 1
+  local mpc_prefix=$OPTDIR/mpc/$name/$version
+
+  local -x LD_LIBRARY_PATH=$gmp_prefix/lib:$mpfr_prefix/lib:$mpc_prefix/lib
+  pkg/install:configure \
+    gcc \
+    -Wc,--with-gmp="$gmp_prefix" \
+    -Wc,--with-mpfr="$mpfr_prefix" \
+    -Wc,--with-mpc="$mpc_prefix" \
+    -Wc,--disable-multilib
+}
+
+function pkg:git/get { pkg/download https://mirrors.edge.kernel.org/pub/software/scm/git/git-2.28.0.tar.xz; }
+function pkg:git/depends { dependencies=(); }
+function pkg:git/install { pkg/install:configure git; }
+
+# .mwg/src よりコピーする
+function pkg/clone:mwg {
+  local name=$1
+  pkg/clone "$name" \
+            --local="$HOME/.mwg/src/$name" \
+            --github="git@github.com:akinomyoga/$name.git"
+}
+
+function pkg:akinomyoga.dotfiles/get { pkg/clone:mwg akinomyoga.dotfiles; }
+function pkg:ble.sh/get   { pkg/clone:mwg ble.sh  ; }
+function pkg:mshex/get    { pkg/clone:mwg mshex   ; }
+function pkg:myemacs/get  { pkg/clone:mwg myemacs ; }
+function pkg:colored/get  { pkg/clone:mwg colored ; }
+function pkg:contra/get   { pkg/clone:mwg contra  ; }
+function pkg:psforest/get { pkg/clone:mwg psforest; }
+function pkg:screen/get   { pkg/clone:mwg screen  ; }
+
+function pkg:hprism/get {
+  pkg/clone hprism --local ~/work/idt/hprism --github git@github.com:akinomyoga/hprism.git
+}
+function pkg:hydro2jam/get {
+  pkg/clone hydro2jam --local ~/work/idt/hydro2jam --github git@github.com:akinomyoga/hydro2jam.git
+}
+function pkg:pku/get {
+  pkg/clone pku --local ~/work/pku --github git@github.com:akinomyoga/pku-work.git
+}
+
+#------------------------------------------------------------------------------
 
 if (($#==0)); then
   echo "usage: pkg.sh subcommand args..." >&2
