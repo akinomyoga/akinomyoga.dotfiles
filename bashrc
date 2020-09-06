@@ -552,6 +552,15 @@ if [[ $- == *i* ]]; then
 
       "$@"
     } ;;
+  (letsnote2019|chatoyancy)
+    function ssh {
+      case $1 in
+      (ln23)
+        TERM=$TERM+WmHxaQ command ssh "$@";;
+      (*)
+        command ssh "$@" ;;
+      esac
+    } ;;
   (ln23.para.bscc)
     alias q='idtsub'
     # 何故か mode_XtermFocusEventMouse が有効になるので off にする。
