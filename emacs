@@ -9,6 +9,7 @@
 (show-paren-mode 1)
 (column-number-mode 1)
 (delete-selection-mode)
+(set-quit-char 28)
 
 ;; emacs-24.4.1 勝手に全てのファイルの行頭にスペースが入る
 (electric-indent-mode -1)
