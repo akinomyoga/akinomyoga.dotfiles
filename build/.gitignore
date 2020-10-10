@@ -1,5 +1,6 @@
 # gitignore
 
+*.tar
 *.tar.xz
 *.tar.bz2
 *.tar.gz
