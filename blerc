@@ -1,8 +1,6 @@
 # blerc -*- mode: sh; mode: sh-bash -*-
 # Settings for ble.sh (https://github.com/akinomyoga/ble.sh)
 
-#bleopt_suppress_bash_output=
-
 shopt -u no_empty_cmd_completion
 
 set -o vi
@@ -118,10 +116,10 @@ blehook/eval-after-load complete blerc/complete-load-hook
 bleopt internal_stackdump_enabled=1
 bleopt decode_error_cseq_vbell=1 # for debugging
 function ble/widget/debug/toggle-debug-switch {
-  if [[ $ble_debug ]]; then
-    ble_debug=
+  if [[ $bleopt_syntax_debug ]]; then
+    bleopt syntax_debug=
   else
-    ble_debug=1
+    bleopt syntax_debug=1
   fi
 }
 function blerc/debug/print-undo-history {

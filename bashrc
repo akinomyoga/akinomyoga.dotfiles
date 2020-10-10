@@ -575,11 +575,12 @@ if [[ $- == *i* ]]; then
 fi
 #------------------------------------------------------------------------------
 
+function a {
+  #echo "$*" | bc -l
+  awk "BEGIN{print $*;exit;}"
+}
+
 if [[ $BLE_VERSION ]]; then
-  function a {
-    #echo "$*" | bc -l
-    awk "BEGIN{print $*;exit;}"
-  }
   ## 関数 ble/widget/xword.locate-backward.1 index
   ##   @param[in] index
   ##   @var[out] ret
@@ -620,6 +621,37 @@ if [[ $BLE_VERSION ]]; then
     return 0
   }
   ble-bind -f 'C-x q' quote-xword
+
+  # for debug
+
+  function debug/complete-load-hook {
+    filename_debug_log=debug.txt
+    function timestamp-args.advice {
+      echo "$EPOCHREALTIME ${ADVICE_WORDS[*]}" >> "$filename_debug_log"
+    }
+    ble/function#advice \
+      before ble-decode/.hook \
+      timestamp-args.advice
+
+    function timestamp-wrap.advice {
+      echo "$EPOCHREALTIME ${ADVICE_WORDS[0]} start" >> "$filename_debug_log"
+      ble/function#advice/do
+      echo "$EPOCHREALTIME ${ADVICE_WORDS[0]} end" >> "$filename_debug_log"
+    }
+    ble/function#advice \
+      around ble/complete/progcomp/.compgen-helper-prog \
+      timestamp-wrap.advice
+    ble/function#advice \
+      around ble/complete/progcomp/.compgen-helper-func \
+      timestamp-wrap.advice
+  }
+  #blehook/eval-after-load complete debug/complete-load-hook
+
+  # 2020-09-15 ble.sh debug
+  # ble/function#advice around _minimal '
+  #   ble/debug/print-variables "${!COMP_@}" 2>/dev/pts/14
+  #   ble/function#advice/do
+  #   ble/debug/print-variables COMPREPLY 2>/dev/pts/14'
 fi
 
 [[ $_dotfiles_blesh_manual_attach ]] &&
