@@ -13,7 +13,7 @@ if [[ $- == *i* ]]; then
   (song???*)
     dotfiles/exec-bash /opt/bash/5.0.11/bin/bash
     dotfiles/exec-bash ~/bin/bash-5.0 ;;
-  (ln23.para.bscc)
+  (ln2?.para.bscc)
     if [[ $TERM == *+WmHxaQ ]]; then
       TERM=${TERM%+*}
       HOME=/public1/home/sc50150/murase
@@ -107,7 +107,7 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:which2.sh:vte.sh:vim.sh:gawk.sh:bash_completion.sh
     _dotfiles_source_delayed_list=flatpak.sh:modules.sh
     case $HOSTNAME in
-    (ln23.para.bscc)
+    (ln2?.para.bscc)
       _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:login_new.sh ;;
     esac
     function dotfiles/source.advice {
@@ -435,13 +435,14 @@ if [[ $_dotfiles_mshex_path ]]; then
 
   export TEXMFHOME=$HOME/.local/share/texmf
 
-  if [[ $HOSTNAME == song??? || $HOSTNAME == song-* ]]; then
-    dotfiles/setup-path:song-HP-Z820-Workstation
-  elif declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null; then
-    dotfiles/setup-path:"${HOSTNAME%%.*}"
-  elif [[ ${HOSTNAME%%.*} == laguerre* ]]; then
-    dotfiles/setup-path:laguerre
-  fi
+  case $HOSTNAME in
+  (song???|song-*) dotfiles/setup-path:song-HP-Z820-Workstation ;;
+  (ln2?.para.bscc) dotfiles/setup-path:ln23 ;;
+  (laguerre*)      dotfiles/setup-path:laguerre ;;
+  (*)
+    declare -f dotfiles/setup-path:"${HOSTNAME%%.*}" &>/dev/null &&
+      dotfiles/setup-path:"${HOSTNAME%%.*}" ;;
+  esac
 
   PATH.prepend "$HOME"/{,.mwg/,local/,.local/}bin
 
@@ -555,13 +556,13 @@ if [[ $- == *i* ]]; then
   (letsnote2019|chatoyancy)
     function ssh {
       case $1 in
-      (ln23)
+      (ln2[0-9])
         TERM=$TERM+WmHxaQ command ssh "$@";;
       (*)
         command ssh "$@" ;;
       esac
     } ;;
-  (ln23.para.bscc)
+  (ln2?.para.bscc)
     alias q='idtsub'
     # 何故か mode_XtermFocusEventMouse が有効になるので off にする。
     # 例えば他のウィンドウに移っている時には優先度を下げるなどの処置に使う?
