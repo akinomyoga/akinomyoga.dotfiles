@@ -578,7 +578,14 @@ fi
 
 function a {
   #echo "$*" | bc -l
-  awk "BEGIN{print $*;exit;}"
+  awk "
+    function acos(x) { return atan2(sqrt(1-x*x),x); }
+    function asin(x) { return atan2(x,sqrt(1-x*x)); }
+    function acosh(x) { return log(x + sqrt(x*x-1)); }
+    function asinh(x) { return log(x + sqrt(x*x+1)); }
+    BEGIN{
+      M_PI = 3.14159265358979323846264;
+      print $*;exit;}"
 }
 
 if [[ $BLE_VERSION ]]; then
