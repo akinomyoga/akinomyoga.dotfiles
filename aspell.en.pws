@@ -1,4 +1,4 @@
-personal_ws-1.1 en 324 
+personal_ws-1.1 en 327 
 AGS
 Aarts
 Abelian
@@ -31,6 +31,7 @@ Conf
 Cygwin
 DOI
 Danmarks
+EINTR
 EKRT
 EoS
 EoSs
@@ -96,6 +97,7 @@ Okai
 Otuka
 PCE
 PHENIX
+POSIX
 PRD
 PTY
 PYTHIA
@@ -201,6 +203,7 @@ dissipative
 eigenspace
 eigenvector
 eigenvectors
+elusion
 enthalpy
 equilibrated
 et
