@@ -133,7 +133,6 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
   fi
 fi
 
-
 case ${HOSTNAME%%.*} in
 (padparadscha)
   # if [[ -f /opt/intel/composer_xe_2013.0.079/bin/ia32/idbvars.sh ]]; then
@@ -154,6 +153,9 @@ case ${HOSTNAME%%.*} in
   fi
   source ~/.bashrc_default ;;
 esac
+
+# システムの profile が勝手に umask を書き換える事があるので再設定
+umask 022
 
 #------------------------------------------------------------------------------
 # load common settings from mshex
