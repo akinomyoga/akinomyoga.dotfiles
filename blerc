@@ -40,6 +40,7 @@ function blerc/vim-load-hook {
   (xterm*)
     _ble_term_Ss=$'\e[@1 q' ;;
   esac
+
   ble-bind -m vi_nmap --cursor 2
   ble-bind -m vi_imap --cursor 0
   ble-bind -m vi_omap --cursor 4
@@ -51,8 +52,10 @@ function blerc/vim-load-hook {
   bleopt vim_surround_Q:=\"
 
   # C-w
-  ble-bind -m vi_imap -f 'C-w' 'kill-region-or kill-backward-uword'
-  ble-bind -m vi_cmap -f 'C-w' 'kill-region-or kill-backward-uword'
+  ble-bind -m vi_imap -f C-w 'kill-region-or kill-uword'
+  ble-bind -m vi_imap -f M-w 'copy-region-or copy-uword'
+  ble-bind -m vi_cmap -f C-w 'kill-region-or kill-uword'
+  ble-bind -m vi_cmap -f M-w 'copy-region-or copy-uword'
 
   ble-bind -m vi_imap -f 'C-o' 'accept-and-next'
 
@@ -162,8 +165,17 @@ bleopt prompt_rps1='\q{blerc/git}'
 #source ~/.mwg/src/ble.sh/memo/D1488.vim-mode-in-status.bash
 #bleopt prompt_status_align=justify
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
+  :
+  # source ~/.mwg/src/ble.sh/memo/D1488.vim-mode-in-status.bash
+
+  # 2020-12-31
+  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  # ble-import -d contrib/fzf-initialize
+  # ble-import -d contrib/fzf-completion
+  # ble-import -d ~/.mwg/src/ble.sh/ext/urbainvaes.fzf-marks/fzf-marks.plugin.bash
+
   # 2020-08-22
-  bleopt complete_auto_menu=300
+  #bleopt complete_auto_menu=1000
   #bleopt complete_menu_maxlines=10
 
   # 2020-05-20
