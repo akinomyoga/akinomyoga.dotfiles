@@ -283,7 +283,9 @@ EOF
 function install:mwgpp {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github mwg_pp akinomyoga/mwg_pp.git &&
-      make install )
+      make &&
+      mkd "$MWGDIR/bin" &&
+      cp out/mwg_pp.awk "$MWGDIR/bin" )
 }
 function install:myemacs/completed {
   [[ -f ~/.mwg/bin/mwg_pp.awk ]]
