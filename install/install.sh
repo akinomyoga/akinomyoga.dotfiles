@@ -63,11 +63,15 @@ function myset/update-github {
 #------------------------------------------------------------------------------
 
 function install:tic {
+  local ext=0
   echo registering rosaterm.ti...
-  tic terminfo/rosaterm.ti || exit 1
+  tic terminfo/rosaterm.ti || ext=$?
   echo registering screen-256color.ti...
-  tic terminfo/screen-256color.ti || exit 1
-  touch "$LOGDIR"/tic.stamp
+  tic terminfo/screen-256color.ti || ext=$?
+  echo registering screen.xterm-256color.ti...
+  tic terminfo/screen-256color.ti || ext=$?
+  ((ext==0)) && touch "$LOGDIR"/tic.stamp
+  return "$ext"
 }
 
 #------------------------------------------------------------------------------
