@@ -2,6 +2,7 @@
 # Settings for ble.sh (https://github.com/akinomyoga/ble.sh)
 
 shopt -u no_empty_cmd_completion
+((_ble_bash>=50000)) && shopt -s progcomp_alias
 
 set -o vi
 bleopt char_width_mode=emacs emoji_width=
@@ -47,7 +48,7 @@ function blerc/vim-load-hook {
   ble-bind -m vi_xmap --cursor 2
   ble-bind -m vi_cmap --cursor 5
 
-  source "$_ble_base/lib/vim-surround.sh"
+  ble-import vim-surround
   bleopt vim_surround_q:=\'
   bleopt vim_surround_Q:=\"
 
@@ -63,11 +64,11 @@ function blerc/vim-load-hook {
 
   bleopt keymap_vi_imap_undo=more
 
-  source "$_ble_base"/keymap/vi_test.sh
+  ble-import keymap/vi_test
 
-  # bleopt keymap_vi_mode_name_{insert=挿入,replace=置換,vreplace=仮想置換}
-  # bleopt keymap_vi_mode_name_{visual=ビジュアル,select=選択}
-  # bleopt keymap_vi_mode_name_{linewise=行,blockwise=矩形}
+  bleopt keymap_vi_mode_name_{insert=挿入,replace=置換,vreplace=仮想置換}
+  bleopt keymap_vi_mode_name_{visual=ビジュアル,select=選択}
+  bleopt keymap_vi_mode_name_{linewise=行,blockwise=矩形}
 
   # # test arpeggio
   # source "$_ble_base/lib/vim-arpeggio.sh"
