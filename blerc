@@ -74,6 +74,15 @@ function blerc/vim-load-hook {
   # source "$_ble_base/lib/vim-arpeggio.sh"
   # bleopt vim_arpeggio_timeoutlen=40
   # ble/lib/vim-arpeggio.sh/bind -f jk vi_imap/normal-mode
+
+  ble-import vim-airline
+  bleopt vim_airline_left_sep='▶'
+  bleopt vim_airline_left_alt_sep='>'
+  bleopt vim_airline_right_sep='◀'
+  bleopt vim_airline_right_alt_sep='<'
+  bleopt vim_airline_symbol_branch='#'
+  bleopt vim_airline_theme=light
+  bleopt keymap_vi_mode_show=1
 }
 blehook/eval-after-load keymap_vi blerc/vim-load-hook
 
@@ -133,6 +142,52 @@ ble-bind -m vi_imap -f 'f11' debug/toggle-debug-switch
 ble-bind -m vi_nmap -f 'f11' debug/toggle-debug-switch
 ble-bind -m vi_imap -c 'f12' blerc/debug/print-undo-history
 ble-bind -m vi_nmap -c 'f12' blerc/debug/print-undo-history
+
+#------------------------------------------------------------------------------
+
+function blerc/vim-airline.hook {
+  bleopt vim_airline_left_sep='▶'
+  bleopt vim_airline_left_alt_sep='>'
+  bleopt vim_airline_right_sep='◀'
+  bleopt vim_airline_right_alt_sep='<'
+  bleopt vim_airline_symbol_branch='#'
+
+  # # themes/landscape.vim (itchyny/landscape.vim)
+  # ble/color/setface vim_airline_x             fg=250,bg=240      # fg=#bcbcbc,bg=#585858
+  # ble/color/setface vim_airline_y             fg=236,bg=245      # fg=#303030,bg=#8a8a8a
+  # ble/color/setface vim_airline_z             fg=236,bg=252      # fg=#303030,bg=#d0d0d0
+  # ble/color/setface vim_airline_a_normal      fg=21,bg=231,bold  # fg=#0000ff,bg=#ffffff
+  # ble/color/setface vim_airline_b_normal      fg=231,bg=21       # fg=#ffffff,bg=#0000ff
+  # ble/color/setface vim_airline_c_normal      fg=231,bg=236      # fg=#ffffff,bg=#303030
+  # ble/color/setface vim_airline_x_normal      ref:vim_airline_x
+  # ble/color/setface vim_airline_y_normal      ref:vim_airline_y
+  # ble/color/setface vim_airline_z_normal      ref:vim_airline_z
+  # ble/color/setface vim_airline_a_insert      fg=22,bg=231,bold  # fg=#005f00,bg=#ffffff
+  # ble/color/setface vim_airline_b_insert      fg=231,bg=22       # fg=#ffffff,bg=#005f00
+  # ble/color/setface vim_airline_c_insert      fg=231,bg=236      # fg=#ffffff,bg=#303030
+  # ble/color/setface vim_airline_x_insert      ref:vim_airline_x
+  # ble/color/setface vim_airline_y_insert      ref:vim_airline_y
+  # ble/color/setface vim_airline_z_insert      ref:vim_airline_z
+  # ble/color/setface vim_airline_a_visual      fg=57,bg=231,bold  # fg=#5f00ff,bg=#ffffff
+  # ble/color/setface vim_airline_b_visual      fg=231,bg=57       # fg=#ffffff,bg=#5f00ff
+  # ble/color/setface vim_airline_c_visual      fg=231,bg=236      # fg=#ffffff,bg=#303030
+  # ble/color/setface vim_airline_x_visual      ref:vim_airline_x
+  # ble/color/setface vim_airline_y_visual      ref:vim_airline_y
+  # ble/color/setface vim_airline_z_visual      ref:vim_airline_z
+  # ble/color/setface vim_airline_a_replace     fg=124,bg=231,bold # fg=#af0000,bg=#ffffff
+  # ble/color/setface vim_airline_b_replace     fg=231,bg=124      # fg=#ffffff,bg=#af0000
+  # ble/color/setface vim_airline_c_replace     fg=231,bg=236      # fg=#ffffff,bg=#303030
+  # ble/color/setface vim_airline_x_replace     ref:vim_airline_x
+  # ble/color/setface vim_airline_y_replace     ref:vim_airline_y
+  # ble/color/setface vim_airline_z_replace     ref:vim_airline_z
+  # ble/color/setface vim_airline_a_inactive    fg=236,bg=233      # fg=#303030,bg=#121212
+  # ble/color/setface vim_airline_b_inactive    ref:vim_airline_a_inactive
+  # ble/color/setface vim_airline_c_inactive    ref:vim_airline_a_inactive
+  # ble/color/setface vim_airline_z_inactive    ref:vim_airline_a_inactive
+  # ble/color/setface vim_airline_y_inactive    ref:vim_airline_a_inactive
+  # ble/color/setface vim_airline_x_inactive    ref:vim_airline_a_inactive
+}
+#ble/util/import/eval-after-load lib/vim-airline 'blerc/vim-airline.hook'
 
 #------------------------------------------------------------------------------
 #
