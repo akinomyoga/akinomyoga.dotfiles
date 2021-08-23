@@ -11,3 +11,11 @@
 	default = simple
 [pull]
 	ff = only
+[sendemail]
+  confirm = auto
+  smtpServer = smtp.gmail.com
+  smtpServerPort = 587
+  smtpEncryption = tls
+  smtpUser = myoga.murase@gmail.com
+[include]
+  path = /home/murase/.ssh/sendemail.gitconfig
