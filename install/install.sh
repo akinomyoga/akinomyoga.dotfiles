@@ -90,6 +90,7 @@ _yum_packages=(
   # Compilers
   llvm\* clang\* bison
   # gcc\*  # 何故か Fedora 27 で動かない
+  gcc g++ gfortran
 
   # Build tools / debugger / VMS
   make git lldb gdb
@@ -118,7 +119,9 @@ _yum_packages=(
   texlive-revtex4
   texlive-elsarticle
   texlive-wrapfig
-  texlive-japanese
+  #texlive-japanese
+  texlive-collection-langjapanese
+  texlive-{platex,dvipdfmx}
 
   # C#
   mono-devel
