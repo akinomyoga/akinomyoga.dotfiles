@@ -11,6 +11,8 @@
 	default = simple
 [pull]
 	ff = only
+[init]
+	defaultBranch = master
 [sendemail]
   confirm = auto
   smtpServer = smtp.gmail.com
