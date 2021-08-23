@@ -24,7 +24,12 @@
 (custom-set-variables
  '(safe-local-variable-values
    (quote
-    ((coding: utf-8-unix)
+    ((shfmt-arguments "-s")
+     (eval add-hook
+           (quote before-save-hook)
+           (quote blacken-buffer)
+           nil t)
+     (coding: utf-8-unix)
      (sh-indent-comment . t)
      (flycheck-sh-bash-args "-O" "extglob")
      (ps-mode-tab . 2)
