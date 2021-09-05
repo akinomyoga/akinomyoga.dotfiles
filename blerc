@@ -75,14 +75,16 @@ function blerc/vim-load-hook {
   # bleopt vim_arpeggio_timeoutlen=40
   # ble/lib/vim-arpeggio.sh/bind -f jk vi_imap/normal-mode
 
-  ble-import vim-airline
-  bleopt vim_airline_left_sep='▶'
-  bleopt vim_airline_left_alt_sep='>'
-  bleopt vim_airline_right_sep='◀'
-  bleopt vim_airline_right_alt_sep='<'
-  bleopt vim_airline_symbol_branch='#'
-  bleopt vim_airline_theme=light
-  bleopt keymap_vi_mode_show=1
+  if [[ $OSTYPE != cygwin* && $OSTYPE != msys* && $OSTYPE != haiku* ]]; then
+    ble-import vim-airline
+    bleopt vim_airline_left_sep='▶'
+    bleopt vim_airline_left_alt_sep='>'
+    bleopt vim_airline_right_sep='◀'
+    bleopt vim_airline_right_alt_sep='<'
+    bleopt vim_airline_symbol_branch='#'
+    bleopt vim_airline_theme=light
+    bleopt keymap_vi_mode_show=1
+  fi
 }
 blehook/eval-after-load keymap_vi blerc/vim-load-hook
 
