@@ -133,6 +133,10 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
       source /etc/profile.d/bash_completion.sh
     fi
   else
+    if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion.sh ]]; then
+      BASH_COMPLETION_USER_DIR=~/.mwg/git/scop/bash-completion
+      source ~/.mwg/git/scop/bash-completion/bash_completion.sh
+    fi
     . /etc/bashrc
   fi
 fi
