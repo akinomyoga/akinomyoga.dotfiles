@@ -75,7 +75,8 @@ function blerc/vim-load-hook {
   # bleopt vim_arpeggio_timeoutlen=40
   # ble/lib/vim-arpeggio.sh/bind -f jk vi_imap/normal-mode
 
-  if [[ $OSTYPE != cygwin* && $OSTYPE != msys* && $OSTYPE != haiku* ]]; then
+  #if [[ $OSTYPE != cygwin* && $OSTYPE != msys* && $OSTYPE != haiku* ]]; then
+  if [[ $HOSTNAME == chatoyancy ]]; then
     ble-import vim-airline
     bleopt vim_airline_left_sep='▶'
     bleopt vim_airline_left_alt_sep='>'
