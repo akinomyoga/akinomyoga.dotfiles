@@ -97,6 +97,9 @@ if [[ ! $NOBLE && $- == *i* ]]; then
     fi
 fi
 
+#------------------------------------------------------------------------------
+# load system configurations
+
 # Source global definitions
 if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
@@ -164,6 +167,8 @@ esac
 
 # システムの profile が勝手に umask を書き換える事があるので再設定
 umask 022
+HISTSIZE=
+HISTFILESIZE=
 
 #------------------------------------------------------------------------------
 # load common settings from mshex
