@@ -251,6 +251,10 @@ if [[ $_dotfiles_mshex_path ]]; then
     #export TERMPATH="$HOME/.mwg/terminfo/rosaterm.tc:${TERMPATH:-$HOME/.termcap:/etc/termcap}"
 
     export GOPATH=$HOME/local/go
+
+    # rbenv
+    PATH.prepend ~/.rbenv/bin
+    builtin eval -- "$(rbenv init -)"
   }
 
   function dotfiles/setup-path:chatoyancy {
