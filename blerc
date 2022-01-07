@@ -202,14 +202,23 @@ function blerc/debug/timestamp/wrap.advice {
   echo "$EPOCHREALTIME ${ADVICE_WORDS[0]} end" >> "$_blerc_debug_timestamp_logfile"
 }
 function blerc/debug/timestamp/complete.loadhook {
+  # ble/function#advice \
+  #   before ble-decode/.hook \
+  #   blerc/debug/timestamp/args.advice
+  # ble/function#advice \
+  #   around ble/complete/progcomp/.compgen-helper-prog \
+  #   blerc/debug/timestamp/wrap.advice
+  # ble/function#advice \
+  #   around ble/complete/progcomp/.compgen-helper-func \
+  #   blerc/debug/timestamp/wrap.advice
   ble/function#advice \
-    before ble-decode/.hook \
-    blerc/debug/timestamp/args.advice
-  ble/function#advice \
-    around ble/complete/progcomp/.compgen-helper-prog \
+    around _minimal \
     blerc/debug/timestamp/wrap.advice
   ble/function#advice \
-    around ble/complete/progcomp/.compgen-helper-func \
+    around _init_completion \
+    blerc/debug/timestamp/wrap.advice
+  ble/function#advice \
+    around _filedir \
     blerc/debug/timestamp/wrap.advice
 }
 #blehook/eval-after-load complete blerc/debug/timestamp/complete.loadhook
@@ -294,6 +303,9 @@ bleopt prompt_rps1='\q{blerc/git}'
 
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   :
+
+  # # For debug (initialize-faces)
+  # ble-face syntax_default=none
 
   # bleopt prompt_status_align=justify
   # source ~/.mwg/src/ble.sh/memo/D1488.vim-mode-in-status.bash
