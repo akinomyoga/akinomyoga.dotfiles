@@ -167,8 +167,8 @@ esac
 
 # システムの profile が勝手に umask を書き換える事があるので再設定
 umask 022
-HISTSIZE=
-HISTFILESIZE=
+export HISTSIZE=
+export HISTFILESIZE=
 
 #------------------------------------------------------------------------------
 # load common settings from mshex
