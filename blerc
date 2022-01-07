@@ -5,7 +5,8 @@ shopt -u no_empty_cmd_completion
 ((_ble_bash>=50000)) && shopt -s progcomp_alias
 
 set -o vi
-bleopt char_width_mode=emacs emoji_width=
+#bleopt char_width_{mode=emacs,version=13.0}
+bleopt emoji_width=
 #bleopt char_width_mode=auto
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
