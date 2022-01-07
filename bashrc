@@ -129,9 +129,9 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     ble/function#advice remove .
 
     # bash_completion は関数内で source すると動かない
-    if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion.sh ]]; then
+    if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion ]]; then
       BASH_COMPLETION_USER_DIR=~/.mwg/git/scop/bash-completion
-      source ~/.mwg/git/scop/bash-completion/bash_completion.sh
+      source ~/.mwg/git/scop/bash-completion/bash_completion
     elif [[ -f /etc/profile.d/bash_completion.sh ]]; then
       source /etc/profile.d/bash_completion.sh
     fi
