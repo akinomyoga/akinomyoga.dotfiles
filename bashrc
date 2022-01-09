@@ -129,12 +129,22 @@ if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
     ble/function#advice remove .
 
     # bash_completion は関数内で source すると動かない
-    if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion ]]; then
-      BASH_COMPLETION_USER_DIR=~/.mwg/git/scop/bash-completion
-      source ~/.mwg/git/scop/bash-completion/bash_completion
+    #
+    # Note: bash_completion.sh が bash の version チェックを行う。一
+    # 方で、 bash_completion.sh は ./configure & make しないと生成さ
+    # れない。なので bash_completion.sh があればそれを使うし、なけれ
+    # ば bash_completion を使う事にする。
+    _dotfiles_bash_completion_path=~/.mwg/git/scop/bash-completion
+    if [[ -f $_dotfiles_bash_completion_path/bash_completion.sh ]]; then
+      BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
+      source "$_dotfiles_bash_completion_path"/bash_completion.sh
+    elif [[ -f $_dotfiles_bash_completion_path/bash_completion ]]; then
+      BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
+      source "$_dotfiles_bash_completion_path"/bash_completion
     elif [[ -f /etc/profile.d/bash_completion.sh ]]; then
       source /etc/profile.d/bash_completion.sh
     fi
+    unset -v _dotfiles_bash_completion_path
   else
     if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion.sh ]]; then
       BASH_COMPLETION_USER_DIR=~/.mwg/git/scop/bash-completion
