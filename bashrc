@@ -453,6 +453,37 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.append /usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin
   }
 
+  function dotfiles/setup-path:front1 {
+    # 何故か screen 内部だと LD_LIBRARY_PATH が設定されない
+    local intel=/sc/system/ap/intel/compilers_and_libraries_2020.4.304/linux
+    local intel_debug=/sc/system/ap/intel/debugger_2020
+    PATH.append -v LD_LIBRARY_PATH \
+                "$intel"/mpi/intel64/lib \
+                "$intel"/mpi/intel64/lib/release \
+                "$intel"/mpi/intel64/libfabric/lib \
+                "$intel"/ipp/lib/intel64 \
+                "$intel"/mkl/lib/intel64_lin \
+                "$intel"/tbb/lib/intel64/gcc4.8 \
+                "$intel_debug"/libipt/intel64/lib \
+                "$intel_debug"/python/intel64/lib \
+                "$intel"/daal/../tbb/lib/intel64_lin/gcc4.8 \
+                "$intel"/daal/lib/intel64_lin \
+                "$intel"/compiler/lib/intel64_lin
+    PATH.append -v PKG_CONFIG_PATH \
+                "$intel"/mkl/bin/pkgconfig \
+                ~/.opt/gnuplot/5.4.2/lib{,64}/pkgconfig
+    PATH.prepend -v PATH \
+                ~/.opt/gnuplot/5.4.2/bin
+    PATH.append -v LD_LIBRARY_PATH \
+                ~/.opt/gnuplot/5.4.2/lib{,64}
+    PATH.append -v LIBRARY_PATH \
+                ~/.opt/gnuplot/5.4.2/lib{,64}
+
+    PATH.prepend "$SCHOME/.opt/idt/bin"
+    alias q=quecon
+    export SCHOME=/sc/home/koichi.murase
+  }
+
   source "$_dotfiles_mshex_path"/shrc/path.sh
   PATH.prepend /usr/local/sbin:/usr/sbin
   PATH.prepend /usr/local/bin:/usr/bin:/bin
