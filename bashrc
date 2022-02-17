@@ -568,7 +568,7 @@ if [[ $- == *i* ]]; then
     [[ ! $pid ]] || return 0
 
     #echo "dotfiles/start_bg ($$): $tty $pid" >> ~/a.txt
-    bash -c "while sleep $interval && kill -0 $$ 2>/dev/null; do echo -n \$'\005'; done # tag: start_bg" &
+    bash -c "while sleep $interval && kill -0 $$ 2>/dev/null; do echo -n \$'\177'; done # tag: start_bg" &
     disown
   }
 
