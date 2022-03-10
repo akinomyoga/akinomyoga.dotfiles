@@ -578,7 +578,7 @@ if [[ $- == *i* ]]; then
 
       "$@"
     } ;;
-  (letsnote2019|chatoyancy)
+  (letsnote2019|chatoyancy|vaio2016)
     function ssh {
       case $1 in
       (ln2[0-9])
