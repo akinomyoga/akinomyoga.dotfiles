@@ -1,5 +1,6 @@
-personal_ws-1.1 en 330 
+personal_ws-1.1 en 341 
 AGS
+AMPT
 Aarts
 Abelian
 Adamczyk
@@ -22,15 +23,18 @@ Brookhaven
 Brueckner
 Bunkyo
 CBM
+CDF
 CEE
 CERN
 CGC
+CME
 CMS
 Chromo
 Conf
 Cygwin
 DOI
 Danmarks
+DeepDream
 EINTR
 EKRT
 EoS
@@ -168,6 +172,7 @@ boundedness
 bursters
 centralities
 chiral
+chirality
 chromodynamics
 codebase
 collectivity
@@ -181,6 +186,8 @@ contaminations
 convolutional
 coprime
 coroutine
+correlator
+correlators
 costless
 covariance
 covariant
@@ -247,6 +254,7 @@ midrapidity
 minima
 monotonicity
 msle
+multiphase
 multiset
 noninteracting
 nonparametric
@@ -272,7 +280,9 @@ pathname
 pathnames
 perturbative
 perturbatively
+phenomenologically
 piecewise
+pion
 pions
 plasmas
 pointwise
@@ -326,6 +336,7 @@ transversality
 trustable
 tunable
 ultrarelativistic
+unaveraged
 underprediction
 unphysical
 variational
