@@ -7,7 +7,6 @@ shopt -u no_empty_cmd_completion
 set -o vi
 #bleopt char_width_{mode=emacs,version=13.0}
 bleopt emoji_width=
-#bleopt char_width_mode=auto
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
 bleopt complete_auto_delay=1
@@ -274,23 +273,41 @@ function blerc/vim-airline.hook {
 # Settings for rps1
 #
 
-function ble/prompt/backslash:blerc/git {
+function ble/prompt/backslash:blerc/rps1 {
   ((COLUMNS>=120)) || return 0
 
-  # [[ $_ble_term_DA2R == '99;'* ]] &&
-  #   ble-edit/prompt/print $'\e[1l\e[6h\eV'
+  # [[ $_ble_term_TERM == contra:* ]] &&
+  #   ble/prompt/print $'\e[1l\e[6h\eV'
 
+  # ATA
+  if [[ $_ble_exec_time_ata ]] && ((_ble_exec_time_LINENO==LINENO)); then
+    ble/prompt/print $'\e[38:5:69;3m'
+    ble/prompt/backslash:contrib/elapsed
+    ble/prompt/print $'\e[m '
+  fi
+
+  # Time
+  ble/prompt/print $'\e[90m'
+  ble/prompt/process-prompt-string '\D{%F %T %Z}'
+  ble/prompt/print $'\e[m '
+
+  # git info
   ble/prompt/backslash:contrib/git-info ||
-    ble-edit/prompt/process-prompt-string '\w'
+    ble/prompt/process-prompt-string '\w'
 
-  # [[ $_ble_term_DA2R == '99;'* ]] &&
-  #   ble-edit/prompt/print $'\eW'
+  # [[ $_ble_term_TERM == contra:* ]] &&
+  #   ble/prompt/print $'\eW'
 
   return 0
 }
+
 ble-import contrib/prompt-git
-bleopt prompt_rps1='\q{blerc/git}'
+ble-import contrib/prompt-elapsed
+bleopt prompt_rps1='\q{blerc/rps1}'
 #bleopt prompt_rps1_transient=1
+
+ble-import -d contrib/config/execmark
+bleopt exec_elapsed_enabled='sys+usr>=1000'
 
 #------------------------------------------------------------------------------
 #
