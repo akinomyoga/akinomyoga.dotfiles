@@ -100,8 +100,18 @@ fi
 #------------------------------------------------------------------------------
 # load system configurations
 
+_dotfiles_disable_etc_bashrc=
+if [[ $OSTYPE == cygwin ]]; then
+  _dotfiles_disable_etc_bashrc=1
+else
+  case $HOSTNAME in
+  (venus[12]|*.yukawa.kyoto-u.ac.jp)
+    _dotfiles_disable_etc_bashrc=1 ;;
+  esac
+fi
+
 # Source global definitions
-if [[ $OSTYPE != cygwin && -f /etc/bashrc ]]; then
+if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
   if ((_ble_bash)); then
     # /etc/profile.d/*.sh の読み込みが遅い
