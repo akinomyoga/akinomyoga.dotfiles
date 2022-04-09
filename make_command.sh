@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+function make/bin/sha256sum {
+  if type -t sha256sum &>/dev/null; then
+    sha256sum "$@"
+  elif type -t gsha256sum &>/dev/null; then
+    gsha256sum "$@"
+  elif type -t sha256 &>/dev/null; then
+    sha256 -r "$@"
+  else
+    cksum "$@"
+  fi
+}
+
 # 既知の古い設定ファイルの場合はバックアップしなくて良い
 function is-known-file {
   local file=$1
@@ -32,7 +44,7 @@ function is-known-file {
     350c552dea4bc158e82506936727382f58b0178394afa327e08334e41dd7aa2c
   )
   IFS=$'\n' eval 'local rex="${known_hash[*]/#/^}"'
-  sha256sum "$file" | grep "$rex" &>/dev/null
+  make/bin/sha256sum "$file" | grep "$rex" &>/dev/null
 }
 
 function make/link-dotfile {

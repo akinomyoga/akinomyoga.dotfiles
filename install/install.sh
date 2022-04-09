@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #
 # ToDo
@@ -197,6 +197,9 @@ function install:yum {
 
 #------------------------------------------------------------------------------
 
+MAKE=make
+type -t gmake &>/dev/null && MAKE=gmake
+
 function install:user-dirs {
   local -a dirnames
   dirnames=(デスクトップ ダウンロード テンプレート 公開 ドキュメント 音楽 画像 ビデオ
@@ -216,19 +219,19 @@ function install:user-dirs {
 function install:dotfiles {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github akinomyoga.dotfiles akinomyoga/akinomyoga.dotfiles.git &&
-      make install )
+      "$MAKE" install )
 }
 
 function install:mshex {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github mshex akinomyoga/mshex.git &&
-      make install )
+      "$MAKE" install )
 }
 
 function install:colored {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github colored akinomyoga/colored.git &&
-      make install )
+      "$MAKE" install )
 }
 
 # cygwin では ncurses-devel と libcrypt-devel が必要である
@@ -241,8 +244,8 @@ function install:screen {
       tar xJvf "${url##*/}" &&
       cd screen-4.6.2 &&
       ./configure --prefix="$HOME"/local --enable-colors256 &&
-      make "${make_options[@]}" all &&
-      make install )
+      "$MAKE" "${make_options[@]}" all &&
+      "$MAKE" install )
 }
 
 function install:contra {
@@ -250,7 +253,7 @@ function install:contra {
   type nproc &>/dev/null && array#push make_options -j $(nproc)
   ( mkcd "$MWGDIR/src" &&
       myset/update-github contra akinomyoga/contra.git &&
-      make "${make_options[@]}" all )
+      "$MAKE" "${make_options[@]}" all )
 }
 
 function install:github {
@@ -290,7 +293,7 @@ EOF
 function install:mwgpp {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github mwg_pp akinomyoga/mwg_pp.git &&
-      make &&
+      "$MAKE" &&
       mkd "$MWGDIR/bin" &&
       cp out/mwg_pp.awk "$MWGDIR/bin" )
 }
@@ -301,7 +304,7 @@ function install:myemacs/completed {
 function install:myemacs {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github myemacs akinomyoga/myemacs.git &&
-      make package-install install )
+      "$MAKE" package-install install )
 }
 function install:myemacs/completed {
   [[ -f ~/.emacs.d/my/mwg.elc ]]
@@ -310,7 +313,7 @@ function install:myemacs/completed {
 function install:blesh {
   ( mkcd "$MWGDIR/src" &&
       myset/update-github ble.sh akinomyoga/ble.sh.git &&
-      make all )
+      "$MAKE" all )
 }
 function install:blesh/completed {
   [[ -f $MWGDIR/src/ble.sh/out/ble.sh ]]

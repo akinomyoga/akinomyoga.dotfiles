@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function mkcd {
   [[ -d $1 ]] || mkdir -p "$1"

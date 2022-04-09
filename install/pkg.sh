@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 function mkd { [[ -d $1 ]] || mkdir -p "$1"; }
 function ble/is-function { declare -f "$1" &>/dev/null; }
