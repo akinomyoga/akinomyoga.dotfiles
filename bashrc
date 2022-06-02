@@ -488,6 +488,11 @@ if [[ $_dotfiles_mshex_path ]]; then
     export SCHOME=/sc/home/koichi.murase
   }
 
+  function dotfiles/setup-path:aventura {
+    dotfiles/setup-path-local
+    PATH.prepend ~/.opt/idt/bin
+  }
+
   source "$_dotfiles_mshex_path"/shrc/path.sh
   PATH.prepend /usr/local/sbin:/usr/sbin
   PATH.prepend /usr/local/bin:/usr/bin:/bin
@@ -529,6 +534,8 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
     (hp2019|song-*|song???)
       mshex/set-prompt $'\e[31m' $'\e[m' ;;
+    (aventura)
+      mshex/set-prompt $'\e[4;38:2::0:128:80m' $'\e[m' ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
     esac
