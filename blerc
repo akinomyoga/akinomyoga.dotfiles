@@ -126,6 +126,22 @@ function blerc/complete-load-hook {
 }
 blehook/eval-after-load complete blerc/complete-load-hook
 
+# Sample
+#
+# ble-bind -m isearch -f 'C-[' isearch/cancel
+# ble-bind -m isearch -f 'ESC' isearch/cancel
+# ble-bind -m lastarg -f 'C-[' lastarg/cancel
+# ble-bind -m lastarg -f 'ESC' lastarg/cancel
+# function blerc/complete-load.hook {
+#   ble-bind -m auto_complete -f 'C-[' auto_complete/cancel
+#   ble-bind -m auto_complete -f 'ESC' auto_complete/cancel
+#   ble-bind -m menu_complete -f 'C-[' menu_complete/cancel
+#   ble-bind -m menu_complete -f 'ESC' menu_complete/cancel
+#   ble-bind -m dabbrev       -f 'C-[' dabbrev/cancel
+#   ble-bind -m dabbrev       -f 'ESC' dabbrev/cancel
+# }
+# blehook/eval-after-load complete blerc/complete-load.hook
+
 #------------------------------------------------------------------------------
 # C-x q
 
