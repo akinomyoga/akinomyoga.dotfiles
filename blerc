@@ -207,7 +207,7 @@ ble-bind -m vi_imap -c 'f12' blerc/debug/print-undo-history
 ble-bind -m vi_nmap -c 'f12' blerc/debug/print-undo-history
 
 # 各関数の時間計測
-_blerc_debug_timestamp_logfile=debug.txt
+_blerc_debug_timestamp_logfile=~/debug.txt
 function blerc/debug/timestamp/args.advice {
   echo "$EPOCHREALTIME ${ADVICE_WORDS[*]}" >> "$_blerc_debug_timestamp_logfile"
 }
@@ -236,6 +236,9 @@ function blerc/debug/timestamp/complete.loadhook {
     around _filedir \
     blerc/debug/timestamp/wrap.advice
 }
+# ble/function#advice \
+#   around ble/builtin/history/option:s \
+#   blerc/debug/timestamp/wrap.advice
 #blehook/eval-after-load complete blerc/debug/timestamp/complete.loadhook
 
 #------------------------------------------------------------------------------
