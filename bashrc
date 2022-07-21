@@ -672,5 +672,11 @@ function a {
       print $*;exit;}"
 }
 
+function attach {
+  local session=$(screen -ls | sed -n 2p)
+  screen -S "$session" -X setenv "$DISPLAY"
+  screen -S "$session" -dr
+}
+
 [[ $_dotfiles_blesh_manual_attach ]] &&
   ((_ble_bash)) && ble-attach
