@@ -144,8 +144,13 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
     # 方で、 bash_completion.sh は ./configure & make しないと生成さ
     # れない。なので bash_completion.sh があればそれを使うし、なけれ
     # ば bash_completion を使う事にする。
+
+    # Note: と思ったが、生成される bash_completion.sh はその場の
+    # bash_completion を source するのではなくて、そのインストール先にある
+    # bash_completion を source するのだった。
     _dotfiles_bash_completion_path=~/.mwg/git/scop/bash-completion
     if [[ -f $_dotfiles_bash_completion_path/bash_completion.sh ]]; then
+      unset -v BASH_COMPLETION_VERSINFO
       BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
       source "$_dotfiles_bash_completion_path"/bash_completion.sh
     elif [[ -f $_dotfiles_bash_completion_path/bash_completion ]]; then
