@@ -176,3 +176,4 @@ install-from-tarball gawk/4.0.2
 install-from-tarball gawk/4.1.4
 install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
+install-from-tarball bash/4.4
