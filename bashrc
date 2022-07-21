@@ -273,9 +273,11 @@ if [[ $_dotfiles_mshex_path ]]; then
   }
 
   function dotfiles/setup-path:chatoyancy {
-    dotfiles/setup-path-local
     export GOPATH=$HOME/go
+    PATH.prepend PATH "$GOPATH/bin"
     PATH.append PATH ~/prog/ext-github/oilshell.oil/bin
+
+    dotfiles/setup-path-local
   }
 
   function dotfiles/setup-path:vaio2016 {
