@@ -299,7 +299,7 @@ function ble/prompt/backslash:blerc/rps1 {
   #   ble/prompt/print $'\e[1l\e[6h\eV'
 
   # ATA
-  if [[ $_ble_exec_time_ata ]] && ((_ble_exec_time_LINENO==LINENO)); then
+  if [[ $_ble_exec_time_ata ]] && ((_ble_exec_time_LINENO==_ble_edit_LINENO)); then
     ble/prompt/print $'\e[38:5:69;3m'
     ble/prompt/backslash:contrib/elapsed
     ble/prompt/print $'\e[m '
