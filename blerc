@@ -306,9 +306,17 @@ function ble/prompt/backslash:blerc/rps1 {
   fi
 
   # Time
-  ble/prompt/print $'\e[90m'
-  ble/prompt/process-prompt-string '\D{%F %T %Z}'
-  ble/prompt/print $'\e[m '
+  if ((_ble_bash>=40200)); then
+    local ret
+    ble/util/sprintf ret '%(%F %T %Z)T' -1
+    ble/string#trim "$ret"
+    ret=$'\e[90m'$ret$'\e[m '
+    ble/prompt/print "$ret"
+  else
+    ble/prompt/print $'\e[90m'
+    ble/prompt/process-prompt-string '\D{%F %T %Z}'
+    ble/prompt/print $'\e[m '
+  fi
 
   # git info
   ble/prompt/backslash:contrib/git-info ||
