@@ -163,12 +163,15 @@ install-from-tarball bash/4.0.44
 install-from-tarball bash/4.1.17
 install-from-tarball bash/4.2.53
 install-from-tarball bash/4.3.48
+# install-from-tarball bash/4.4
 install-from-tarball bash/4.4.23
 # install-from-tarball bash/5.0.7
 # install-from-tarball bash/5.0.16
 install-from-tarball bash/5.0.18
 #install-from-tarball bash/5.1-alpha
-install-from-tarball bash/5.1
+#install-from-tarball bash/5.1
+install-from-tarball bash/5.1.16
+install-from-tarball bash/5.2
 
 install-from-tarball gawk/3.0.6
 install-from-tarball gawk/3.1.8
@@ -176,4 +179,3 @@ install-from-tarball gawk/4.0.2
 install-from-tarball gawk/4.1.4
 install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
-install-from-tarball bash/4.4
