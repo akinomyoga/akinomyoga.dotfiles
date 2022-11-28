@@ -348,6 +348,10 @@ bleopt exec_elapsed_enabled='sys+usr>=1000'
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   :
 
+  # https://github.com/akinomyoga/ble.sh/issues/190
+  # blehook ATTACH+='ble/bin/awk() { /home/murase/bin/apple-awk-32 -v AWKTYPE=nawk "$@"; }'
+  # blehook ATTACH+='ble/bin/awk() { /usr/bin/nawk -v AWKTYPE=nawk "$@"; }'
+
   # # For debug (initialize-faces)
   # ble-face syntax_default=none
 
@@ -358,7 +362,7 @@ if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   #bleopt input_encoding=C
 
   # 2020-12-31
-  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
   # ble-import -d contrib/fzf-initialize
   # ble-import -d contrib/fzf-completion
   # ble-import -d ~/.mwg/src/ble.sh/ext/urbainvaes.fzf-marks/fzf-marks.plugin.bash
