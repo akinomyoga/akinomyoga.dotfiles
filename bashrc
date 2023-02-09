@@ -278,6 +278,7 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.append PATH ~/prog/ext-github/oilshell.oil/bin
 
     dotfiles/setup-path-local
+    PATH.prepend PATH ~/.opt/idt/bin
   }
 
   function dotfiles/setup-path:vaio2016 {
