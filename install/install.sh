@@ -280,6 +280,13 @@ function install:github {
 Host github.com
   HostName github.com
   Port 22
+  # HostName gist.github.com
+  # Port 443
+Host gist.github.com
+  HostName gist.github.com
+  Port 22
+Host github.com gist.github.com
+  HostName github.com
   User git
   IdentityFile $fkey
 
