@@ -173,6 +173,11 @@ install-from-tarball bash/5.0.18
 install-from-tarball bash/5.1.16
 install-from-tarball bash/5.2
 
+# Extra binaries before Shellshock
+# install-from-tarball bash/4.0.0 bash-4.0.tar.gz
+# install-from-tarball bash/4.1.0 bash-4.1.tar.gz
+# install-from-tarball bash/4.3.0 bash-4.3.tar.gz
+
 install-from-tarball gawk/3.0.6
 install-from-tarball gawk/3.1.8
 install-from-tarball gawk/4.0.2
