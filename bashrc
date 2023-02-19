@@ -2,6 +2,8 @@
 
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
+[[ ${LANG-} ]] || export LANG='ja_JP.UTF-8'
+
 if [[ $- == *i* ]]; then
   function dotfiles/exec-bash {
     local bash=$1
