@@ -21,3 +21,7 @@
   smtpUser = myoga.murase@gmail.com
 [include]
   path = /home/murase/.ssh/sendemail.gitconfig
+[column]
+	status = auto
+[diff]
+	ignoreSubmodules = untracked
