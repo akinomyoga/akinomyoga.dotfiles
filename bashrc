@@ -676,10 +676,34 @@ function a {
       print $*;exit;}"
 }
 
+function ble/util/message/handler:bashrc/DISPLAY {
+  # terminal multiplexer の中でだけ DISPLAY を再設定する。
+  [[ $STY || $_ble_term_TERM == tmux:* ]] || return 0
+
+  # attach した screen session の下にある ble.sh だけで処理する。
+  local session=${1%%' '*} display=${1#*' '}
+  [[ $session == "$STY" ]] || return 0
+
+  [[ $display == *.* ]] || display=$display.0
+  [[ $display == *:* ]] || display=:$display
+  display=${display/#localhost:/:}
+  display=${display/#127.0.0.1:/:}
+  export DISPLAY=$display
+}
+
 function attach {
-  local session=$(screen -ls | sed -n 2p)
-  screen -S "$session" -X setenv "$DISPLAY"
+  if [[ $STY || $_ble_term_TERM == tmux:* ]]; then
+    ble/util/print 'bashrc (attach): attaching from inside a terminal multiplexer?' >&2
+    return 1
+  fi
+
+  local session
+  ble/string#split-words session "$(screen -ls | sed -n 2p)"
+  screen -S "$session" -X setenv DISPLAY "$DISPLAY"
   screen -S "$session" -dr
+  if declare -f ble/util/message.post &>/dev/null; then
+    ble/util/message.post broadcast precmd bashrc/DISPLAY "$session $DISPLAY"
+  fi
 }
 
 [[ $_dotfiles_blesh_manual_attach ]] &&
