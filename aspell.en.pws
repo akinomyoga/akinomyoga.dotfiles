@@ -1,4 +1,4 @@
-personal_ws-1.1 en 384 
+personal_ws-1.1 en 388 
 AGS
 AMPT
 Aarts
@@ -250,6 +250,7 @@ excitations
 executables
 extglob
 factorizable
+failglob
 feedforward
 femtometer
 femtoscopy
@@ -294,6 +295,7 @@ multiset
 noninteracting
 nonparametric
 nucleonic
+nullglob
 numerics
 observables
 orthonormal
@@ -353,6 +355,7 @@ rescatterings
 resummed
 reweighting
 sQGP
+shopt
 sigmoid
 sizeof
 skewness
@@ -382,4 +385,5 @@ ultrarelativistic
 unaveraged
 underprediction
 unphysical
+untracked
 variational
