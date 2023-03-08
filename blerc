@@ -328,12 +328,12 @@ function ble/prompt/backslash:blerc/rps1 {
   return 0
 }
 
-ble-import contrib/prompt-git
-ble-import contrib/prompt-elapsed
+ble-import prompt-git
+ble-import prompt-elapsed
 bleopt prompt_rps1='\q{blerc/rps1}'
 #bleopt prompt_rps1_transient=1
 
-ble-import -d contrib/config/execmark
+ble-import -d config/execmark
 bleopt exec_elapsed_enabled='sys+usr>=1000'
 
 #------------------------------------------------------------------------------
@@ -363,8 +363,9 @@ if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
 
   # 2020-12-31
   _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
-  # ble-import -d contrib/fzf-initialize
-  # ble-import -d contrib/fzf-completion
+  # ble-import -d integration/fzf-initialize
+  # ble-import -d integration/fzf-completion
+  # ble-import -d integration/fzf-key-bindings
   # ble-import -d ~/.mwg/src/ble.sh/ext/urbainvaes.fzf-marks/fzf-marks.plugin.bash
 
   # 2020-09-15 ble.sh debug
@@ -378,15 +379,15 @@ if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   #bleopt complete_menu_maxlines=10
 
   # 2020-05-20
-  #ble-import contrib/prompt-vim-mode
-  #ble-import contrib/prompt-git
+  #ble-import prompt-vim-mode
+  #ble-import prompt-git
   # PS1='\q{contrib/vim-mode}'
 
   # 2020-02-09 fzfテスト
   # ((_ble_bash)) && ble-import -d ~/.fzf.bash
   # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
-  # ble-import -d contrib/fzf-completion
-  # ble-import -d contrib/fzf-key-bindings
+  # ble-import -d integration/fzf-completion
+  # ble-import -d integration/fzf-key-bindings
 
   # 2019-02-09 結合テスト
   #source ~/.bashrc.bash-it
