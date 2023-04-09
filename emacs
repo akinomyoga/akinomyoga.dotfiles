@@ -22,20 +22,22 @@
 (setq inhibit-startup-message t)
 
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(frame-background-mode 'light)
  '(safe-local-variable-values
-   (quote
-    ((shfmt-arguments "-s")
-     (eval add-hook
-           (quote before-save-hook)
-           (quote blacken-buffer)
-           nil t)
+   '((shfmt-arguments "-s")
+     (eval add-hook 'before-save-hook 'blacken-buffer nil t)
      (coding: utf-8-unix)
      (sh-indent-comment . t)
      (flycheck-sh-bash-args "-O" "extglob")
      (ps-mode-tab . 2)
      (mwg-no-delete-trailing-whitespaces . t)
      (c-basic-offset 2)
-     (eval sh-set-shell "bash")))))
+     (eval sh-set-shell "bash")))
+ '(warning-suppress-types '((comp))))
 
 ;;-----------------------------------------------------------------------------
 ;; mwg.el (https://github.com/akinomyoga/myemacs)
@@ -46,8 +48,6 @@
 (mwg-init-pcmark)
 ;;(mwg-init-mouse)
 
-(custom-set-variables
- '(frame-background-mode 'light))
 (mwg-init-custom-color)
 
 (mwg-add-hook-csharp) ;; recursive load error??
@@ -261,4 +261,3 @@
 ;; (setq evil-insert-state-map nil)
 
 ;;-----------------------------------------------------------------------------
-
