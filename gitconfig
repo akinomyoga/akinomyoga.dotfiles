@@ -29,3 +29,7 @@
 	detachedHead = false
 [diff "no"]
 	command = /bin/true
+[gc]
+	bigPackThreshold = 500m
+[pack]
+	packSizeLimit = 500m
