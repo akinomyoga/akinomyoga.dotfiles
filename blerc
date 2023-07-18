@@ -22,6 +22,7 @@ fi
 bleopt vbell_align=right
 bleopt edit_vbell=1
 
+bleopt menu_desc_prefix=$'\e[1m%d.\e[m '
 bleopt menu_linewise_prefix=$' \e[1;32m>\e[m '
 
 [[ $TERM == screen-256color ]] &&
@@ -64,7 +65,8 @@ function blerc/vim-load-hook {
 
   bleopt keymap_vi_imap_undo=more
 
-  ble-import keymap/vi_test
+  ble-import -f keymap/vi_test
+  ble-import -f keymap.vi_test
 
   bleopt keymap_vi_mode_name_{insert=挿入,replace=置換,vreplace=仮想置換}
   bleopt keymap_vi_mode_name_{visual=ビジュアル,select=選択}
@@ -347,6 +349,43 @@ bleopt exec_elapsed_enabled='sys+usr>=1000'
 
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   :
+
+  # 2023-06-30
+  # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf
+  # _ble_contrib_fzf_git_config=key-binding:arpeggio
+  # ble-import -d integration/fzf-git
+
+  ble-import -d colorglass
+
+  if ble/bin#has sqlite3; then
+    ble-import -d histdb
+    ble/util/import/eval-after-load histdb 'bleopt histdb_remarks="\q{blerc/histdb-remarks}"'
+    function ble/prompt/backslash:blerc/histdb-remarks {
+      local "${_ble_contrib_prompt_git_vars[@]/%/=}" # WA #D1570 checked
+      ble/contrib/prompt-git/initialize || return 0
+      ble/contrib/prompt-git/update-head-information
+      local state; ble/contrib/prompt-git/get-state
+      local dirty_mark; ble/contrib/prompt-git/get-dirty-mark
+
+      local path=${git_base%.git}
+      path=${path%/}
+      path=${path##*?/}
+      [[ $PWD == "$git_base"/?* ]] &&
+        path="$path/${PWD#$git_base/}"
+
+      ble/prompt/print "git: ${branch:-(detached)} ${hash:-(orphan)}$dirty_mark${state:+ $state} @ ${path:-/}"
+    }
+  fi
+
+  # Test for #D1987
+  # function ble/widget/test1 {
+  #   local beg=0 end=${#_ble_edit_str} ret
+  #   ble/string#repeat $'echo hello\n' 10
+  #   local new=$ret
+  #   ble/widget/.replace-range "$beg" "$end" "$new"
+  #   return 0
+  # }
+  # ble-bind -m vi_nmap -f C-t test1
 
   # https://github.com/akinomyoga/ble.sh/issues/190
   # blehook ATTACH+='ble/bin/awk() { /home/murase/bin/apple-awk-32 -v AWKTYPE=nawk "$@"; }'
