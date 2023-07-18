@@ -121,10 +121,12 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
   # Cygwin の /etc/profile には cd $HOME 等変な物が書かれている。
   if ((_ble_bash)); then
     # /etc/profile.d/*.sh の読み込みが遅い
+
+    # Note: modules.sh を delay させていたがこれだと profiler で悪さをする。
     _dotfiles_source_guard=:
     _dotfiles_source_exclude_list=PackageKit.sh:colorgrep.sh:colorls.sh:colorxzgrep.sh:colorzgrep.sh:lang.sh
     _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:which2.sh:vte.sh:vim.sh:gawk.sh:bash_completion.sh
-    _dotfiles_source_delayed_list=flatpak.sh:modules.sh
+    _dotfiles_source_delayed_list=flatpak.sh
     case $HOSTNAME in
     (ln2?.para.bscc)
       _dotfiles_source_exclude_list=$_dotfiles_source_exclude_list:login_new.sh ;;
@@ -141,10 +143,12 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
       ble/function#advice/do
     }
     ble/function#advice around . dotfiles/source.advice
+    ble/function#advice around source dotfiles/source.advice
     . /etc/bashrc
-    ble/function#advice remove .
 
     # bash_completion は関数内で source すると動かない
+    _dotfiles_source_exclude_list=fzf
+    #_dotfiles_source_exclude_list=
     #
     # Note: bash_completion.sh が bash の version チェックを行う。一
     # 方で、 bash_completion.sh は ./configure & make しないと生成さ
@@ -165,6 +169,9 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
     elif [[ -f /etc/profile.d/bash_completion.sh ]]; then
       source /etc/profile.d/bash_completion.sh
     fi
+
+    ble/function#advice remove .
+    ble/function#advice remove source
     unset -v _dotfiles_bash_completion_path
   else
     if [[ -f ~/.mwg/git/scop/bash-completion/bash_completion.sh ]]; then
