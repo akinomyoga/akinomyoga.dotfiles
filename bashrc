@@ -286,7 +286,11 @@ if [[ $_dotfiles_mshex_path ]]; then
   }
 
   function dotfiles/setup-path:chatoyancy {
-    export GOPATH=$HOME/go
+    export GOPATH=~/go
+    export CARGO_HOME=~/.cargo
+
+    PATH.prepend PATH ~/.cargo/bin
+
     PATH.prepend PATH "$GOPATH/bin"
     PATH.append PATH ~/prog/ext-github/oilshell.oil/bin
 
