@@ -13,6 +13,7 @@
 
 ;; emacs-24.4.1 勝手に全てのファイルの行頭にスペースが入る
 (electric-indent-mode -1)
+(global-display-fill-column-indicator-mode 1)
 
 ;(setq vc-handled-backends '(RCS CVS SVN SCCS Bzr Git Hg Mtn Arch))
 (setq vc-handled-backends '(RCS CVS SVN SCCS Bzr Hg Mtn Arch))
