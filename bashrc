@@ -80,7 +80,11 @@ if [[ ! $NOBLE && $- == *i* ]]; then
 
   [[ -s $_dotfiles_blesh_path ]] &&
     if ((_dotfiles_blesh_version>=400)); then
-      source "$_dotfiles_blesh_path"
+      if [[ $_dotfiles_blesh_manual_attach ]]; then
+        source "$_dotfiles_blesh_path" --attach=none
+      else
+        source "$_dotfiles_blesh_path"
+      fi
     elif ((_dotfiles_blesh_version==300)); then
       if [[ $_dotfiles_blesh_manual_attach ]]; then
         source "$_dotfiles_blesh_path" --noattach
