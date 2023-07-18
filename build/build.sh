@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+#------------------------------------------------------------------------------
+# Configuration:
+
+optdir=$HOME/opt
+bindir=$HOME/bin
+
+#------------------------------------------------------------------------------
+
+shopt -s extglob
+
 function mkcd {
   [[ -d $1 ]] || mkdir -p "$1"
   cd "$1"
@@ -22,8 +32,8 @@ function install-from-tarball {
   local binary_name=${prefix//["$sl"]/-}
   local tarname=$2
 
-  local install=$HOME/opt/$prefix
-  local install_link=$HOME/bin
+  local install=$optdir/$prefix
+  local install_link=$bindir
   if [[ -s $install/bin/$name ]]; then
     echo "build: \"$prefix\" is already installed" >&2
   else
@@ -39,13 +49,19 @@ function install-from-tarball {
         tarname=$binary_name.tar.gz
       elif [[ -f $binary_name.tar.bz2 ]]; then
         tarname=$binary_name.tar.bz2
+      elif [[ -f $binary_name.txz ]]; then
+        tarname=$binary_name.txz
+      elif [[ -f $binary_name.tgz ]]; then
+        tarname=$binary_name.tgz
+      elif [[ -f $binary_name.tbz ]]; then
+        tarname=$binary_name.tbz
       else
         echo "build: failed to find a tar ball for \"$binary_name\"." >&2
         return 1
       fi
     fi
 
-    local dirname=${tarname##*/}; dirname=${dirname%.tar.*}
+    local dirname=${tarname##*/}; dirname=${dirname%@(.tar.*|.t??)}
     local base=$PWD
 
     ( mkcd /tmp/build &&
@@ -174,6 +190,8 @@ install-from-tarball bash/5.1.16
 install-from-tarball bash/5.2
 
 # Extra binaries before Shellshock
+install-from-tarball bash/3.0.0 bash-3.0.tar.gz
+install-from-tarball bash/3.1.0 bash-3.1.tar.gz
 # install-from-tarball bash/4.0.0 bash-4.0.tar.gz
 # install-from-tarball bash/4.1.0 bash-4.1.tar.gz
 # install-from-tarball bash/4.3.0 bash-4.3.tar.gz
@@ -184,3 +202,13 @@ install-from-tarball gawk/4.0.2
 install-from-tarball gawk/4.1.4
 install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
+
+install-from-tarball mawk/1.3.3-20080909
+install-from-tarball mawk/1.3.4-20100419
+install-from-tarball mawk/1.3.4-20101210
+install-from-tarball mawk/1.3.4-20230404
+install-from-tarball mawk/1.3.4-20230404
+
+install-from-tarball mawk/1.3.3-20090721
+install-from-tarball mawk/1.3.3-20090710
+install-from-tarball mawk/1.3.3-20090705

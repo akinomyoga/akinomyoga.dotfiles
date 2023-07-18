@@ -4,4 +4,5 @@
 *.tar.xz
 *.tar.bz2
 *.tar.gz
+*.tgz
 bash-*-patches
