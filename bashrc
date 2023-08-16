@@ -135,7 +135,7 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
       local arg=${ADVICE_WORDS[1]}
       [[ $_dotfiles_source_guard == *:"$arg":* ]] && return
       [[ :$_dotfiles_source_exclude_list: == *:"${arg##*/}":* ]] && return
-      if [[ :$_dotfiles_source_delayed_list: == *:"${arg##*/}":* ]]; then
+      if [[ :$_dotfiles_source_delayed_list: == *:"${arg##*/}":* ]] && ble/is-function ble/util/idle.push; then
         ble-import -d "$arg"
         return
       fi
