@@ -1,4 +1,4 @@
-# blerc -*- mode: sh; mode: sh-bash -*-
+# blerc -*- mode: sh; mode: sh-blesh -*-
 # Settings for ble.sh (https://github.com/akinomyoga/ble.sh)
 
 shopt -u no_empty_cmd_completion
