@@ -1,5 +1,7 @@
 # -*- mode: sh; mode: sh-bash -*-
 
+export HISTSIZE=
+export HISTFILESIZE=
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
 [[ ${LANG-} ]] || export LANG='ja_JP.UTF-8'
