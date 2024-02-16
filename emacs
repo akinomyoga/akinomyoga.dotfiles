@@ -53,6 +53,7 @@
 
 (mwg-add-hook-csharp) ;; recursive load error??
 (add-to-list 'auto-mode-alist '("\\.\\(gp\\|plt\\)$" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\.mdx$" . markdown-mode))
 (mwg-add-hook-shell)
 (mwg-add-hook-xml-mode)
 (mwg-add-hook-mwg-c++exp)
