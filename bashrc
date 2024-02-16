@@ -291,13 +291,12 @@ if [[ $_dotfiles_mshex_path ]]; then
     export GOPATH=~/go
     export CARGO_HOME=~/.cargo
 
-    PATH.prepend PATH ~/.cargo/bin
-
-    PATH.prepend PATH "$GOPATH/bin"
-    PATH.append PATH ~/prog/ext-github/oilshell.oil/bin
+    PATH.prepend "$CARGO_HOME"/bin
+    PATH.prepend "$GOPATH/bin"
+    PATH.append ~/prog/ext-github/oilshell.oil/bin
 
     dotfiles/setup-path-local
-    PATH.prepend PATH ~/.opt/idt/bin
+    PATH.prepend ~/.opt/idt/bin
   }
 
   function dotfiles/setup-path:vaio2016 {
