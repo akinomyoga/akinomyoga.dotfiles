@@ -25,3 +25,5 @@
 	status = auto
 [diff]
 	ignoreSubmodules = untracked
+[advice]
+	detachedHead = false
