@@ -348,44 +348,44 @@ function show_status {
   done < <( declare -F )
 }
 
-if (($#==0)); then
-  {
+function main {
+  if (($#==0)); then
     echo "usage: ./install.sh name"
     echo
     echo "NAME:"
     show_status
-  } >&2
-  exit 1
-fi
+    return 0
+  fi >&2
 
-declare -a alphas
-alphas=()
-fUpdate=
-while (($#)); do
-  declare arg=$1
-  shift
-  case "$arg" in
-  (--update)
-    fUpdate=1 ;;
-  (-*)
-    echo "myset: unrecognized option \`$arg'." >&2;;
-  (*)
-    alphas+=("$arg") ;;
-  esac
-done
+  local -a alphas=()
+  local fUpdate=
+  while (($#)); do
+    local arg=$1; shift
+    case $arg in
+    (--update)
+      fUpdate=1 ;;
+    (-*)
+      echo "myset: unrecognized option \`$arg'." >&2;;
+    (*)
+      array#push alphas "$arg" ;;
+    esac
+  done
 
-declare alpha
-for alpha in "${alphas[@]}"; do
-  if ! declare -f "install:$alpha" &>/dev/null; then
-    echo "myset-install.sh: command $alpha not found" >&2
-    continue
-  fi
+  local alpha
+  for alpha in "${alphas[@]}"; do
+    if ! declare -f "install:$alpha" &>/dev/null; then
+      echo "myset-install.sh: command $alpha not found" >&2
+      continue
+    fi
 
-  declare fstamp="$LOGDIR/$alpha.stamp"
-  if [[ ! $fUpdate && -e $fstamp ]]; then
-    echo "myset-install.sh: $alpha is already installed" >&2
-    continue
-  fi
+    local fstamp=$LOGDIR/$alpha.stamp
+    if [[ ! $fUpdate && -e $fstamp ]]; then
+      echo "myset-install.sh: $alpha is already installed" >&2
+      continue
+    fi
 
-  "install:$alpha" && touch "$fstamp"
-done
+    "install:$alpha" && touch "$fstamp"
+  done
+}
+
+main "$@"
