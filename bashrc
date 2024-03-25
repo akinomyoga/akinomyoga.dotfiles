@@ -299,6 +299,11 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend ~/.opt/idt/bin
   }
 
+  function dotfiles/setup-path:aventura {
+    dotfiles/setup-path-local
+    PATH.prepend ~/.opt/idt/bin
+  }
+
   function dotfiles/setup-path:vaio2016 {
     # libmwg/libkashiwa
     local libmwg_cxxconfig=i686-cygwin-gcc-5.4.0+cxx98-debug
@@ -524,10 +529,50 @@ if [[ $_dotfiles_mshex_path ]]; then
     export SCHOME=/sc/home/koichi.murase
   }
 
-  function dotfiles/setup-path:aventura {
+  function dotfiles/setup-path:bflqcd3 {
     dotfiles/setup-path-local
-    PATH.prepend ~/.opt/idt/bin
+    ulimit -s unlimited
   }
+  function dotfiles/setup-path:qhpserv1 {
+    dotfiles/setup-path-local
+    ulimit -s unlimited
+
+    local SCRIPTDIR=/home/.common
+
+    ##################################
+    #
+    # for Compiler
+    #
+
+    local COMPILER=INTEL19.0
+    #local COMPILER=INTEL18.0
+    #local COMPILER=INTEL17.0
+    #local COMPILER=INTEL15.0
+    #local COMPILER=PGI17
+    #local COMPILER=PGI16
+    #local COMPILER=PGI15
+
+    ##################################
+    #
+    # for MPI
+    #
+
+    local MPI=IntelMPI
+    #local MPI=OpenMPI
+    #local MPI=MPICH
+    #local MPI=MPICH2
+
+    local script
+    for script in "$SCRIPTDIR"{"/$COMPILER","/$COMPILER/$MPI",}/*.sh; do
+      if [[ -r $script ]]; then
+        source $script
+      fi
+    done
+
+    export OMP_NUM_THREADS=1
+    export MKL_NUM_THREADS=1
+  }
+  function dotfiles/setup-path:qhpserv2 { dotfiles/setup-path:qhpserv1; }
 
   source "$_dotfiles_mshex_path"/shrc/path.sh
   PATH.prepend /usr/local/sbin:/usr/sbin
@@ -572,6 +617,8 @@ if [[ $_dotfiles_mshex_path ]]; then
       mshex/set-prompt $'\e[31m' $'\e[m' ;;
     (aventura)
       mshex/set-prompt $'\e[4;38:2::0:128:80m' $'\e[m' ;;
+    (bflqcd3|qhpserv[12]|jldgfe)
+      shopt -u failglob ;;
     (*)
       mshex/set-prompt '\e[m'   '\e[m' ;;
     esac
