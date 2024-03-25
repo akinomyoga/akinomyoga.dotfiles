@@ -69,7 +69,7 @@ function install:tic {
   echo registering screen-256color.ti...
   tic terminfo/screen-256color.ti || ext=$?
   echo registering screen.xterm-256color.ti...
-  tic terminfo/screen-256color.ti || ext=$?
+  tic terminfo/screen.xterm-256color.ti || ext=$?
   ((ext==0)) && touch "$LOGDIR"/tic.stamp
   return "$ext"
 }
