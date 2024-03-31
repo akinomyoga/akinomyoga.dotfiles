@@ -60,6 +60,14 @@ function install-from-tarball {
         tarname=$binary_name.tgz
       elif [[ -f $binary_name.tbz ]]; then
         tarname=$binary_name.tbz
+      elif
+        local url rex_ext='\.(tar\.([xg]z|bz2)|t[xgb]z)$'
+        url=$(awk -v prefix="$1" '$1 == prefix {print $2;a=1;exit 0;} END { if(!a) exit 1;}' build.url.txt) &&
+          echo "[$url]" &&
+          [[ ${url%%'?'*} =~ $rex_ext ]] &&
+          curl -L "$url" > "$binary_name$BASH_REMATCH"
+      then
+        tarname=$binary_name$BASH_REMATCH
       else
         echo "build: failed to find a tar ball for \"$binary_name\"." >&2
         return 1
