@@ -3,8 +3,13 @@
 #------------------------------------------------------------------------------
 # Configuration:
 
-optdir=$HOME/opt
+optdir=$HOME/.opt
 bindir=$HOME/bin
+
+case $HOSTNAME in
+(chatoyancy)
+  optdir=$HOME/opt ;;
+esac
 
 #------------------------------------------------------------------------------
 
