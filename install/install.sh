@@ -299,7 +299,7 @@ Host github.com gist.github.com
 
 EOF
     echo "myset (install:github): github.com is added to ssh_config ($fconfig)."
-    printf '%s\n' $'Please access \e[4;94mhttps://github.com/settings/ssh/new\e[m to add the public key.'
+    printf 'Please access \e[4;94mhttps://github.com/settings/ssh/new\e[m to add the public key: \e[35m%s.pub\e[m\n' "${fkeyi##*/}"
     printf '\e[34m'
     cat "$fkey.pub"
     printf '\e[m'
