@@ -272,9 +272,10 @@ function install:github {
   fi
 
   # create ~/.ssh/id_rsa-github
-  local fkey=~/.ssh/id_rsa-github@${HOSTNAME%%.*}
+  local fkey=~/.ssh/keys/id_rsa-github@${HOSTNAME%%.*}
   if [[ ! -e $fkey ]]; then
     echo "myset (install:github): generating $fkey..."
+    mkd "${fkey%/*}"
     ssh-keygen -t rsa -b 4096 -f "$fkey"
   fi
 
@@ -285,8 +286,9 @@ function install:github {
 Host github.com
   HostName github.com
   Port 22
-  # HostName gist.github.com
-  # Port 443
+  # If your local network does not allow SSH, please instead use the following:
+  #HostName gist.github.com
+  #Port 443
 Host gist.github.com
   HostName gist.github.com
   Port 22
@@ -297,6 +299,10 @@ Host github.com gist.github.com
 
 EOF
     echo "myset (install:github): github.com is added to ssh_config ($fconfig)."
+    printf '%s\n' $'Please access \e[4;94mhttps://github.com/settings/ssh/new\e[m to add the public key.'
+    printf '\e[34m'
+    cat "$fkey.pub"
+    printf '\e[m'
   else
     echo "myset (install:github): ssh_config ($fconfig) seems to already have a github.com entry."
   fi
