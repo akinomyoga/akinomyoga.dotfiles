@@ -236,16 +236,21 @@ function install:colored {
 
 # cygwin では ncurses-devel と libcrypt-devel が必要である
 function install:screen {
-  local url=https://github.com/akinomyoga/screen/releases/download/myoga%2Fv4.6.2/screen-4.6.2.tar.xz
+  local url=https://github.com/akinomyoga/screen/archive/refs/tags/myoga-v4.99.0-v6.tar.gz
+  local prefix=~/.opt/screen/4.99.0m-v6
   local -a make_options=()
   type nproc &>/dev/null && array#push make_options -j $(nproc)
   ( mkcd "$MWGDIR/src" &&
       wget "$url" &&
-      tar xJvf "${url##*/}" &&
-      cd screen-4.6.2 &&
-      ./configure --prefix="$HOME"/local --enable-colors256 &&
+      tar xzvf "${url##*/}" &&
+      cd screen-myoga-v4.99.0-v6/src &&
+      autoreconf -i &&
+      ./configure --prefix="$prefix" --enable-colors256 &&
       "$MAKE" "${make_options[@]}" all &&
-      "$MAKE" install )
+      "$MAKE" install &&
+      mkdir -p ~/bin &&
+      ln -s "$prefix/bin/screen" ~/bin/screen-4.99.9m-v6 &&
+      ln -sf screen-4.99.9m-v6 ~/bin/screen )
 }
 
 function install:contra {
