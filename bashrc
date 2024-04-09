@@ -609,14 +609,13 @@ if [[ $_dotfiles_mshex_path ]]; then
       fi ;;
     (magnate2016|gauge)
       mshex/set-prompt '\e[32m' '\e[m' ;;
-    (vaio2016|dyna2018|letsnote2019)
+    (vaio2016|dyna2018|letsnote2019|letsnote2023)
       mshex/set-prompt '\e[34m' '\e[m' ;;
-    (laguerre*|neumann|mathieu|gell-mann|hankel)
-      mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;;
-    (hp2019|song-*|song???)
-      mshex/set-prompt $'\e[31m' $'\e[m' ;;
-    (aventura)
-      mshex/set-prompt $'\e[4;38:2::0:128:80m' $'\e[m' ;;
+    (laguerre*|neumann|mathieu|gell-mann|hankel) mshex/set-prompt $'\e[38;5;125m' $'\e[m' ;; # Sophia
+    (hp2019|song-*|song???) mshex/set-prompt $'\e[31m' $'\e[m' ;; # PKU
+    (aventura|irida|opala)
+      # mshex/set-prompt $'\e[4;38:2::0:128:80m' $'\e[m' ;; # YITP
+      mshex/set-prompt $'\e[4;38:5:69m' $'\e[m' ;; # TMU
     (bflqcd3|qhpserv[12]|jldgfe)
       shopt -u failglob ;;
     (*)
