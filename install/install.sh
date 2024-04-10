@@ -337,6 +337,24 @@ function install:blesh/completed {
   [[ -f $MWGDIR/src/ble.sh/out/ble.sh ]]
 }
 
+function install:yay {
+  if ! type pacman makepkg &>/dev/null; then
+    echo 'error(yay): this item is intended for Arch Linux'
+    return 2
+  fi
+
+  (
+    sudo pacman -Syu --needed base-devel fakeroot binutils debugedit &&
+      if [[ -e ~/.opt/build/yay/.git ]]; then
+        cd ~/.opt/build/yay && git pull
+      else
+        git clone https://aur.archlinux.org/yay.git ~/.opt/build/yay
+      fi &&
+      cd ~/.opt/build/yay &&
+      makepkg -si
+  )
+}
+
 function show_status/completed {
   local alpha=$1
   declare -f "install:$alpha/completed" &>/dev/null &&
