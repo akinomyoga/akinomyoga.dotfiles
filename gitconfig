@@ -27,3 +27,5 @@
 	ignoreSubmodules = untracked
 [advice]
 	detachedHead = false
+[diff "no"]
+	command = /bin/true
