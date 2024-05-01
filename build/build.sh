@@ -36,10 +36,11 @@ function install-from-tarball {
   local name=${prefix%%[-/]*}
   local binary_name=${prefix//["$sl"]/-}
   local tarname=$2
+  local opts=$3
 
   local install=$optdir/$prefix
   local install_link=$bindir
-  if [[ -s $install/bin/$name ]]; then
+  if [[ -s $install/bin/$name && :$opts: != *:force:* ]]; then
     echo "build: \"$prefix\" is already installed" >&2
   else
     if [[ $tarname ]]; then
@@ -77,10 +78,15 @@ function install-from-tarball {
     local dirname=${tarname##*/}; dirname=${dirname%@(.tar.*|.t??)}
     local base=$PWD
 
+    local -a configure_options=(--prefix="$install")
+    if [[ $prefix == bash/*-@(alpha|beta|rc)*([0-9]) ]]; then
+      configure_options+=(--with-bash-malloc=no)
+    fi
+
     ( mkcd /tmp/build &&
         tar xvf "$base/$tarname" &&
         cd "$dirname" &&
-        CFLAGS='-O2 -march=native' ./configure --prefix="$install" &&
+        CFLAGS='-O2 -march=native' ./configure "${configure_options[@]}" &&
         make -j$(build/nproc) all &&
         make install &&
         cd .. && /bin/rm -rf /tmp/build/"$dirname" )
@@ -201,6 +207,7 @@ install-from-tarball bash/5.0.18
 #install-from-tarball bash/5.1
 install-from-tarball bash/5.1.16
 install-from-tarball bash/5.2
+install-from-tarball bash/5.3-alpha
 
 # Extra binaries before Shellshock
 install-from-tarball bash/3.0.0 bash-3.0.tar.gz
