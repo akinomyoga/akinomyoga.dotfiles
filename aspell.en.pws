@@ -1,4 +1,4 @@
-personal_ws-1.1 en 389 
+personal_ws-1.1 en 401 
 AGS
 AMPT
 Aarts
@@ -116,9 +116,11 @@ PRD
 PTY
 PYTHIA
 Plumberg
+Poderosa
 QCD
 QGP
 RHIC
+RLogin
 RMS
 ReLU
 Readline
@@ -137,6 +139,7 @@ Shen
 Shian
 Shujun
 Skyrme
+Solaris
 Sollfrank
 Stephanov
 Stratonovich
@@ -259,6 +262,7 @@ fermions
 gluon
 gluons
 graining
+grapheme
 hadron
 hadronic
 hadronization
@@ -299,6 +303,7 @@ nucleonic
 nullglob
 numerics
 observables
+openSUSE
 orthonormal
 overfitting
 overprediction
@@ -342,6 +347,7 @@ quartic
 quartile
 reasonability
 recasted
+renderer
 renormalization
 renormalize
 renormalized
@@ -361,9 +367,14 @@ sigmoid
 sizeof
 skewness
 spacetime
+stderr
+stdin
+stdout
 subevent
 subshell
 subshells
+substring
+substrings
 synchrotron
 systematics
 tetrads
@@ -386,5 +397,6 @@ ultrarelativistic
 unaveraged
 underprediction
 unphysical
+unregister
 untracked
 variational
