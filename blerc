@@ -96,6 +96,9 @@ function blerc/complete-load-hook {
   [[ $OSTYPE == cygwin ]] &&
     ble-sabbrev '\I'='| iconv -c -f cp932 -t utf-8'
 
+  ble-bind -m auto_complete -f 'M-f'     'auto_complete/insert-cword'
+  ble-bind -m auto_complete -f 'M-right' 'auto_complete/insert-word'
+
   # sabbrev \branch
   function blerc/sabbrev-git-branch {
     ble/util/assign-array COMPREPLY "git branch | sed 's/^\*\{0,1\}[[:space:]]*//'" 2>/dev/null
