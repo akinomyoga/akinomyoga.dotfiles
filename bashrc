@@ -4,6 +4,10 @@ export HISTSIZE=
 export HISTFILESIZE=
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
+if [[ $DEBUG ]]; then
+  return 0
+fi
+
 [[ ${LANG-} ]] || export LANG='ja_JP.UTF-8'
 
 if [[ $- == *i* ]]; then
