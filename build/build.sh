@@ -196,6 +196,7 @@ install-from-tarball bash/3.1.23
 install-from-tarball bash/3.2.57
 install-from-tarball bash/4.0.44
 install-from-tarball bash/4.1.17
+install-from-tarball bash/4.2.0 bash-4.2.tar.gz
 install-from-tarball bash/4.2.53
 install-from-tarball bash/4.3.48
 # install-from-tarball bash/4.4
