@@ -294,6 +294,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   function dotfiles/setup-path:chatoyancy {
     export GOPATH=~/go
     export CARGO_HOME=~/.cargo
+    export CARGO_PROFILE_RELEASE_LTO=false
 
     PATH.prepend "$CARGO_HOME"/bin
     PATH.prepend "$GOPATH/bin"
