@@ -39,7 +39,8 @@
      (mwg-no-delete-trailing-whitespaces . t)
      (c-basic-offset 2)
      (eval sh-set-shell "bash")))
- '(warning-suppress-types '((comp))))
+ '(warning-suppress-types '((comp)))
+ '(display-fill-column-indicator-character ?|))
 
 ;;-----------------------------------------------------------------------------
 ;; mwg.el (https://github.com/akinomyoga/myemacs)
