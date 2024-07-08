@@ -302,6 +302,7 @@ if [[ $_dotfiles_mshex_path ]]; then
   function dotfiles/setup-path:aventura {
     dotfiles/setup-path-local
     PATH.prepend ~/.opt/idt/bin
+    source "$HOME/.cargo/env"
   }
 
   function dotfiles/setup-path:vaio2016 {
