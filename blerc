@@ -5,7 +5,7 @@ shopt -u no_empty_cmd_completion
 ((_ble_bash>=50000)) && shopt -s progcomp_alias
 
 set -o vi
-#bleopt char_width_{mode=emacs,version=13.0}
+bleopt char_width_{mode=emacs,version=13.0}
 bleopt emoji_width=
 bleopt indent_offset=2
 bleopt decode_isolated_esc=esc
@@ -353,6 +353,19 @@ bleopt exec_elapsed_enabled='sys+usr>=1000'
 
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
   :
+
+  # # 2023-09-19
+  # ble-import layer/pattern
+  # ble/highlight/layer:{pattern}/declare pattern1
+  # ble/highlight/layer:{pattern}/register pattern1 'rm -rf [^;&|]*' 'fg=white,bold,bg=red'
+  # ble/array#insert-after _ble_highlight_layer_list syntax pattern1
+
+  # ble/highlight/layer:{pattern}/declare pattern2 glob
+  # # ble/highlight/layer:{pattern}/register pattern2 '[a-z]+' 'bg=39'
+  # ble/highlight/layer:{pattern}/register pattern2 "$USER" 'fg=blue,bold'
+  # ble/highlight/layer:{pattern}/register pattern2 "$HOSTNAME" 'fg=green,bold'
+  # ble/highlight/layer:{pattern}/register pattern2 '[0-9]+' 'bg=216,fg=black'
+  # ble/array#insert-after _ble_highlight_layer_list pattern1 pattern2
 
   # 2023-06-30
   # _ble_contrib_fzf_base=~/prog/ext-github/junegunn.fzf

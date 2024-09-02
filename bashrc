@@ -5,6 +5,13 @@ export HISTFILESIZE=
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
 if [[ $DEBUG ]]; then
+  # source ~/.mwg/src/ble.sh/out/ble.sh
+  # #bleopt vbell_align=panel:right
+  # bleopt debug_xtrace_ps4='+$FUNCNAME'
+  # bleopt debug_xtrace=trace.txt
+  _ble_canvas_panel_height=([0]="1" [1]="0" [2]="1" [4]="1" [5]="5")
+  index="4"
+  echo "${_ble_canvas_panel_height[@]::index}"
   return 0
 fi
 
