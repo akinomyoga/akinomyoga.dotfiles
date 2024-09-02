@@ -89,7 +89,7 @@ if [[ ! $NOBLE && $- == *i* ]]; then
       if [[ $_dotfiles_blesh_manual_attach ]]; then
         source "$_dotfiles_blesh_path" --attach=none
       else
-        source "$_dotfiles_blesh_path"
+        source "$_dotfiles_blesh_path" --bash-debug-version=short
       fi
     elif ((_dotfiles_blesh_version==300)); then
       if [[ $_dotfiles_blesh_manual_attach ]]; then
