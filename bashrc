@@ -528,6 +528,22 @@ if [[ $_dotfiles_mshex_path ]]; then
     PATH.prepend "$SCHOME/.opt/idt/bin"
     alias q=quecon
     export SCHOME=/sc/home/koichi.murase
+
+    function qinfo {
+      squeue | grep koichi
+      echo
+      sinfo | awk '$5 != "alloc"'
+      echo
+      {
+        lfs quota -hu "$UID" /sc
+        quota -s "$UID"
+      } | awk '
+        /^Disk quotas/ {next}
+        $1 == "Filesystem" && flag++ {next}
+        /^uid .* is using default file quota setting/ {next}
+        {print}
+      '
+    }
   }
 
   function dotfiles/setup-path:bflqcd3 {
