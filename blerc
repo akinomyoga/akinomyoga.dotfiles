@@ -36,6 +36,12 @@ if ((_ble_version<400)); then
   }
 fi
 
+function ble/widget/insert-date {
+  local date
+  ble/util/sprintf date '%(%F)T' -1
+  ble/widget/insert-string "$date"
+}
+
 function blerc/vim-load-hook {
   bind 'set keyseq-timeout 1'
 
@@ -63,6 +69,8 @@ function blerc/vim-load-hook {
   ble-bind -m vi_imap -f 'C-o' 'accept-and-next'
 
   ble-decode/keymap:vi_imap/define-meta-bindings
+
+  ble-bind -m vi_imap -f C-f5 'insert-date'
 
   bleopt keymap_vi_imap_undo=more
 
