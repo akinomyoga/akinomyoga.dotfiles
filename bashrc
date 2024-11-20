@@ -619,7 +619,7 @@ if [[ $_dotfiles_mshex_path ]]; then
       dotfiles/setup-path:"${HOSTNAME%%.*}" ;;
   esac
 
-  PATH.prepend "$HOME"/{,.mwg/,local/,.local/}bin
+  PATH.prepend "$HOME"/{,.mwg/,.opt/,local/,.local/}bin
 
   #----------------------------------------------------------------------------
   # mshex/bashrc_common

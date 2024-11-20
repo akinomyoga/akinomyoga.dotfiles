@@ -6,11 +6,6 @@
 optdir=$HOME/.opt
 bindir=$HOME/bin
 
-case $HOSTNAME in
-(chatoyancy)
-  optdir=$HOME/opt ;;
-esac
-
 #------------------------------------------------------------------------------
 
 shopt -s extglob
@@ -39,6 +34,7 @@ function install-from-tarball {
   local opts=$3
 
   local install=$optdir/$prefix
+  local install_rel=../$prefix
   local install_link=$bindir
   if [[ -s $install/bin/$name && :$opts: != *:force:* ]]; then
     echo "build: \"$prefix\" is already installed" >&2
@@ -95,7 +91,7 @@ function install-from-tarball {
     local flag_new=
     if [[ ! -e $binary_name ]]; then
       flag_new=1
-      ln -s "$install"/bin/"$name" "$binary_name"
+      ln -s "$install_rel"/bin/"$name" "$binary_name"
     fi
 
     local flag_relink=
