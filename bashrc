@@ -172,13 +172,16 @@ if [[ ! $_dotfiles_disable_etc_bashrc && -f /etc/bashrc ]]; then
     # bash_completion を source するのではなくて、そのインストール先にある
     # bash_completion を source するのだった。
     _dotfiles_bash_completion_path=~/.mwg/git/scop/bash-completion
-    if [[ -f $_dotfiles_bash_completion_path/bash_completion.sh ]]; then
+    if [[ -f $_dotfiles_bash_completion_path/bash_completion ]]; then
+      if ((_ble_bash>=40200)); then
+        BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
+        source "$_dotfiles_bash_completion_path"/bash_completion
+      fi
+    elif [[ -f $_dotfiles_bash_completion_path/bash_completion.sh ]]; then
+      # This loads the installed version of bash_completion at ~/.opt/...
       unset -v BASH_COMPLETION_VERSINFO
       BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
       source "$_dotfiles_bash_completion_path"/bash_completion.sh
-    elif [[ -f $_dotfiles_bash_completion_path/bash_completion ]]; then
-      BASH_COMPLETION_USER_DIR=$_dotfiles_bash_completion_path
-      source "$_dotfiles_bash_completion_path"/bash_completion
     elif [[ -f /etc/profile.d/bash_completion.sh ]]; then
       source /etc/profile.d/bash_completion.sh
     fi
