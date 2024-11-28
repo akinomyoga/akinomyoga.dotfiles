@@ -1,6 +1,7 @@
 [user]
 	email = myoga.murase@gmail.com
 	name = Koichi Murase
+	signingkey = 1806194EEAF9F5AE
 [core]
 	editor = emacs -nw
 	excludesfile = /home/murase/.gitignore
