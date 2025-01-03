@@ -4,7 +4,7 @@
 # Configuration:
 
 optdir=$HOME/.opt
-bindir=$HOME/bin
+bindir=$HOME/.opt/bin
 
 #------------------------------------------------------------------------------
 
@@ -221,11 +221,14 @@ install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
 
 install-from-tarball mawk/1.3.3-20080909
+install-from-tarball mawk/1.3.3-20090705
+install-from-tarball mawk/1.3.3-20090710
+install-from-tarball mawk/1.3.3-20090721
+
 install-from-tarball mawk/1.3.4-20100419
 install-from-tarball mawk/1.3.4-20101210
+install-from-tarball mawk/1.3.4-20200120
 install-from-tarball mawk/1.3.4-20230404
-install-from-tarball mawk/1.3.4-20230404
-
-install-from-tarball mawk/1.3.3-20090721
-install-from-tarball mawk/1.3.3-20090710
-install-from-tarball mawk/1.3.3-20090705
+install-from-tarball mawk/1.3.4-20230525
+install-from-tarball mawk/1.3.4-20230730
+install-from-tarball mawk/1.3.4-20230808
