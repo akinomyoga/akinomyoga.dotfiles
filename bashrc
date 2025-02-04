@@ -759,7 +759,7 @@ fi
 
 function a {
   #echo "$*" | bc -l
-  awk "
+  awk -v OFMT='%.15g' "
     function tan(x) { return sin(x)/cos(x); }
     function acos(x) { return atan2(sqrt(1-x*x),x); }
     function asin(x) { return atan2(x,sqrt(1-x*x)); }
