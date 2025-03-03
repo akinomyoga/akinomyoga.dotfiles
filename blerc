@@ -75,9 +75,6 @@ function blerc/vim-load-hook {
 
   bleopt keymap_vi_imap_undo=more
 
-  ble-import -f keymap/vi_test
-  ble-import -f keymap.vi_test
-
   bleopt keymap_vi_mode_name_{insert=挿入,replace=置換,vreplace=仮想置換}
   bleopt keymap_vi_mode_name_{visual=ビジュアル,select=選択}
   bleopt keymap_vi_mode_name_{linewise=行,blockwise=矩形}
