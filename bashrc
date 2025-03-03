@@ -2,6 +2,7 @@
 
 export HISTSIZE=
 export HISTFILESIZE=
+shopt -s histappend
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
 if [[ $DEBUG ]]; then
