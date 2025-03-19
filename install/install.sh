@@ -245,7 +245,7 @@ function install:screen {
       tar xzvf "${url##*/}" &&
       cd screen-myoga-v4.99.0-v6/src &&
       autoreconf -i &&
-      ./configure --prefix="$prefix" --enable-colors256 &&
+      ./configure --prefix="$prefix" --disable-pam --disable-shadow &&
       "$MAKE" "${make_options[@]}" all &&
       "$MAKE" install &&
       mkdir -p ~/bin &&
