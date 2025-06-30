@@ -219,6 +219,7 @@ install-from-tarball gawk/4.0.2
 install-from-tarball gawk/4.1.4
 install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
+install-from-tarball gawk/5.3.1
 
 install-from-tarball mawk/1.3.3-20080909
 install-from-tarball mawk/1.3.3-20090705
