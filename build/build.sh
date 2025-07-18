@@ -205,6 +205,7 @@ install-from-tarball bash/5.0.18
 install-from-tarball bash/5.1.16
 install-from-tarball bash/5.2
 install-from-tarball bash/5.3-alpha
+install-from-tarball bash/5.3.0 bash-5.3.tar.gz # https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz
 
 # Extra binaries before Shellshock
 install-from-tarball bash/3.0.0 bash-3.0.tar.gz
