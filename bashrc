@@ -801,7 +801,7 @@ function attach {
   fi
 
   local session
-  ble/string#split-words session "$(screen -ls | sed -n 2p)"
+  ble/string#split-words session "$(screen -ls | grep -Ev '\((Remote|Dead)' | sed -n 2p)"
   screen -S "$session" -X setenv DISPLAY "$DISPLAY"
   screen -S "$session" -dr
   if declare -f ble/util/message.post &>/dev/null; then
