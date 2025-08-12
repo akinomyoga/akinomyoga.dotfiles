@@ -321,6 +321,14 @@ if [[ $_dotfiles_mshex_path ]]; then
     source "$HOME/.cargo/env"
   }
 
+  function dotfiles/setup-path:squidhpc1 {
+    PATH.prepend ~/.opt/idt/bin
+    alias q=quecon
+  }
+  function dotfiles/setup-path:squidhpc2 { dotfiles/setup-path:squidhpc1; }
+  function dotfiles/setup-path:squidhpc3 { dotfiles/setup-path:squidhpc1; }
+  function dotfiles/setup-path:squidhpc4 { dotfiles/setup-path:squidhpc1; }
+
   function dotfiles/setup-path:vaio2016 {
     # libmwg/libkashiwa
     local libmwg_cxxconfig=i686-cygwin-gcc-5.4.0+cxx98-debug
