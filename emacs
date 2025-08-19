@@ -123,6 +123,12 @@
 
 (mwg-add-hook-auto-complete)
 
+;; 2025-08-05 https://github.com/auto-complete/auto-complete/issues/533#issuecomment-2698199280
+;; Emacs 30.1 で動かなくなってバグが放置されている。
+(add-hook 'auto-complete-mode-hook
+          (lambda ()
+            (setq ac-sources (remove 'ac-source-abbrev ac-sources))))
+
 ;;
 ;; company-mode を試してみたが補完されたりされなかったりが分からない。
 ;; C++ で試していると補完される単語は補完されるが、
