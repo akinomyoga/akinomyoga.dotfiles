@@ -321,6 +321,13 @@ if [[ $_dotfiles_mshex_path ]]; then
     source "$HOME/.cargo/env"
   }
 
+  function dotfiles/setup-path:opala {
+    dotfiles/setup-path-local
+    PATH.prepend ~/.opt/idt/bin
+    export PYTHIA8=~/.opt/pythia/8.315
+    alias q=quecon
+  }
+
   function dotfiles/setup-path:squidhpc1 {
     PATH.prepend ~/.opt/idt/bin
     alias q=quecon
