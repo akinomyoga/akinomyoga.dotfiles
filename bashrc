@@ -137,9 +137,7 @@ if [[ ! $NOBLE && $- == *i* ]] && dotfiles/find-blesh-path 400; then
   #
   #bleopt_internal_suppress_bash_output=
 
-  echo "blesh: $EPOCHREALTIME" >&2
   source "${_dotfiles_blesh_args[@]}"
-  echo "blesh-done: $EPOCHREALTIME" >&2
 fi
 
 #------------------------------------------------------------------------------
