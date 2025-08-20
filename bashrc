@@ -47,74 +47,99 @@ umask 022
 #------------------------------------------------------------------------------
 # initialize ble.sh
 
+## @fn dotfiles/find-blesh-path blever opts
+##   @param[in] blever
+##   @param[in,opt] opts
+##   @opt manual
+##   @arr[out] _dotfiles_blesh_args
+##   @var[out] _dotfiles_blesh_manual_attach
 function dotfiles/find-blesh-path {
-  _dotfiles_blesh_path=
+  _dotfiles_blesh_args=()
+  _dotfiles_blesh_manual_attach=
 
-  local -a candidates
-  candidates=(
-    "$HOME"/.mwg/src/ble.sh/out/ble.sh
-    ${XDG_DATA_HOME:+"$XDG_DATA_HOME"/blesh/ble.sh}
-    "$HOME"/.local/share/blesh/ble.sh )
+  local blever=$1 opts=${2-}
 
-  local path
-  for path in "${candidates[@]}"; do
-    if [[ -s $path ]]; then
-      _dotfiles_blesh_path=$path
-      break
-    fi
-  done
-}
-
-if [[ ! $NOBLE && $- == *i* ]]; then
-  dotfiles/find-blesh-path
+  local args i=0
+  args=()
 
   #
   # Selection of devel ble.sh
   #
+  local srcdir=~/.mwg/src
+  if ((blever==300)) && [[ -s $srcdir/ble-0.3/out/ble.sh ]]; then
+    args[i++]=$srcdir/ble-0.3/out/ble.sh
+  elif ((blever==200)) && [[ -s $srcdir/ble-0.2/out/ble.sh ]]; then
+    args[i++]=$srcdir/ble-0.2/out/ble.sh
+  elif ((blever==100)) && [[ -s $srcdir/ble-0.1/out/ble.sh ]]; then
+    args[i++]=$srcdir/ble-0.1/out/ble.sh
+  else
+    local -a candidates
+    candidates=(
+      "$HOME"/.mwg/src/ble.sh/out/ble.sh
+      ${XDG_DATA_HOME:+"$XDG_DATA_HOME"/blesh/ble.sh}
+      "$HOME"/.local/share/blesh/ble.sh )
 
-  _dotfiles_blesh_manual_attach=
-  _dotfiles_blesh_devel=~/.mwg/src
+    local path
+    for path in "${candidates[@]}"; do
+      if [[ -s $path ]]; then
+        args[i++]=$path
+        break
+      fi
+    done
 
-  _dotfiles_blesh_version=400
-  if ((_dotfiles_blesh_version==300)); then
-    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.3/out/ble.sh
-  elif ((_dotfiles_blesh_version==200)); then
-    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.2/out/ble.sh
-  elif ((_dotfiles_blesh_version==100)); then
-    _dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-0.1/out/ble.sh
+    ((i == 0)) && return 1
   fi
-  #_dotfiles_blesh_path=~/.local/share/blesh/ble.sh
-  #_dotfiles_blesh_path=~/prog/ble/ble.sh
-  #_dotfiles_blesh_path=$_dotfiles_blesh_devel/ble-dev/out/ble.sh
+  #args[i++]=~/.local/share/blesh/ble.sh
+  #args[i++]=~/prog/ble/ble.sh
+  #args[i++]=$_dotfiles_blesh_devel/ble-dev/out/ble.sh
 
+  # When ble.sh is not found
+  [[ -s ${args[0]-} ]] || return 1
+
+  #
+  # Set up version-specific options
+  #
+  if ((blever>=400)); then
+    if [[ :$opts: == *:manual:* ]]; then
+      _dotfiles_blesh_manual_attach=1
+      args[i++]='--attach=none'
+    else
+      args[i++]='--bash-debug-version=short'
+    fi
+
+    # Since the default extraction of the readline settings are slow in Cygwin,
+    # we skip reading the readline settings there.  I do not have readline
+    # settings anyway.
+    [[ $OSTYPE == cygwin* || $OSTYPE == msys* ]] &&
+      args[i++]='--inputrc=none'
+  elif ((blever==300)); then
+    if [[ :$opts: == *:manual:* ]]; then
+      _dotfiles_blesh_manual_attach=1
+      args[i++]='--noattach'
+    else
+      args[i++]='--attach=prompt'
+    fi
+  elif ((blever==200)); then
+    _dotfiles_blesh_manual_attach=1
+    args[i++]='--noattach'
+  elif ((blever==100)); then
+    _dotfiles_blesh_manual_attach=1
+    args[i++]='noattach'
+  fi
+
+  _dotfiles_blesh_args=("${args[@]}")
+  return 0
+}
+
+if [[ ! $NOBLE && $- == *i* ]] && dotfiles/find-blesh-path 400; then
   #
   # Debug settings
   #
   #bleopt_internal_suppress_bash_output=
 
-  [[ -s $_dotfiles_blesh_path ]] &&
-    if ((_dotfiles_blesh_version>=400)); then
-      if [[ $_dotfiles_blesh_manual_attach ]]; then
-        source "$_dotfiles_blesh_path" --attach=none
-      else
-        source "$_dotfiles_blesh_path" --bash-debug-version=short
-      fi
-    elif ((_dotfiles_blesh_version==300)); then
-      if [[ $_dotfiles_blesh_manual_attach ]]; then
-        source "$_dotfiles_blesh_path" --noattach
-      else
-        source "$_dotfiles_blesh_path" --attach=prompt
-        # Note: The option "--attach=prompt" is an experimental feature.
-        #   Basically you should use "--noattach" and manual
-        #   "((_ble_bash)) && ble-attach" instead.
-      fi
-    elif ((_dotfiles_blesh_version==200)); then
-      _dotfiles_blesh_manual_attach=1
-      source "$_dotfiles_blesh_path" --noattach
-    elif ((_dotfiles_blesh_version==100)); then
-      _dotfiles_blesh_manual_attach=1
-      source "$_dotfiles_blesh_path" noattach
-    fi
+  echo "blesh: $EPOCHREALTIME" >&2
+  source "${_dotfiles_blesh_args[@]}"
+  echo "blesh-done: $EPOCHREALTIME" >&2
 fi
 
 #------------------------------------------------------------------------------
