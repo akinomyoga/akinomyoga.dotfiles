@@ -1,4 +1,4 @@
-;; -*- mode:emacs-lisp -*-
+;; -*- mode: emacs-lisp; fill-column: 79 -*-
 
 (add-to-list 'load-path "~/.emacs.d/my")
 (add-to-list 'load-path "~/.emacs.d/lisp")
@@ -15,6 +15,13 @@
 (electric-indent-mode -1)
 (when (>= emacs-major-version 27)
   (global-display-fill-column-indicator-mode 1))
+
+;; emacs-29.4 遂に矢印の幅が半角になってしまった。不便すぎるので幅2にする。
+;; そろそろ別のエディターに切り替える時なのかもしれない。
+(set-char-table-range char-width-table #x2190 2) ;; ←
+(set-char-table-range char-width-table #x2191 2) ;; ↑
+(set-char-table-range char-width-table #x2192 2) ;; →
+(set-char-table-range char-width-table #x2193 2) ;; ↓
 
 ;(setq vc-handled-backends '(RCS CVS SVN SCCS Bzr Git Hg Mtn Arch))
 (setq vc-handled-backends '(RCS CVS SVN SCCS Bzr Hg Mtn Arch))
