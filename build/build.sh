@@ -100,8 +100,9 @@ function install-from-tarball {
         flag_relink=1
       elif [[ $flag_new ]]; then
         local file patch_level max_patch_level=0
-        for file in $install_link/${binary_name%.*}.*; do
+        for file in "$install_link/${binary_name%.*}".*; do
           patch_level=${file##*.}
+          [[ $patch_level == *[!0-9]* ]] && continue
           ((patch_level>max_patch_level)) &&
             max_patch_level=$patch_level
         done
@@ -221,6 +222,7 @@ install-from-tarball gawk/4.1.4
 install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
 install-from-tarball gawk/5.3.1
+install-from-tarball gawk/5.4.0
 
 install-from-tarball mawk/1.3.3-20080909
 install-from-tarball mawk/1.3.3-20090705
