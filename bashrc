@@ -354,6 +354,20 @@ if [[ $_dotfiles_mshex_path ]]; then
   function dotfiles/setup-path:squidhpc1 {
     PATH.prepend ~/.opt/idt/bin
     alias q=quecon
+    export ACLOCAL_PATH=~/.local/share/aclocal
+
+    # I tried to save the output to a file and show the diff, but module seems
+    # to print the message only when stdout is connected to a TTY.  I gave it
+    # up and ended up simply redirecting the output to /dev/null.
+    #
+    # local module_log=~/.cache/bashrc.module-load.txt
+    # [[ -d ${module_log%/*} ]] || mkdir "${module_log%/*}"
+    # [[ -e $module_log ]] || touch "$module_log"
+    # module load BaseCPU > "$module_log.part" 2>&1
+    # colored diff -bwu "$module_log"{,.part}
+    # mv -f "$module_log"{.part,}
+    #
+    module load BaseCPU &>/dev/null
   }
   function dotfiles/setup-path:squidhpc2 { dotfiles/setup-path:squidhpc1; }
   function dotfiles/setup-path:squidhpc3 { dotfiles/setup-path:squidhpc1; }
