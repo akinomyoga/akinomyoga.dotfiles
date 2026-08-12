@@ -14,7 +14,11 @@
 ;; emacs-24.4.1 勝手に全てのファイルの行頭にスペースが入る
 (electric-indent-mode -1)
 (when (>= emacs-major-version 27)
-  (global-display-fill-column-indicator-mode 1))
+  (global-display-fill-column-indicator-mode 1)
+  (set-face-attribute 'fill-column-indicator nil
+                      :background "gray85")
+  (custom-set-variables
+   '(display-fill-column-indicator-character ?\s)))
 
 ;; emacs-29.4 遂に矢印の幅が半角になってしまった。不便すぎるので幅2にする。
 ;; そろそろ別のエディターに切り替える時なのかもしれない。
@@ -47,8 +51,9 @@
      (mwg-no-delete-trailing-whitespaces . t)
      (c-basic-offset 2)
      (eval sh-set-shell "bash")))
- '(warning-suppress-types '((comp)))
- '(display-fill-column-indicator-character ?|))
+ '(warning-suppress-types '((comp))))
+
+
 
 ;;-----------------------------------------------------------------------------
 ;; mwg.el (https://github.com/akinomyoga/myemacs)
