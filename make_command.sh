@@ -82,6 +82,11 @@ function make/link-dotfile {
       src=$PWD/$src
     fi
 
+    local host_specific_src=$src.${HOSTNAME%%.*}
+    if [[ -f $host_specific_src ]]; then
+      src=$host_specific_src
+    fi
+
     echo "ln -sf $src $dst"
     ln -sf "$src" "$dst"
   fi

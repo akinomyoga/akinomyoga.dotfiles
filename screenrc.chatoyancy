@@ -1,0 +1,117 @@
+# screenrc -*- mode: sh -*-
+defflow off
+vbell off
+startup_message off
+altscreen on
+shell /home/murase/.opt/bash/dev/bin/bash
+defshell /home/murase/.opt/bash/dev/bin/bash
+defscrollback 1000
+deflogin off
+
+bind w windowlist -b
+bind  windowlist -b
+
+bind ~ split
+bind | split -v
+
+# ESC の次の文字を待たない
+maptimeout 1
+
+# bindkey のオプション -t はタイムアウトしない事を表す。
+# これはユーザの手でシーケンスを入力する時に使用する。
+# ここで、ESC から始まるシーケンスに対して -t を指定すると、
+# maptimeout が効かなくなってしまうことに注意する。
+
+# bindkey -t "[A" focus up
+# bindkey -t "[B" focus down
+# bindkey -t "[C" focus right
+# bindkey -t "[D" focus left
+# bindkey -t "OA" focus up
+# bindkey -t "OB" focus down
+# bindkey -t "OC" focus right
+# bindkey -t "OD" focus left
+# bindkey -t "[1;5A" resize -v -l -3
+# bindkey -t "[1;5B" resize -v -l +3
+# bindkey -t "[1;5C" resize -h -l +5
+# bindkey -t "[1;5D" resize -h -l -5
+# bindkey -t "" other
+
+# s-up, etc. to move region
+bindkey "[1;9A" focus up
+bindkey "[1;9B" focus down
+bindkey "[1;9C" focus right
+bindkey "[1;9D" focus left
+
+# C-s-up, etc. to resize region
+bindkey "[1;13A" resize -v -l -3
+bindkey "[1;13B" resize -v -l -3
+bindkey "[1;13C" resize -h -l +5
+bindkey "[1;13D" resize -h -l -5
+
+# escape 
+# escape \377\377
+
+# 以下は C-tab で始まるシーケンスとして登録していたが、
+# maptimeout と競合するので取り敢えず今は無効にする。
+#
+# bindkey  -t "[27;5;9~" windowlist -b
+# bindkey  -t "[27;5;9~" command
+# bindkey  -t "[27;5;9~[A" focus up
+# bindkey  -t "[27;5;9~[B" focus down
+# bindkey  -t "[27;5;9~[C" focus right
+# bindkey  -t "[27;5;9~[D" focus left
+# bindkey  -t "[27;5;9~[1;5A" resize -v -l -3
+# bindkey  -t "[27;5;9~[1;5B" resize -v -l +3
+# bindkey  -t "[27;5;9~[1;5C" resize -h -l +5
+# bindkey  -t "[27;5;9~[1;5D" resize -h -l -5
+# bindkey  -t "[27;5;9~[27;5;9~" other
+
+caption string '%?%F%{= bW}%:%{= Kk}%?%4n %t%=%f'
+
+#defmousetrack on
+term screen-256color
+termcapinfo xterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:mh=\E[9m:sa=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m:'
+termcapinfo kterm* 'Co#256:pa#32767:AB=\E[48;5;%dm:AF=\E[38;5;%dm:'
+termcapinfo rosaterm 'Co#256:pa#32767:'
+
+#------------------------------------------------------------------------------
+# 改造版 screen 独自コマンド
+
+# Note: screen-4.6.2 では %F は常に false なので windowlist の着色には使えない。
+#   screen-4.6.2m では %F は選択されている時に true になる様に改造した。
+#   更に 4.99.0 では %{ fb} という設定 (f=fg, b=bg) ができなくなった。
+#   4.99.0m では無理やりその機能を復元する patch を当てている。
+windowlist string "%?%F%{= bW}%:%{= Wb}%?%4n %t%=%f"
+# rendition silence "= RW"
+# rendition monitor "=u RW"
+# rendition bell "=ub RW"
+
+# For dark background
+#windowlist string "%?%F%{=b}%:%{= .B}%?%4n %t%=%f"
+
+cjkwidth east
+cjkwidth emacs # myoga
+truecolor on
+attach_password off # myoga
+
+# Note: 4.99.0m では xterm-256color に等価?
+term screen.xterm-256color
+
+#------------------------------------------------------------------------------
+# Multi-user mode の設定方法
+#
+# 見てもらうだけの時
+#
+# multiuser on
+# acladd hirono
+# aclchg hirono +r-wx "#?"
+# aclchg hirono +x "prev,next,select,detach"
+
+# 向こうの編集も可能にする時
+#
+# multiuser on
+# acladd sakai
+# aclchg sakai +rwx "#?"
+
+# multiuser on した後に、
+# /home/murase/local/bin/screen -r -x murase/sessionname としてもらう。
