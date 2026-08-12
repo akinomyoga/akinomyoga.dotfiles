@@ -6,13 +6,39 @@ shopt -s histappend
 case $BASH_VERSION in 1.* | 2.* ) return 0 ;; esac
 
 if [[ $DEBUG ]]; then
+
+  # # atuin 2026-01-28 #3107
+  # export ATUIN_CONFIG_DIR=~/.mwg/git/atuinsh/atuin
+  # PATH=~/.mwg/git/atuinsh/atuin/target/debug:$PATH
+  # HISTFILE=~/.mwg/git/atuinsh/atuin/bash_history
+  # source ~/.local/share/blesh/ble.sh --norc
+  # eval "$(atuin init bash)"
+  # return
+
+  #----------------------------------------------------------------------------
+  # ble.sh
+
+  source ~/.mwg/src/ble.sh/bashrc
+
+  #----------------------------------------------------------------------------
+  # OMP
+  # source ~/.mwg/src/ble.sh/gh0554.bashrc
+
+  # #source ~/.mwg/git/JanDeDobbeleer/oh-my-posh/bashrc
+  # source ~/.mwg/git/JanDeDobbeleer/oh-my-posh/gh0629.bashrc
+  # return
+
+  # source ~/.mwg/src/ble.sh/out/ble.sh --norc
+  # bleopt prompt_status_line='\u@\h\r\w'
+
   # source ~/.mwg/src/ble.sh/out/ble.sh
   # #bleopt vbell_align=panel:right
   # bleopt debug_xtrace_ps4='+$FUNCNAME'
   # bleopt debug_xtrace=trace.txt
-  _ble_canvas_panel_height=([0]="1" [1]="0" [2]="1" [4]="1" [5]="5")
-  index="4"
-  echo "${_ble_canvas_panel_height[@]::index}"
+
+  # _ble_canvas_panel_height=([0]="1" [1]="0" [2]="1" [4]="1" [5]="5")
+  # index="4"
+  # echo "${_ble_canvas_panel_height[@]::index}"
   return 0
 fi
 

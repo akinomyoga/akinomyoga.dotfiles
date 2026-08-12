@@ -358,7 +358,8 @@ bleopt exec_elapsed_enabled='sys+usr>=1000'
   source ~/bashrc.forms.sh
 
 if [[ ${HOSTNAME%%.*} == chatoyancy ]]; then
-  :
+
+  ble-import -d config/postexec-list-modified-files
 
   # # 2023-09-19
   # ble-import layer/pattern
