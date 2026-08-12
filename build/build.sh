@@ -207,6 +207,7 @@ install-from-tarball bash/5.1.16
 install-from-tarball bash/5.2
 install-from-tarball bash/5.3-alpha
 install-from-tarball bash/5.3.0 bash-5.3.tar.gz # https://ftp.gnu.org/gnu/bash/bash-5.3.tar.gz
+install-from-tarball bash/5.3.9
 
 # Extra binaries before Shellshock
 install-from-tarball bash/3.0.0 bash-3.0.tar.gz
@@ -223,6 +224,7 @@ install-from-tarball gawk/4.2.0
 install-from-tarball gawk/5.0.1
 install-from-tarball gawk/5.3.1
 install-from-tarball gawk/5.4.0
+install-from-tarball gawk/5.4.0m
 
 install-from-tarball mawk/1.3.3-20080909
 install-from-tarball mawk/1.3.3-20090705
