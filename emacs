@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp; fill-column: 79 -*-
+;; -*- mode: emacs-lisp; fill-column: 79; lexical-binding: nil -*-
 
 (add-to-list 'load-path "~/.emacs.d/my")
 (add-to-list 'load-path "~/.emacs.d/lisp")
